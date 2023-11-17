@@ -1,12 +1,31 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-contract Trashify {
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract Trashify is AccessControl {
+    constructor(address[] memory moderators, address[] memory admins) {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setRoleAdmin(MODERATORS, DEFAULT_ADMIN_ROLE);
+        _setRoleAdmin(ADMINS, DEFAULT_ADMIN_ROLE);
+
+        for (uint256 i = 0; i < moderators.length; i++) {
+            _grantRole(MODERATORS, moderators[i]);
+        }
+
+        for (uint256 i = 0; i < admins.length; i++) {
+            _grantRole(ADMINS, admins[i]);
+        }
+    }
+
     /* Events */
 
     event NewReportSubmited(uint256 indexed reportId, address indexed creator);
+    event ReportDeleted(uint256 indexed reportId, address indexed creator);
 
     /* Data Structures */
+    bytes32 public constant MODERATORS = keccak256("MODERATORS");
+    bytes32 public constant ADMINS = keccak256("ADMINS");
 
     enum ReportState {
         InReview, // user submitted a report and moderators are reviewing it
@@ -85,5 +104,46 @@ contract Trashify {
         }
 
         return paginatedList;
+    }
+
+    // owner can close a report if no one subscribed to it and pool is empty
+    function deleteReport(
+        uint256 _reportId
+    ) public onlyAdminModeratorAndReportCreator(_reportId) {
+        uint256 index = reportIdToIndex[_reportId];
+        Report storage report = reports[index];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(report.state == ReportState.Available, "Report not available");
+        require(
+            report.cleaners.length == 0,
+            "Report has cleaners, cannot delete"
+        );
+        require(report.totalRewards == 0, "Report has rewards, cannot delete");
+
+        // Deleting an element creates a gap in the array.
+        // One trick to keep the array compact is to move the last element into the place to delete.
+        // Move the last element into the place to delete (and also overwrite it)
+        reports[index] = reports[reports.length - 1];
+        // Update the mapping for the moved report
+        reportIdToIndex[reports[index].id] = index;
+
+        // Remove the last element
+        reports.pop();
+        // Delete the mapping for the removed report
+        delete reportIdToIndex[_reportId];
+
+        emit ReportDeleted(_reportId, msg.sender);
+    }
+
+    /* Modifiers */
+    modifier onlyAdminModeratorAndReportCreator(uint256 _reportId) {
+        require(
+            hasRole(MODERATORS, msg.sender) ||
+                hasRole(ADMINS, msg.sender) ||
+                reports[reportIdToIndex[_reportId]].creator == msg.sender,
+            "Only admins, moderators and report creator can call this function"
+        );
+        _;
     }
 }

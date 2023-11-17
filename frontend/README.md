@@ -44,6 +44,6 @@ npx hardhat run --network goerli scripts/deploy.ts
 Run the following command to verify the contracts:
 
 ```bash
-npx hardhat verify --constructor-args scripts/arguments.ts DEPLOYED_CONTRACT_ADDRESS --network goerli
+npx hardhat verify --constructor-args scripts/arguments.ts --network goerli DEPLOYED_CONTRACT_ADDRESS
 
 ```
