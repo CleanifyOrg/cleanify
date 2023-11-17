@@ -3,6 +3,27 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
+/**
+ * @title Trashify
+ * @dev Implements the core functionality of the Trashify platform
+ *
+ * Trashify is a decentralized application that allows users to report trash fields and
+ * reward people that clean them.
+ *
+ * The platform is composed of the following actors:
+ * - Report creator: the person that reports a trash field
+ * - Contoributor: the person that contributes to the reward pool of a report
+ * - Cleaner: the person that cleans the field and claims the reward
+ * - Moderator: the person that verifies the report, the cleaning proof and have control over the platform
+ *
+ * When a user reports a trash field, the report will be in a InReview state until a moderator approves it.
+ * After the report is approved, the report will be in a Available state and users can subscribe to clean it.
+ * When a user cleans the field, they have to provide a proof of the cleaning and the report will be in a PendingVerification state.
+ * A moderator or the cretor of the report will verify the proof and approve or deny the cleaning verification.
+ * If the cleaning verification is approved, the report will be in a Cleaned state and the reward pool will be distributed equally between the cleaners.
+ * If the cleaning verification is denied, the report will be in a Available state and users can subscribe to clean it again or provide more proofs.
+ * After the reward pool is distributed, the report will be in a Rewarded state and can be considered closed.
+ */
 contract Trashify is AccessControl {
     constructor(address[] memory moderators) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
