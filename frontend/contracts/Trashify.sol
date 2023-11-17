@@ -22,6 +22,7 @@ contract Trashify is AccessControl {
 
     event NewReportSubmited(uint256 indexed reportId, address indexed creator);
     event ReportDeleted(uint256 indexed reportId, address indexed creator);
+    event ReportStateChanged(uint256 indexed reportId, ReportState newState);
 
     /* Data Structures */
     bytes32 public constant MODERATORS = keccak256("MODERATORS");
@@ -52,6 +53,8 @@ contract Trashify is AccessControl {
 
     /* Functions */
 
+    // Function to submit a new report by the user
+    // The report will need to be reviewed by a moderator before being available for cleaning
     function submitReport(string memory _metadata) public {
         uint256 nextId = reportIdCounter;
 
@@ -106,7 +109,7 @@ contract Trashify is AccessControl {
         return paginatedList;
     }
 
-    // owner can close a report if no one subscribed to it and pool is empty
+    // owner can close a report if no one subscribed to it and reward pool is empty
     function deleteReport(
         uint256 _reportId
     ) public onlyAdminModeratorAndReportCreator(_reportId) {
@@ -136,6 +139,22 @@ contract Trashify is AccessControl {
         emit ReportDeleted(_reportId, msg.sender);
     }
 
+    // Moderators can change the state of a report to Available
+    // and make it available for cleaning
+    function approveReport(uint256 _reportId) public onlyModerator {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.InReview,
+            "Report is not awaiting to be reviewd"
+        );
+
+        report.state = ReportState.Available;
+
+        emit ReportStateChanged(_reportId, ReportState.Available);
+    }
+
     /* Modifiers */
     modifier onlyAdminModeratorAndReportCreator(uint256 _reportId) {
         require(
@@ -143,6 +162,14 @@ contract Trashify is AccessControl {
                 hasRole(ADMINS, msg.sender) ||
                 reports[reportIdToIndex[_reportId]].creator == msg.sender,
             "Only admins, moderators and report creator can call this function"
+        );
+        _;
+    }
+
+    modifier onlyModerator() {
+        require(
+            hasRole(MODERATORS, msg.sender),
+            "Only moderators can call this function"
         );
         _;
     }
