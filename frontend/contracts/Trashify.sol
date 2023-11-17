@@ -30,6 +30,8 @@ contract Trashify is AccessControl {
         address indexed cleaner,
         string proof
     );
+    event CleaningVerificationApproved(uint256 indexed reportId);
+    event CleaningVerificationDenied(uint256 indexed reportId);
 
     /* Data Structures */
     bytes32 public constant MODERATORS = keccak256("MODERATORS");
@@ -241,6 +243,33 @@ contract Trashify is AccessControl {
 
         report.proofs.push(_proof);
         emit NewProofAdded(_reportId, msg.sender, _proof);
+    }
+
+    // Moderators will call this function to approve or deny the cleaning verification
+    // after analyzing the proofs provided by the user.
+    function handleVerificationRequest(
+        uint256 _reportId,
+        bool _isCleaned
+    ) public onlyModerator {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.PendingVerification,
+            "Report not pending verification"
+        );
+
+        if (_isCleaned) {
+            report.state = ReportState.Cleaned;
+            emit ReportStateChanged(_reportId, ReportState.Cleaned);
+            emit CleaningVerificationApproved(_reportId);
+        } else {
+            report.state = ReportState.Available;
+            emit ReportStateChanged(_reportId, ReportState.Available);
+            emit CleaningVerificationDenied(_reportId);
+            //TODO: handle reasons of why this was declined?
+            //we should have a history of people applying to verification and the reasons why they failed
+        }
     }
 
     /* Modifiers */
