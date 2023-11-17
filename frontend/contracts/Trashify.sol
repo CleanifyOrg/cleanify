@@ -24,6 +24,7 @@ contract Trashify is AccessControl {
     event ReportDeleted(uint256 indexed reportId, address indexed creator);
     event ReportStateChanged(uint256 indexed reportId, ReportState newState);
     event UserSubscribedToClean(uint256 indexed reportId, address subscriber);
+    event ReportSetAsCleaned(uint256 indexed reportId, address indexed cleaner);
 
     /* Data Structures */
     bytes32 public constant MODERATORS = keccak256("MODERATORS");
@@ -156,6 +157,8 @@ contract Trashify is AccessControl {
         emit ReportStateChanged(_reportId, ReportState.Available);
     }
 
+    // When a user wants to clean a field, they have to subscribe to it
+    // otherwise they want receive any reward
     function subscribeToClean(uint256 _reportId) public {
         Report storage report = reports[reportIdToIndex[_reportId]];
 
@@ -190,6 +193,30 @@ contract Trashify is AccessControl {
         return false;
     }
 
+    // After a user cleaned a field, they have call this function
+    // to set the report as cleaned and provide a proof of the cleaning.
+    // The report will be in a PendingVerification state until a moderator
+    // verifies the proof and enables users to claim their rewards.
+    function setReportAsCleaned(
+        uint256 _reportId,
+        string memory _proof
+    ) public onlyCleaner(_reportId) {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(report.state == ReportState.Available, "Report not available");
+        require(
+            isUserSubscribedAsCleaner(report.id, msg.sender),
+            "User is not subscribed to clean"
+        );
+
+        report.proofs.push(_proof);
+        report.state = ReportState.PendingVerification;
+
+        emit ReportStateChanged(_reportId, ReportState.PendingVerification);
+        emit ReportSetAsCleaned(_reportId, msg.sender);
+    }
+
     /* Modifiers */
     modifier onlyAdminModeratorAndReportCreator(uint256 _reportId) {
         require(
@@ -205,6 +232,14 @@ contract Trashify is AccessControl {
         require(
             hasRole(MODERATORS, msg.sender),
             "Only moderators can call this function"
+        );
+        _;
+    }
+
+    modifier onlyCleaner(uint256 _reportId) {
+        require(
+            isUserSubscribedAsCleaner(_reportId, msg.sender),
+            "Only a user registered as a cleaner can call this function"
         );
         _;
     }
