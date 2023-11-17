@@ -119,7 +119,7 @@ const AccountAbstractionProvider = ({
         chainConfig: {
           chainNamespace: CHAIN_NAMESPACES.EIP155,
           chainId: chain.id,
-          rpcTarget: chain.rpcUrl,
+          rpcTarget: chain.rpcUrls.default.http[0],
         },
         uiConfig: {
           theme: "dark",

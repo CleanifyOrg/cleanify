@@ -1,15 +1,12 @@
-export type ChainWithSafeConfig = {
+import { Chain } from "viem"
+
+export type ChainWithSafeConfig = Omit<Chain, "id"> & {
     id: string
-    token: string
-    rpcUrl: string
-    shortName: string
-    label: string
     color?: string
     icon?: string
-    blockExplorerUrl: string
     transactionServiceUrl?: string
-    isStripePaymentsEnabled: boolean // only available in Mumbai chain
-    isMoneriumPaymentsEnabled: boolean // only available in Goerli chain
+    isStripePaymentsEnabled: boolean
+    isMoneriumPaymentsEnabled: boolean
     faucetUrl?: string
     contractAddress?: string
 }
