@@ -82,7 +82,7 @@ export function SafeInfo({ safeAddress, chainId }: SafeInfoProps) {
         {/* <Skeleton isLoaded={!isLoading}> */}
         <AmountLabel
           amount={utils.formatEther(safeBalance ?? "0")}
-          tokenSymbol={chain?.token ?? ""}
+          tokenSymbol={chain?.nativeCurrency.symbol ?? ""}
         />
         {/* </Skeleton> */}
       </VStack>

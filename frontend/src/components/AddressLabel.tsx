@@ -18,7 +18,7 @@ export const AddressLabel = ({
 }: AddressLabelProps) => {
   const { chain } = useAccountAbstraction();
 
-  const blockExplorerLink = `${chain?.blockExplorerUrl}/${
+  const blockExplorerLink = `${chain?.blockExplorers?.default.url}/${
     isTransactionAddress ? "tx" : "address"
   }/${address}`;
 
