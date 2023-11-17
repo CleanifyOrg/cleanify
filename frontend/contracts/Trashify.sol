@@ -69,7 +69,6 @@ contract Trashify is AccessControl {
     struct Reward {
         address contributor;
         uint256 amount;
-        bool withdrawn;
     }
 
     mapping(uint256 => Reward[]) reportContributors; // people that donated to the report (reportId => Supporter[])
@@ -131,6 +130,23 @@ contract Trashify is AccessControl {
         }
 
         return paginatedList;
+    }
+
+    // The creator of the report can update the metadata
+    // while the report is still in review
+    function updateReportMetadata(
+        uint256 _reportId,
+        string memory _metadata
+    ) public onlyReportCreator(_reportId) {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.InReview,
+            "Report not available for modification"
+        );
+
+        report.metadata = _metadata;
     }
 
     // owner can close a report if no one subscribed to it and reward pool is empty
@@ -260,12 +276,13 @@ contract Trashify is AccessControl {
         emit NewProofAdded(_reportId, msg.sender, _proof);
     }
 
-    // Moderators will call this function to approve or deny the cleaning verification
+    // Moderators and the Creator of the report will call this function
+    // to approve or deny the cleaning verification
     // after analyzing the proofs provided by the user.
     function handleVerificationRequest(
         uint256 _reportId,
         bool _isCleaned
-    ) public onlyModerator {
+    ) public onlyAdminAndModeratorAndReportCreator(_reportId) {
         Report storage report = reports[reportIdToIndex[_reportId]];
 
         require(report.id != 0, "Report ID does not exist");
@@ -282,8 +299,6 @@ contract Trashify is AccessControl {
             report.state = ReportState.Available;
             emit ReportStateChanged(_reportId, ReportState.Available);
             emit CleaningVerificationDenied(_reportId);
-            //TODO: handle reasons of why this was declined?
-            //we should have a history of people applying to verification and the reasons why they failed
         }
     }
 
@@ -300,8 +315,7 @@ contract Trashify is AccessControl {
 
         Reward memory newReward = Reward({
             contributor: msg.sender,
-            amount: msg.value,
-            withdrawn: false
+            amount: msg.value
         });
 
         reportContributors[report.id].push(newReward);
@@ -369,6 +383,24 @@ contract Trashify is AccessControl {
             isUserSubscribedAsCleaner(_reportId, msg.sender) ||
                 reports[reportIdToIndex[_reportId]].creator == msg.sender,
             "Only a user registered as a cleaner or the report creator can call this function"
+        );
+        _;
+    }
+
+    modifier onlyReportCreator(uint256 _reportId) {
+        require(
+            reports[reportIdToIndex[_reportId]].creator == msg.sender,
+            "Only the report creator can call this function"
+        );
+        _;
+    }
+
+    modifier onlyAdminAndModeratorAndReportCreator(uint256 _reportId) {
+        require(
+            hasRole(MODERATORS, msg.sender) ||
+                hasRole(ADMINS, msg.sender) ||
+                reports[reportIdToIndex[_reportId]].creator == msg.sender,
+            "Only admins, moderators and report creator can call this function"
         );
         _;
     }
