@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import {CoordinatesHelper} from "./CoordinatesHelper.sol";
-
-contract Trashify is CoordinatesHelper {
+contract Trashify {
     /* Events */
 
     event NewReportSubmited(uint256 indexed reportId, address indexed creator);
@@ -26,7 +24,6 @@ contract Trashify is CoordinatesHelper {
         string metadata; //contains off chain information like images, videos, written details, etc.
         string[] proofs; //contains off chain information provided as proofs by the cleaners that cleaned the field
         uint256 totalRewards; //amount of ETH that the report contains as reward
-        Coordinates location; //location of the field
     }
 
     Report[] public reports;
@@ -36,11 +33,7 @@ contract Trashify is CoordinatesHelper {
 
     /* Functions */
 
-    function submitReport(
-        string memory _metadata,
-        uint256 latitude,
-        uint256 longitude
-    ) public {
+    function submitReport(string memory _metadata) public {
         uint256 nextId = reportIdCounter;
 
         Report memory newReport;
@@ -49,10 +42,6 @@ contract Trashify is CoordinatesHelper {
         newReport.state = ReportState.InReview;
         newReport.metadata = _metadata;
         newReport.totalRewards = 0;
-        newReport.location = Coordinates({
-            latitude: latitude,
-            longitude: longitude
-        });
 
         reports.push(newReport);
 
@@ -96,37 +85,5 @@ contract Trashify is CoordinatesHelper {
         }
 
         return paginatedList;
-    }
-
-    // Function to retrieve reports close to a specific point
-    //TODO: simplify (through a mapping??) the possibility to find nearby reports,
-    //at the moment we have to loop through all the reports
-    function getNearbyReports(
-        uint256 _latitude,
-        uint256 _longitude,
-        uint256 _proximity
-    ) public view returns (Report[] memory) {
-        uint256 counter = 0;
-        Report[] memory nearbyReports;
-
-        for (uint256 i = 0; i < reports.length; i++) {
-            if (reports[i].state != ReportState.Available) {
-                continue;
-            }
-
-            if (
-                isWithinProximity(
-                    reports[i].location,
-                    _latitude,
-                    _longitude,
-                    _proximity
-                )
-            ) {
-                nearbyReports[counter] = reports[i];
-                counter++;
-            }
-        }
-
-        return nearbyReports;
     }
 }
