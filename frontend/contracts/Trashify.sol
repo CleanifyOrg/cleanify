@@ -23,6 +23,7 @@ contract Trashify is AccessControl {
     event NewReportSubmited(uint256 indexed reportId, address indexed creator);
     event ReportDeleted(uint256 indexed reportId, address indexed creator);
     event ReportStateChanged(uint256 indexed reportId, ReportState newState);
+    event UserSubscribedToClean(uint256 indexed reportId, address subscriber);
 
     /* Data Structures */
     bytes32 public constant MODERATORS = keccak256("MODERATORS");
@@ -153,6 +154,40 @@ contract Trashify is AccessControl {
         report.state = ReportState.Available;
 
         emit ReportStateChanged(_reportId, ReportState.Available);
+    }
+
+    function subscribeToClean(uint256 _reportId) public {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.Available,
+            "Report not available for subscription"
+        );
+        require(
+            !isUserSubscribedAsCleaner(report.id, msg.sender),
+            "Already subscribed"
+        );
+
+        report.cleaners.push(msg.sender);
+
+        emit UserSubscribedToClean(_reportId, msg.sender);
+    }
+
+    // Return if user has subscribed to clean a specific report
+    function isUserSubscribedAsCleaner(
+        uint256 _reportId,
+        address user
+    ) public view returns (bool) {
+        uint256 index = reportIdToIndex[_reportId];
+        address[] memory cleaners = reports[index].cleaners;
+        for (uint256 i = 0; i < cleaners.length; i++) {
+            if (cleaners[i] == user) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /* Modifiers */
