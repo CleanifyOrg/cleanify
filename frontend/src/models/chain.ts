@@ -1,4 +1,4 @@
-export type Chain = {
+export type ChainWithSafeConfig = {
     id: string
     token: string
     rpcUrl: string

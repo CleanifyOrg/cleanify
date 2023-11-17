@@ -1,6 +1,6 @@
-import { Chain } from "@/models"
+import { ChainWithSafeConfig } from "@/models"
 
-export const gnosisChain: Chain = {
+export const gnosisChain: ChainWithSafeConfig = {
     id: '0x64',
     token: 'xDai',
     shortName: 'gno',
@@ -13,7 +13,7 @@ export const gnosisChain: Chain = {
     isMoneriumPaymentsEnabled: false
 }
 
-export const goerliChain: Chain = {
+export const goerliChain: ChainWithSafeConfig = {
     id: '0x5',
     token: 'gETH',
     label: 'Görli',
@@ -26,7 +26,7 @@ export const goerliChain: Chain = {
     isMoneriumPaymentsEnabled: true
 }
 
-export const mainnetChain: Chain = {
+export const mainnetChain: ChainWithSafeConfig = {
     id: '0x1',
     token: 'ETH',
     label: 'Ethereum',
@@ -39,7 +39,7 @@ export const mainnetChain: Chain = {
     isMoneriumPaymentsEnabled: false
 }
 
-export const polygonChain: Chain = {
+export const polygonChain: ChainWithSafeConfig = {
     id: '0x89',
     token: 'matic',
     shortName: 'matic',
@@ -52,7 +52,7 @@ export const polygonChain: Chain = {
     isMoneriumPaymentsEnabled: false
 }
 
-export const mumbaiChain: Chain = {
+export const mumbaiChain: ChainWithSafeConfig = {
     id: '0x13881',
     token: 'matic',
     shortName: 'matic',
@@ -65,8 +65,14 @@ export const mumbaiChain: Chain = {
     faucetUrl: 'https://mumbaifaucet.com/'
 }
 
-const chains: Chain[] = [gnosisChain, goerliChain, mainnetChain, mumbaiChain, polygonChain]
+const chains: ChainWithSafeConfig[] = [gnosisChain, goerliChain, mainnetChain, mumbaiChain, polygonChain]
 
-export const initialChain = mumbaiChain
+export const getChain = (chainId?: string) => {
+    const chain = chains.find((chain) => chain.id === chainId)
+
+    return chain
+}
+
+export const defaultTestnetChain = mumbaiChain
 
 export default chains
