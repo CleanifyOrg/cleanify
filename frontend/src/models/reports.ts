@@ -1,30 +1,28 @@
-export enum TrashifyState {
-  InReview,
-  Available,
-  PendingVerification,
-  Cleaned,
-  Rewarded
-}
+import {BigNumberish} from "ethers"
 
-
+/**
+ * This is the on chain state
+ */
 export type TrashifyReport = {
-  id: number;
-  creator: string;
-  state: TrashifyState;
-  cleaners: string[];
-  metadata: string;
-  proofs: string[];
-  totalRewards: number;
+  id: BigNumberish
+  creator: string
+  // ipfs hash, pointing to metadata
+  metadata: string
+  totalRewards: BigNumberish
+  state: number
 }
 
 export type Coordinates = {
   lat: number
-  long: number
+  lng: number
 }
 
+/**
+ * IPFS Metadata
+ */
 export type RecordMetadata = {
-  coordinates: Coordinates
-  name: string
+  title: string
   description: string
   images: string[]
+  coordinates: Coordinates
 }

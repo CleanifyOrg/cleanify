@@ -1,4 +1,5 @@
 export * from "./usePolling"
 export * from "./useTrashifyContract"
 export * from "./useTrashifyReports"
-export * from "./useReportMetadata.ts"
+export * from "./useReportMetadata"
+export * from "./useSubmitReport"

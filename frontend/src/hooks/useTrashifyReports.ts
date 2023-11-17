@@ -1,16 +1,7 @@
 import {useTrashifyContract} from "@hooks/useTrashifyContract.ts"
 import {useEffect, useState} from "react"
 import {Trashify} from "@/typechain"
-import {BigNumberish} from "ethers"
-
-
-export type TrashifyReport = {
-  id: BigNumberish
-  creator: string
-  metadata: string
-  totalRewards: BigNumberish
-  state: number
-}
+import {TrashifyReport} from "@models"
 
 
 export const useTrashifyReports = () => {
