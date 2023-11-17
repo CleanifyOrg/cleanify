@@ -25,6 +25,11 @@ contract Trashify is AccessControl {
     event ReportStateChanged(uint256 indexed reportId, ReportState newState);
     event UserSubscribedToClean(uint256 indexed reportId, address subscriber);
     event ReportSetAsCleaned(uint256 indexed reportId, address indexed cleaner);
+    event NewProofAdded(
+        uint256 indexed reportId,
+        address indexed cleaner,
+        string proof
+    );
 
     /* Data Structures */
     bytes32 public constant MODERATORS = keccak256("MODERATORS");
@@ -217,6 +222,27 @@ contract Trashify is AccessControl {
         emit ReportSetAsCleaned(_reportId, msg.sender);
     }
 
+    // While the cleaning verification is pending, the user can add more proofs
+    function addAdditionalProofs(
+        uint256 _reportId,
+        string memory _proof
+    ) public onlyCleanerAndReportCreatore(_reportId) {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.PendingVerification,
+            "Report not pending verification"
+        );
+        require(
+            isUserSubscribedAsCleaner(report.id, msg.sender),
+            "User is not subscribed to clean"
+        );
+
+        report.proofs.push(_proof);
+        emit NewProofAdded(_reportId, msg.sender, _proof);
+    }
+
     /* Modifiers */
     modifier onlyAdminModeratorAndReportCreator(uint256 _reportId) {
         require(
@@ -240,6 +266,15 @@ contract Trashify is AccessControl {
         require(
             isUserSubscribedAsCleaner(_reportId, msg.sender),
             "Only a user registered as a cleaner can call this function"
+        );
+        _;
+    }
+
+    modifier onlyCleanerAndReportCreatore(uint256 _reportId) {
+        require(
+            isUserSubscribedAsCleaner(_reportId, msg.sender) ||
+                reports[reportIdToIndex[_reportId]].creator == msg.sender,
+            "Only a user registered as a cleaner or the report creator can call this function"
         );
         _;
     }
