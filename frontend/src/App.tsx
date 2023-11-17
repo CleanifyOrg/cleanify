@@ -11,18 +11,10 @@ import {
 } from "@chakra-ui/react";
 import { useAccountAbstraction } from "./store";
 import { ConnectedWalletOwner } from "./components";
-import {useEffect} from "react"
-import {useTrashifyReports} from "@hooks"
 import {AllReports} from "@components/AllReports.tsx"
 
 function App() {
-  const { isAuthenticated, loginWeb3Auth, chain } = useAccountAbstraction();
-
-  useEffect(() => {
-    console.log(chain)
-  }, [chain])
-
-  useTrashifyReports()
+  const { isAuthenticated, loginWeb3Auth } = useAccountAbstraction();
 
   return (
     <VStack

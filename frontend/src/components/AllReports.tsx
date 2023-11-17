@@ -9,7 +9,6 @@ export const AllReports = () => {
     console.log("reports", reports)
   }, [reports])
 
-
   return <>
     {reports.map((report) => {
       return <TrashifyReport report={report} />

@@ -43,12 +43,6 @@ export const useTrashifyReports = () => {
     }
   }, [contract])
 
-
-  useEffect(() => {
-
-    console.log("reports: ", reports)
-  }, [reports])
-
   return {
     reports
   }
