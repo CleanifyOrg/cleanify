@@ -1,8 +1,8 @@
 import hre from "hardhat";
-import { moderators, admins } from "./arguments";
+import { moderators } from "./arguments";
 
 async function main() {
-  const lock = await hre.viem.deployContract("Trashify", [moderators, admins]);
+  const lock = await hre.viem.deployContract("Trashify", [moderators]);
 
   console.log(
     `Trashify deployed to ${lock.address}`

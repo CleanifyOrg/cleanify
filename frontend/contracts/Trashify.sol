@@ -4,17 +4,12 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract Trashify is AccessControl {
-    constructor(address[] memory moderators, address[] memory admins) {
+    constructor(address[] memory moderators) {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setRoleAdmin(MODERATORS, DEFAULT_ADMIN_ROLE);
-        _setRoleAdmin(ADMINS, DEFAULT_ADMIN_ROLE);
 
         for (uint256 i = 0; i < moderators.length; i++) {
             _grantRole(MODERATORS, moderators[i]);
-        }
-
-        for (uint256 i = 0; i < admins.length; i++) {
-            _grantRole(ADMINS, admins[i]);
         }
     }
 
@@ -41,7 +36,6 @@ contract Trashify is AccessControl {
 
     /* Data Structures */
     bytes32 public constant MODERATORS = keccak256("MODERATORS");
-    bytes32 public constant ADMINS = keccak256("ADMINS");
 
     enum ReportState {
         InReview, // user submitted a report and moderators are reviewing it
@@ -152,7 +146,7 @@ contract Trashify is AccessControl {
     // owner can close a report if no one subscribed to it and reward pool is empty
     function deleteReport(
         uint256 _reportId
-    ) public onlyAdminModeratorAndReportCreator(_reportId) {
+    ) public onlyModeratorAndReportCreator(_reportId) {
         uint256 index = reportIdToIndex[_reportId];
         Report storage report = reports[index];
 
@@ -282,7 +276,7 @@ contract Trashify is AccessControl {
     function handleVerificationRequest(
         uint256 _reportId,
         bool _isCleaned
-    ) public onlyAdminAndModeratorAndReportCreator(_reportId) {
+    ) public onlyModeratorAndReportCreator(_reportId) {
         Report storage report = reports[reportIdToIndex[_reportId]];
 
         require(report.id != 0, "Report ID does not exist");
@@ -352,10 +346,9 @@ contract Trashify is AccessControl {
     }
 
     /* Modifiers */
-    modifier onlyAdminModeratorAndReportCreator(uint256 _reportId) {
+    modifier onlyModeratorAndReportCreator(uint256 _reportId) {
         require(
             hasRole(MODERATORS, msg.sender) ||
-                hasRole(ADMINS, msg.sender) ||
                 reports[reportIdToIndex[_reportId]].creator == msg.sender,
             "Only admins, moderators and report creator can call this function"
         );
@@ -391,16 +384,6 @@ contract Trashify is AccessControl {
         require(
             reports[reportIdToIndex[_reportId]].creator == msg.sender,
             "Only the report creator can call this function"
-        );
-        _;
-    }
-
-    modifier onlyAdminAndModeratorAndReportCreator(uint256 _reportId) {
-        require(
-            hasRole(MODERATORS, msg.sender) ||
-                hasRole(ADMINS, msg.sender) ||
-                reports[reportIdToIndex[_reportId]].creator == msg.sender,
-            "Only admins, moderators and report creator can call this function"
         );
         _;
     }
