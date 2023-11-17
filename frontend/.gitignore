@@ -38,3 +38,7 @@ src/typechain
 # solidity-coverage files
 /coverage
 /coverage.json
+
+.mnemonic
+.etherscan
+.infura

@@ -28,3 +28,22 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+## Deploy contracts
+
+Create a .mnemonic and a .infura file in the root directory of the project. The .mnemonic file should contain the mnemonic of the wallet that will deploy the contracts. The .infura file should contain the infura key.
+
+Run the following command to deploy the contracts:
+
+```bash
+npx hardhat run --network goerli scripts/deploy.ts
+```
+
+## Verify contracts
+
+Run the following command to verify the contracts:
+
+```bash
+npx hardhat verify --constructor-args scripts/arguments.ts DEPLOYED_CONTRACT_ADDRESS --network goerli
+
+```
