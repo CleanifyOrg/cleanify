@@ -12,6 +12,7 @@ import {
 import { useAccountAbstraction } from "./store";
 import { ConnectedWalletOwner } from "./components";
 import {AllReports} from "@components/AllReports.tsx"
+import {SubmitReport} from "@components/SubmitReport.tsx"
 
 function App() {
   const { isAuthenticated, loginWeb3Auth } = useAccountAbstraction();
@@ -31,6 +32,7 @@ function App() {
 
 
           <AllReports />
+          <SubmitReport />
 
           <Text fontWeight="normal" textAlign="center">
             The decentralized waste management platform that allows users to

@@ -25,7 +25,8 @@ const goerliWithSafeConfig: ChainWithSafeConfig = {
     transactionServiceUrl: 'https://safe-transaction-goerli.safe.global',
     isStripePaymentsEnabled: false,
     isMoneriumPaymentsEnabled: true,
-    icon: "/icons/ethereum.png"
+    icon: "/icons/ethereum.png",
+    contractAddress: "0x151892c5dcf44afe384d09c4ff9b54012ac441c2"
 }
 
 
@@ -35,4 +36,4 @@ export const testnets: ChainWithSafeConfig[] = [
     goerliWithSafeConfig,
 ]
 
-export const defaultTestnetChain = baseGoerliWithSafeConfig
+export const defaultTestnetChain = goerliWithSafeConfig

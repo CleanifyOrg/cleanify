@@ -11,7 +11,7 @@ export const AllReports = () => {
 
   return <>
     {reports.map((report) => {
-      return <TrashifyReport report={report} />
+      return <TrashifyReport key={report.id.toString()} report={report} />
     })}
   </>
 }
