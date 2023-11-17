@@ -11,9 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { useAccountAbstraction } from "./store";
 import { ConnectedWalletOwner } from "./components";
+import {AllReports} from "@components/AllReports.tsx"
 
 function App() {
   const { isAuthenticated, loginWeb3Auth } = useAccountAbstraction();
+
   return (
     <VStack
       h={"100vh"}
@@ -26,6 +28,10 @@ function App() {
           <Heading textAlign={"center"} size="lg">
             Welcome to Trashify
           </Heading>
+
+
+          <AllReports />
+
           <Text fontWeight="normal" textAlign="center">
             The decentralized waste management platform that allows users to
             earn rewards for recycling.

@@ -11,4 +11,5 @@ export type ChainWithSafeConfig = {
     isStripePaymentsEnabled: boolean // only available in Mumbai chain
     isMoneriumPaymentsEnabled: boolean // only available in Goerli chain
     faucetUrl?: string
+    contractAddress?: string
 }
