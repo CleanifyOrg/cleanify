@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "compile": "yarn hardhat compile",
     "clean": "rm -rf artifacts cache",
-    "deploy": "npx hardhat run scripts/deploy.ts"
+    "deploy": "npx hardhat run scripts/deploy.ts",
+    "lint:fix": "eslint --fix"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",

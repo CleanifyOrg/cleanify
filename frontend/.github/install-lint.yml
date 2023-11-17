@@ -1,0 +1,29 @@
+name: Build & Lint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    name: Build & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install & Patch packages
+        run: yarn install
+
+      - name: Lint & Format Check
+        run: yarn lint
+
+      - name: Build
+        run: yarn build
