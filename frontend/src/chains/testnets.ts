@@ -14,7 +14,8 @@ const baseGoerliWithSafeConfig: ChainWithSafeConfig = {
     isMoneriumPaymentsEnabled: false,
     transactionServiceUrl: "https://safe-transaction-base-testnet.safe.global",
     color: '#3e6957',
-    icon: "/icons/base.png"
+    icon: "/icons/base.png",
+    contractAddress: "0x151892c5dcf44afe384d09c4ff9b54012ac441c2"
 }
 
 const goerliWithSafeConfig: ChainWithSafeConfig = {

@@ -1,12 +1,47 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-contract Trashify {
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract Trashify is AccessControl {
+    constructor(address[] memory moderators, address[] memory admins) {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setRoleAdmin(MODERATORS, DEFAULT_ADMIN_ROLE);
+        _setRoleAdmin(ADMINS, DEFAULT_ADMIN_ROLE);
+
+        for (uint256 i = 0; i < moderators.length; i++) {
+            _grantRole(MODERATORS, moderators[i]);
+        }
+
+        for (uint256 i = 0; i < admins.length; i++) {
+            _grantRole(ADMINS, admins[i]);
+        }
+    }
+
     /* Events */
 
     event NewReportSubmited(uint256 indexed reportId, address indexed creator);
+    event ReportDeleted(uint256 indexed reportId, address indexed creator);
+    event ReportStateChanged(uint256 indexed reportId, ReportState newState);
+    event UserSubscribedToClean(uint256 indexed reportId, address subscriber);
+    event ReportSetAsCleaned(uint256 indexed reportId, address indexed cleaner);
+    event NewProofAdded(
+        uint256 indexed reportId,
+        address indexed cleaner,
+        string proof
+    );
+    event CleaningVerificationApproved(uint256 indexed reportId);
+    event CleaningVerificationDenied(uint256 indexed reportId);
+    event RewardAdded(
+        uint256 indexed reportId,
+        address indexed contributor,
+        uint256 amount
+    );
+    event RewardsDistributed(uint256 indexed reportId, address[] cleaners);
 
     /* Data Structures */
+    bytes32 public constant MODERATORS = keccak256("MODERATORS");
+    bytes32 public constant ADMINS = keccak256("ADMINS");
 
     enum ReportState {
         InReview, // user submitted a report and moderators are reviewing it
@@ -31,8 +66,19 @@ contract Trashify {
     // Mapping to store the index of a report based on its ID
     mapping(uint256 => uint256) public reportIdToIndex;
 
+    struct Reward {
+        address contributor;
+        uint256 amount;
+        bool withdrawn;
+    }
+
+    mapping(uint256 => Reward[]) reportContributors; // people that donated to the report (reportId => Supporter[])
+    mapping(address => uint256[]) userContributions; // mapping to get all donations of a user (user => reportId[])
+
     /* Functions */
 
+    // Function to submit a new report by the user
+    // The report will need to be reviewed by a moderator before being available for cleaning
     function submitReport(string memory _metadata) public {
         uint256 nextId = reportIdCounter;
 
@@ -85,5 +131,245 @@ contract Trashify {
         }
 
         return paginatedList;
+    }
+
+    // owner can close a report if no one subscribed to it and reward pool is empty
+    function deleteReport(
+        uint256 _reportId
+    ) public onlyAdminModeratorAndReportCreator(_reportId) {
+        uint256 index = reportIdToIndex[_reportId];
+        Report storage report = reports[index];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(report.state == ReportState.Available, "Report not available");
+        require(
+            report.cleaners.length == 0,
+            "Report has cleaners, cannot delete"
+        );
+        require(report.totalRewards == 0, "Report has rewards, cannot delete");
+
+        // Deleting an element creates a gap in the array.
+        // One trick to keep the array compact is to move the last element into the place to delete.
+        // Move the last element into the place to delete (and also overwrite it)
+        reports[index] = reports[reports.length - 1];
+        // Update the mapping for the moved report
+        reportIdToIndex[reports[index].id] = index;
+
+        // Remove the last element
+        reports.pop();
+        // Delete the mapping for the removed report
+        delete reportIdToIndex[_reportId];
+
+        emit ReportDeleted(_reportId, msg.sender);
+    }
+
+    // Moderators can change the state of a report to Available
+    // and make it available for cleaning
+    function approveReport(uint256 _reportId) public onlyModerator {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.InReview,
+            "Report is not awaiting to be reviewd"
+        );
+
+        report.state = ReportState.Available;
+
+        emit ReportStateChanged(_reportId, ReportState.Available);
+    }
+
+    // When a user wants to clean a field, they have to subscribe to it
+    // otherwise they want receive any reward
+    function subscribeToClean(uint256 _reportId) public {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.Available,
+            "Report not available for subscription"
+        );
+        require(
+            !isUserSubscribedAsCleaner(report.id, msg.sender),
+            "Already subscribed"
+        );
+
+        report.cleaners.push(msg.sender);
+
+        emit UserSubscribedToClean(_reportId, msg.sender);
+    }
+
+    // Return if user has subscribed to clean a specific report
+    function isUserSubscribedAsCleaner(
+        uint256 _reportId,
+        address user
+    ) public view returns (bool) {
+        uint256 index = reportIdToIndex[_reportId];
+        address[] memory cleaners = reports[index].cleaners;
+        for (uint256 i = 0; i < cleaners.length; i++) {
+            if (cleaners[i] == user) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // After a user cleaned a field, they have call this function
+    // to set the report as cleaned and provide a proof of the cleaning.
+    // The report will be in a PendingVerification state until a moderator
+    // verifies the proof and enables users to claim their rewards.
+    function setReportAsCleaned(
+        uint256 _reportId,
+        string memory _proof
+    ) public onlyCleaner(_reportId) {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(report.state == ReportState.Available, "Report not available");
+        require(
+            isUserSubscribedAsCleaner(report.id, msg.sender),
+            "User is not subscribed to clean"
+        );
+
+        report.proofs.push(_proof);
+        report.state = ReportState.PendingVerification;
+
+        emit ReportStateChanged(_reportId, ReportState.PendingVerification);
+        emit ReportSetAsCleaned(_reportId, msg.sender);
+    }
+
+    // While the cleaning verification is pending, the user can add more proofs
+    function addAdditionalProofs(
+        uint256 _reportId,
+        string memory _proof
+    ) public onlyCleanerAndReportCreatore(_reportId) {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.PendingVerification,
+            "Report not pending verification"
+        );
+        require(
+            isUserSubscribedAsCleaner(report.id, msg.sender),
+            "User is not subscribed to clean"
+        );
+
+        report.proofs.push(_proof);
+        emit NewProofAdded(_reportId, msg.sender, _proof);
+    }
+
+    // Moderators will call this function to approve or deny the cleaning verification
+    // after analyzing the proofs provided by the user.
+    function handleVerificationRequest(
+        uint256 _reportId,
+        bool _isCleaned
+    ) public onlyModerator {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.PendingVerification,
+            "Report not pending verification"
+        );
+
+        if (_isCleaned) {
+            report.state = ReportState.Cleaned;
+            emit ReportStateChanged(_reportId, ReportState.Cleaned);
+            emit CleaningVerificationApproved(_reportId);
+        } else {
+            report.state = ReportState.Available;
+            emit ReportStateChanged(_reportId, ReportState.Available);
+            emit CleaningVerificationDenied(_reportId);
+            //TODO: handle reasons of why this was declined?
+            //we should have a history of people applying to verification and the reasons why they failed
+        }
+    }
+
+    // Users can contribute to the reward pool of a report by sending ETH to this function
+    function addRewards(uint256 _reportId) public payable {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.Available,
+            "Report not available for rewards"
+        );
+        require(msg.value > 0, "Reward amount must be greater than 0");
+
+        Reward memory newReward = Reward({
+            contributor: msg.sender,
+            amount: msg.value,
+            withdrawn: false
+        });
+
+        reportContributors[report.id].push(newReward);
+        report.totalRewards += msg.value;
+
+        emit RewardAdded(_reportId, msg.sender, msg.value);
+    }
+
+    // When a report is in the Cleaned state, whoever can call this function
+    // and the contract will distribute the rewards equally between the cleaners
+    function distributeRewards(uint256 _reportId) public {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.Cleaned,
+            "Report not available for claiming rewards"
+        );
+        require(
+            report.cleaners.length > 0,
+            "No cleaners to distribute rewards"
+        );
+
+        uint256 reward = report.totalRewards / report.cleaners.length;
+
+        for (uint256 i = 0; i < report.cleaners.length; i++) {
+            payable(report.cleaners[i]).transfer(reward);
+        }
+
+        report.state = ReportState.Rewarded;
+
+        emit RewardsDistributed(_reportId, report.cleaners);
+        emit ReportStateChanged(_reportId, ReportState.Rewarded);
+    }
+
+    /* Modifiers */
+    modifier onlyAdminModeratorAndReportCreator(uint256 _reportId) {
+        require(
+            hasRole(MODERATORS, msg.sender) ||
+                hasRole(ADMINS, msg.sender) ||
+                reports[reportIdToIndex[_reportId]].creator == msg.sender,
+            "Only admins, moderators and report creator can call this function"
+        );
+        _;
+    }
+
+    modifier onlyModerator() {
+        require(
+            hasRole(MODERATORS, msg.sender),
+            "Only moderators can call this function"
+        );
+        _;
+    }
+
+    modifier onlyCleaner(uint256 _reportId) {
+        require(
+            isUserSubscribedAsCleaner(_reportId, msg.sender),
+            "Only a user registered as a cleaner can call this function"
+        );
+        _;
+    }
+
+    modifier onlyCleanerAndReportCreatore(uint256 _reportId) {
+        require(
+            isUserSubscribedAsCleaner(_reportId, msg.sender) ||
+                reports[reportIdToIndex[_reportId]].creator == msg.sender,
+            "Only a user registered as a cleaner or the report creator can call this function"
+        );
+        _;
     }
 }

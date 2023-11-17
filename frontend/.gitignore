@@ -42,3 +42,4 @@ src/typechain
 .mnemonic
 .etherscan
 .infura
+test

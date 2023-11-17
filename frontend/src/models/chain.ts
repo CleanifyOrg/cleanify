@@ -8,4 +8,5 @@ export type ChainWithSafeConfig = Omit<Chain, "id"> & {
     isStripePaymentsEnabled: boolean
     isMoneriumPaymentsEnabled: boolean
     faucetUrl?: string
+    contractAddress?: string
 }
