@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import {CoordinateHelper} from "./CoordinateHelper.sol";
+import {CoordinatesHelper} from "./CoordinatesHelper.sol";
 
 contract Trashify is CoordinatesHelper {
     /* Events */
@@ -31,6 +31,8 @@ contract Trashify is CoordinatesHelper {
 
     Report[] public reports;
     uint256 reportIdCounter = 1;
+    // Mapping to store the index of a report based on its ID
+    mapping(uint256 => uint256) public reportIdToIndex;
 
     /* Functions */
 
