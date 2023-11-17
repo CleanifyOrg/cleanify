@@ -10,7 +10,7 @@ export const gnosisChain: ChainWithSafeConfig = {
     color: '#3e6957',
     transactionServiceUrl: 'https://safe-transaction-gnosis-chain.safe.global',
     isStripePaymentsEnabled: false,
-    isMoneriumPaymentsEnabled: false
+    isMoneriumPaymentsEnabled: false,
 }
 
 export const goerliChain: ChainWithSafeConfig = {
@@ -23,7 +23,8 @@ export const goerliChain: ChainWithSafeConfig = {
     color: '#fbc02d',
     transactionServiceUrl: 'https://safe-transaction-goerli.safe.global',
     isStripePaymentsEnabled: false,
-    isMoneriumPaymentsEnabled: true
+    isMoneriumPaymentsEnabled: true,
+    contractAddress: "0x151892c5dcf44afe384d09c4ff9b54012ac441c2"
 }
 
 export const mainnetChain: ChainWithSafeConfig = {
@@ -73,6 +74,6 @@ export const getChain = (chainId?: string) => {
     return chain
 }
 
-export const defaultTestnetChain = mumbaiChain
+export const defaultTestnetChain = goerliChain
 
 export default chains
