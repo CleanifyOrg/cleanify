@@ -40,7 +40,7 @@ contract Trashify is CoordinatesHelper {
         string memory _metadata,
         uint256 latitude,
         uint256 longitude
-    ) internal {
+    ) public {
         uint256 nextId = reportIdCounter;
 
         Report memory newReport;
