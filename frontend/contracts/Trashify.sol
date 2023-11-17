@@ -32,6 +32,12 @@ contract Trashify is AccessControl {
     );
     event CleaningVerificationApproved(uint256 indexed reportId);
     event CleaningVerificationDenied(uint256 indexed reportId);
+    event RewardAdded(
+        uint256 indexed reportId,
+        address indexed contributor,
+        uint256 amount
+    );
+    event RewardsDistributed(uint256 indexed reportId, address[] cleaners);
 
     /* Data Structures */
     bytes32 public constant MODERATORS = keccak256("MODERATORS");
@@ -59,6 +65,15 @@ contract Trashify is AccessControl {
     uint256 reportIdCounter = 1;
     // Mapping to store the index of a report based on its ID
     mapping(uint256 => uint256) public reportIdToIndex;
+
+    struct Reward {
+        address contributor;
+        uint256 amount;
+        bool withdrawn;
+    }
+
+    mapping(uint256 => Reward[]) reportContributors; // people that donated to the report (reportId => Supporter[])
+    mapping(address => uint256[]) userContributions; // mapping to get all donations of a user (user => reportId[])
 
     /* Functions */
 
@@ -270,6 +285,56 @@ contract Trashify is AccessControl {
             //TODO: handle reasons of why this was declined?
             //we should have a history of people applying to verification and the reasons why they failed
         }
+    }
+
+    // Users can contribute to the reward pool of a report by sending ETH to this function
+    function addRewards(uint256 _reportId) public payable {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.Available,
+            "Report not available for rewards"
+        );
+        require(msg.value > 0, "Reward amount must be greater than 0");
+
+        Reward memory newReward = Reward({
+            contributor: msg.sender,
+            amount: msg.value,
+            withdrawn: false
+        });
+
+        reportContributors[report.id].push(newReward);
+        report.totalRewards += msg.value;
+
+        emit RewardAdded(_reportId, msg.sender, msg.value);
+    }
+
+    // When a report is in the Cleaned state, whoever can call this function
+    // and the contract will distribute the rewards equally between the cleaners
+    function distributeRewards(uint256 _reportId) public {
+        Report storage report = reports[reportIdToIndex[_reportId]];
+
+        require(report.id != 0, "Report ID does not exist");
+        require(
+            report.state == ReportState.Cleaned,
+            "Report not available for claiming rewards"
+        );
+        require(
+            report.cleaners.length > 0,
+            "No cleaners to distribute rewards"
+        );
+
+        uint256 reward = report.totalRewards / report.cleaners.length;
+
+        for (uint256 i = 0; i < report.cleaners.length; i++) {
+            payable(report.cleaners[i]).transfer(reward);
+        }
+
+        report.state = ReportState.Rewarded;
+
+        emit RewardsDistributed(_reportId, report.cleaners);
+        emit ReportStateChanged(_reportId, ReportState.Rewarded);
     }
 
     /* Modifiers */
