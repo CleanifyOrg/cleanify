@@ -48,6 +48,10 @@ export const Navbar = () => {
     onOpen: openLoggedAccountModal,
   } = useDisclosure();
   const safeLogSrc = useColorModeValue(safeLogo, safeLogoDark);
+  const logoSrc = useColorModeValue(
+    "/logo/cleanify_light.png",
+    "/logo/cleanify_dark.png"
+  );
 
   const { toggleColorMode } = useColorMode();
 
@@ -66,8 +70,8 @@ export const Navbar = () => {
       right={0}
       w="100%"
       boxShadow={"md"}
-      px={8}
-      py={2}
+      px={[2, 8]}
+      py={[1, 2]}
     >
       <MobileDrawerMenu
         isOpen={isMobileMenuOpen}
@@ -78,9 +82,18 @@ export const Navbar = () => {
         isOpen={isLoggedAccountModalOpen}
         onClose={closeLoggedAccountModal}
       />
-      <Heading size="md" flex={2} cursor={"pointer"} onClick={onLogoClick}>
-        Cleanify
-      </Heading>
+      <HStack spacing={0}>
+        <Image
+          src={logoSrc}
+          alt="Cleanify logo"
+          boxSize={10}
+          //   w="full"
+          objectFit={"cover"}
+        />
+        <Heading size="md" flex={2} cursor={"pointer"} onClick={onLogoClick}>
+          Cleanify
+        </Heading>
+      </HStack>
       <Hide above="sm">
         <IconButton
           icon={<FaBars />}
