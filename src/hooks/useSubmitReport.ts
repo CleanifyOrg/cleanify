@@ -3,29 +3,11 @@ import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
 import { Coordinates, RecordMetadata } from "@models";
 import { NewReportSubmitedEvent } from "@/typechain/Trashify.ts";
 import {uploadToIpfs} from "@utils"
+import {AnalyzeImageResponse} from "@api/chatgpt"
 
 export const useSubmitReport = () => {
   const { contract } = useTrashifyContract();
-
-  const [title, setTitle] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [images, setImages] = useState<string[]>([]);
-  const [coordinates, setCoordinates] = useState<Coordinates>();
-
-  const canCreate = useMemo(() => {
-    return !!title && !!description && !!images && !!coordinates && !!contract;
-  }, [title, description, images, coordinates, contract]);
-
-  const createReport = async (): Promise<NewReportSubmitedEvent> => {
-    if (
-      !contract ||
-      !title ||
-      !description ||
-      !images ||
-      !coordinates ||
-      !contract
-    )
-      throw new Error("Can't create report");
+  const createReport = async (analysis: AnalyzeImageResponse, images: string[]): Promise<NewReportSubmitedEvent> => {
 
     const imageUris = await Promise.all(
       images.map((image) => {
@@ -34,10 +16,8 @@ export const useSubmitReport = () => {
     );
 
     const metadata: RecordMetadata = {
-      title,
-      description,
-      images: imageUris,
-      coordinates,
+      ...analysis,
+      imageUris,
     };
 
     const metadataUri = await uploadToIpfs(JSON.stringify(metadata));
@@ -58,11 +38,6 @@ export const useSubmitReport = () => {
   };
 
   return {
-    setCoordinates,
-    setImages,
-    setDescription,
-    setTitle,
-    canCreate,
     createReport,
   };
 };

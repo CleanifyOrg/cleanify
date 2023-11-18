@@ -1,4 +1,5 @@
 import { BigNumberish } from "ethers";
+import {AnalyzeImageResponse} from "@api/chatgpt"
 
 /**
  * This is the on chain state
@@ -20,9 +21,6 @@ export type Coordinates = {
 /**
  * IPFS Metadata
  */
-export type RecordMetadata = {
-  title: string;
-  description: string;
-  images: string[];
-  coordinates: Coordinates;
-};
+export type RecordMetadata = AnalyzeImageResponse & {
+  imageUris: string[];
+}

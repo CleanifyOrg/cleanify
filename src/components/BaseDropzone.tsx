@@ -26,8 +26,8 @@ export const BaseDropzone: React.FC<Props> = ({
     if (uploadedFiles.length)
       return (
         <VStack spacing={0} alignItems={"center"} justify={"center"} h="full">
-          {uploadedFiles.map((file) => (
-            <Image src={file.image} w={"20%"} />
+          {uploadedFiles.map((file, index) => (
+            <Image key={index} src={file.image} w={"20%"} />
           ))}
           <HStack mt={4} spacing={2} align={"center"}>
             <Icon as={FaCheck} boxSize={4} color="green" />
