@@ -37,8 +37,6 @@ export const Navbar = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const safeLogSrc = useColorModeValue(safeLogo, safeLogoDark);
 
-  console.log({ chains });
-
   const { toggleColorMode } = useColorMode();
 
   const navigate = useNavigate();
