@@ -22,7 +22,6 @@ import { ConfirmMetadataStep } from "./NewReportModalStepsContent/ConfirmMetadat
 import { NewReportModalSteps } from "../Step";
 import { analyzeImage } from "@/api/chatgpt";
 import { ConfirmPosition } from "./NewReportModalStepsContent/ConfirmPosition";
-import { SendReport } from "./NewReportModalStepsContent/SendReport";
 
 type Step = {
   title: string;
@@ -112,18 +111,8 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <ConfirmPosition
             selectedLocation={selectedPosition}
             setSelectedLocation={setSelectedPosition}
-          />
-        ),
-      },
-      {
-        title: "send",
-        description: "Send the report",
-        component: (
-          <SendReport
             data={data}
-            isPending={isPending}
             uploadedImages={uploadedImages}
-            selectedLocation={selectedPosition}
             closeModal={onClose}
           />
         ),
@@ -142,7 +131,7 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
     [activeStepIndex]
   );
   const isNextDisabled = useMemo(() => {
-    if (activeStepIndex === steps.length) return true;
+    if (activeStepIndex === steps.length - 1) return true;
     if (activeStepIndex === 0 && uploadedImages.length === 0) return true;
     if (activeStepIndex === 1 && !data?.isWastePollution) return true;
     return false;

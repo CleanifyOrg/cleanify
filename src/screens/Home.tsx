@@ -9,11 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
-import { useTrashifyReports } from "@/hooks";
+import { useReports } from "@/api/hooks";
 
 export const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { baseReports } = useTrashifyReports();
+  const { data: baseReports } = useReports();
 
   return (
     <Box h={"full"} w={"full"}>

@@ -64,7 +64,7 @@ export const Report = () => {
   return (
     <>
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
-        <Box h={"full"} w={"50%"} overflow={"auto"} pr={4}>
+        <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
           <Image src={report.metadata.images[0]} w={"full"} />
           <Box py={4}>
             <Box pb={2}>
@@ -96,7 +96,7 @@ export const Report = () => {
             </Box>
           </Box>
         </Box>
-        <Box h={"full"} w={"50%"}>
+        <Box h={"full"} w={["full", "50%"]}>
           <MapComponent
             defaultActiveReport={report.id}
             defaultMapCenter={report.metadata.location}
