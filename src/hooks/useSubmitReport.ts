@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { useTrashifyContract } from "@hooks/useTrashifyContract.ts"
 import { Coordinates, RecordMetadata } from "@models"
-import { uploadToIpfs } from "@utils/IPFSUtil.ts"
+import { uploadToIpfs } from "@/utils"
 import { NewReportSubmitedEvent } from "@/typechain/Trashify.ts"
 
 export const useSubmitReport = () => {
