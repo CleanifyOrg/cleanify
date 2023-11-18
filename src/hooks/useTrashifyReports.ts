@@ -1,16 +1,14 @@
 import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 import { useEffect, useState } from "react";
-import { Trashify } from "@/typechain";
+import { Cleanify } from "@/typechain";
 import { BaseReport } from "@models/report.ts";
 
 export const useTrashifyReports = () => {
   const { contract } = useCleanifyContract();
   const [baseReports, setBaseReports] = useState<BaseReport[]>([]);
 
-  const queryReports = async (contract: Trashify) => {
+  const queryReports = async (contract: Cleanify) => {
     const totalReports = await contract.totalReports();
-
-    console.log("totalReports: ", totalReports.toNumber());
 
     const allReports: BaseReport[] = await Promise.all(
       Array.from(Array(totalReports.toNumber()).keys()).map((i) =>

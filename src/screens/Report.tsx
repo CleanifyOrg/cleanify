@@ -89,8 +89,6 @@ export const Report = () => {
     }
   };
 
-  console.log({state: report.state, hasSubscribed});
-
   return (
     <>
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
