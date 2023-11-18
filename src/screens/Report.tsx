@@ -3,7 +3,6 @@ import { Routes } from "@/router";
 import {
   Box,
   Button,
-  HStack,
   Image,
   Stack,
   Text,
@@ -40,10 +39,11 @@ export const Report = () => {
   const checkIfTheUserIsAlreadySubscribedToClean = useCallback(async () => {
     if (!contract || !report || !ownerAddress) {
       setIsUserAlreadySubscribedToClean(true); // so the button is disabled
+      return;
     }
 
     const isUserAlreadySubscribedToClean =
-      await contract.isUserSubscribedAsCleaner(report!.id, ownerAddress!);
+      await contract.isUserSubscribedAsCleaner(report.id, ownerAddress!);
 
     setIsUserAlreadySubscribedToClean(isUserAlreadySubscribedToClean);
   }, [contract, report, ownerAddress]);

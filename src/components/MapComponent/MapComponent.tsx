@@ -5,6 +5,7 @@ import { useMapConfig } from "./useMapConfig";
 import { Routes } from "@/router";
 import { useNavigate } from "react-router-dom";
 import { MapMarker } from "@components/MapMarker.tsx";
+import { useTrashifyReports } from "@/hooks";
 
 const containerStyle = {
   height: "100%",
@@ -17,10 +18,8 @@ const MapComponentContent = ({
   defaultActiveReport,
   route,
   onMapClick,
-  reports = [],
   defaultCenterCurrentLocation = true,
 }: {
-  reports?: BaseReport[];
   route: Routes;
   defaultActiveReport?: number;
   defaultMapCenter?: {
@@ -30,6 +29,7 @@ const MapComponentContent = ({
   defaultCenterCurrentLocation?: boolean;
   onMapClick?: (le: google.maps.MapMouseEvent) => void;
 }) => {
+  const { baseReports: reports } = useTrashifyReports();
   const [center, setCenter] = useState(
     defaultMapCenter || { lat: 40.7485612, lng: -73.9881861 }
   );
@@ -83,7 +83,6 @@ const MapComponentContent = ({
       navigate(`/report/${report.id}`);
     }
   };
-
   return isLoaded ? (
     <GoogleMap
       options={{
@@ -99,6 +98,11 @@ const MapComponentContent = ({
       {reports.map((baseReport: BaseReport) => {
         return (
           <MapMarker
+            key={
+              baseReport.id === activeReportID
+                ? `${baseReport.id}-active`
+                : baseReport.id
+            }
             route={route}
             baseReport={baseReport}
             activeReportID={activeReportID}
