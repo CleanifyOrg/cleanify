@@ -4,6 +4,7 @@ import {
   Button,
   HStack,
   Heading,
+  Hide,
   IconButton,
   Image,
   Skeleton,
@@ -15,13 +16,15 @@ import {
 import { BsSun, BsMoon } from "react-icons/bs";
 import { AddressLabel } from ".";
 
+import safeLogoDark from "src/assets/safe-info-logo-dark.svg";
 import safeLogo from "src/assets/safe-info-logo-light.svg";
 import { NetworkSelector } from "./NetworkSelector";
 import { Routes } from "@/router";
 import { ConnectedWalletModal } from "./ConnectedWalletModal";
-import safeLogoDark from "src/assets/safe-info-logo-dark.svg";
 
 import { useNavigate } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
+import { MobileDrawerMenu } from "./MobileDrawerMenu";
 
 export const Navbar = () => {
   const {
@@ -33,7 +36,17 @@ export const Navbar = () => {
     ownerLoading,
   } = useAccountAbstraction();
 
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isMobileMenuOpen,
+    onOpen: openMobileMenu,
+    onClose: closeMobileMenu,
+  } = useDisclosure();
+
+  const {
+    isOpen: isLoggedAccountModalOpen,
+    onClose: closeLoggedAccountModal,
+    onOpen: openLoggedAccountModal,
+  } = useDisclosure();
   const safeLogSrc = useColorModeValue(safeLogo, safeLogoDark);
 
   const { toggleColorMode } = useColorMode();
@@ -56,60 +69,69 @@ export const Navbar = () => {
       px={8}
       py={2}
     >
-      <ConnectedWalletModal isOpen={isOpen} onClose={onClose} />
+      <MobileDrawerMenu
+        isOpen={isMobileMenuOpen}
+        onClose={closeMobileMenu}
+        openLoggedAccountModal={openLoggedAccountModal}
+      />
+      <ConnectedWalletModal
+        isOpen={isLoggedAccountModalOpen}
+        onClose={closeLoggedAccountModal}
+      />
       <Heading size="md" flex={2} cursor={"pointer"} onClick={onLogoClick}>
         Cleanify
       </Heading>
-      <HStack spacing={4} flex={1.5} justify={"flex-end"}>
-        <NetworkSelector
-          selectedChainId={chainId}
-          setSelectedChainId={setChainId}
-        />
-        {/* <Select
-          flex={2}
-          placeholder="Select chain"
-          value={chainId}
-          onChange={(e) => setChainId(e.target.value)}
-        > */}
-        {/* {chains.map((chain) => (
-            <option value={chain.id}>
-              <HStack>
-                <Image src={chain.icon} boxSize={4} />
-                <Text>{chain.name}</Text>
-              </HStack>
-            </option>
-          ))}
-        </Select> */}
-        <Box>
-          {!isAuthenticated ? (
-            <Button size="md" onClick={loginWeb3Auth} isLoading={ownerLoading}>
-              <HStack spacing={1} alignItems={"center"}>
-                <Image src={safeLogSrc} alt="Safe logo" boxSize={5} />
-                <Text>Login</Text>
-              </HStack>
-            </Button>
-          ) : (
-            <Skeleton isLoaded={!!ownerAddress}>
-              {ownerAddress && (
-                <Button size="md" onClick={onOpen}>
-                  <AddressLabel
-                    address={ownerAddress}
-                    showCopyIntoClipboardButton={false}
-                  />
-                </Button>
-              )}
-            </Skeleton>
-          )}
-        </Box>
+      <Hide above="sm">
         <IconButton
-          aria-label="Mode Change"
+          icon={<FaBars />}
           variant="empty"
-          colorScheme="black"
           size="lg"
-          icon={useColorModeValue(<BsMoon />, <BsSun />)}
-          onClick={toggleColorMode}
+          aria-label="Open menu"
+          onClick={openMobileMenu}
         />
-      </HStack>
+      </Hide>
+      <Hide below="sm">
+        <HStack spacing={4} flex={1.5} justify={"flex-end"}>
+          <NetworkSelector
+            selectedChainId={chainId}
+            setSelectedChainId={setChainId}
+          />
+
+          <Box>
+            {!isAuthenticated ? (
+              <Button
+                size="md"
+                onClick={loginWeb3Auth}
+                isLoading={ownerLoading}
+              >
+                <HStack spacing={1} alignItems={"center"}>
+                  <Image src={safeLogSrc} alt="Safe logo" boxSize={5} />
+                  <Text>Login</Text>
+                </HStack>
+              </Button>
+            ) : (
+              <Skeleton isLoaded={!!ownerAddress}>
+                {ownerAddress && (
+                  <Button size="md" onClick={openLoggedAccountModal}>
+                    <AddressLabel
+                      address={ownerAddress}
+                      showCopyIntoClipboardButton={false}
+                    />
+                  </Button>
+                )}
+              </Skeleton>
+            )}
+          </Box>
+          <IconButton
+            aria-label="Mode Change"
+            variant="empty"
+            colorScheme="black"
+            size="lg"
+            icon={useColorModeValue(<BsMoon />, <BsSun />)}
+            onClick={toggleColorMode}
+          />
+        </HStack>
+      </Hide>
     </HStack>
   );
 };
