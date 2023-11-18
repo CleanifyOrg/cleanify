@@ -4,7 +4,7 @@ export type AnalyzeImageResponse = {
     isWastePresent: boolean;
     isWastePollution: boolean;
     wasteKind: string[];
-    description: string;
+    wasteDescription: string;
     estimatedWeight: string;
     estimatedCost: string;
 };
@@ -13,7 +13,7 @@ const FALLBACK_RESPONSE = {
     isWastePresent: false,
     isWastePollution: false,
     wasteKind: [],
-    description: "N.A.",
+    wasteDescription: "N.A.",
     estimatedWeight: "N.A.",
     estimatedCost: "N.A.",
 };

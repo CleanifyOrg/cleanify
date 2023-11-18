@@ -61,7 +61,7 @@ export const ConfirmDetailsStep: React.FC<Props> = ({
                 <Skeleton isLoaded={!isPending}>
                   <Heading size="sm">Description</Heading>
                   <Text fontWeight="thin">
-                    {data?.description ?? loremIpsum}
+                    {data?.wasteDescription ?? loremIpsum}
                   </Text>
                 </Skeleton>
               </Box>
