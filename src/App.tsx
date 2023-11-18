@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { ConnectedWalletOwner, NewReportModal } from "@/components";
 import { useAccountAbstraction } from "@/store";
+import {SubmitReport} from "@components/SubmitReport.tsx"
 
 export const Home = () => {
   const { isAuthenticated } = useAccountAbstraction();
@@ -35,6 +36,9 @@ export const Home = () => {
               The decentralized waste management platform that allows users to
               earn rewards for recycling.
             </Text>
+
+
+            <SubmitReport />
           </VStack>
           <Button onClick={onOpen}>New report</Button>
         </HStack>

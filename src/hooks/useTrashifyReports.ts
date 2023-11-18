@@ -1,38 +1,39 @@
-import {useTrashifyContract} from "@hooks/useTrashifyContract.ts"
-import {useEffect, useState} from "react"
-import {Trashify} from "@/typechain"
-import {TrashifyReport} from "@models"
-
+import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
+import { useEffect, useState } from "react";
+import { Trashify } from "@/typechain";
+import { TrashifyReport } from "@models";
 
 export const useTrashifyReports = () => {
-
-  const {contract} = useTrashifyContract()
-  const [reports, setReports] = useState<TrashifyReport[]>([])
+  const { contract } = useTrashifyContract();
+  const [reports, setReports] = useState<TrashifyReport[]>([]);
 
   const queryReports = async (contract: Trashify) => {
-    const totalReports = await contract.totalReports()
+    const totalReports = await contract.totalReports();
 
-    console.log("totalReports: ", totalReports.toNumber())
+    console.log("totalReports: ", totalReports.toNumber());
 
     for (let i = 0; i < totalReports.toNumber(); i++) {
-      const report = await contract.reports(i)
+      const report = await contract.reports(i);
 
-      setReports((reports) => [...reports, {
-        totalRewards: report.totalRewards,
-        id: report.id,
-        creator: report.creator,
-        metadata: report.metadata,
-        state: report.state
-      }])
+      setReports((reports) => [
+        ...reports,
+        {
+          totalRewards: report.totalRewards,
+          id: report.id,
+          creator: report.creator,
+          metadata: report.metadata,
+          state: report.state,
+        },
+      ]);
     }
-  }
+  };
 
   useEffect(() => {
-      setReports([])
-      queryReports(contract)
-  }, [contract])
+    setReports([]);
+    queryReports(contract);
+  }, [contract]);
 
   return {
-    reports
-  }
-}
+    reports,
+  };
+};
