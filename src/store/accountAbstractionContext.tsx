@@ -279,7 +279,7 @@ const AccountAbstractionProvider = ({
 
         let status: TransactionStatusResponse | undefined;
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 30; i++) {
           status = await relayPack.getTaskStatus(response.taskId);
           console.log("status", status);
 
@@ -330,7 +330,11 @@ const AccountAbstractionProvider = ({
 
     await safeAccountAbstraction.init({ relayPack });
 
-    return await safeAccountAbstraction.getSafeAddress();
+    const safeAddress =  await safeAccountAbstraction.getSafeAddress()
+
+    console.log("safeAddress", safeAddress, ownerAddress)
+
+    return safeAddress;
   }, [web3Provider, ownerAddress]);
 
   const state = {
