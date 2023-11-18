@@ -1,6 +1,6 @@
 import { RecordMetadata } from "@models";
 import { useCallback, useEffect, useState } from "react";
-import { getFromIPFS } from "@utils/IPFSUtil.ts";
+import { getFromIPFS } from "@/utils";
 
 export const useReportMetadata = (metadataUri: string) => {
   const [metadata, setMetadata] = useState<RecordMetadata | null>(null);
