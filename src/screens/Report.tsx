@@ -17,14 +17,22 @@ import IWantToCleanModal from "@/components/IWantToCleanModal";
 import { useCallback, useEffect, useState } from "react";
 import { useBase64Image, useCleanifyContract } from "@/hooks";
 import { useAccountAbstraction } from "@/store";
+import {useHasModeratorRole} from "@hooks/useHasModeratorRole.ts"
+import {useCleanifyAsModerator} from "@hooks/useCleanifyAsModerator.ts"
 
 export const Report = () => {
   const params = useParams();
   const { contract } = useCleanifyContract();
+  const { contractAsModerator} = useCleanifyAsModerator();
   const [isUserAlreadySubscribedToClean, setIsUserAlreadySubscribedToClean] =
     useState(true);
 
-  const { report } = useReportById(Number(params.id));
+  const { report, refreshReport } = useReportById(Number(params.id));
+
+  const { hasModeratorRole} = useHasModeratorRole();
+
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
+
   const {
     onOpen: onOpenDonationModal,
     onClose: onCloseDonationModal,
@@ -37,6 +45,27 @@ export const Report = () => {
   } = useDisclosure();
 
   const { ownerAddress, isAuthenticated } = useAccountAbstraction();
+
+  const verifyReport = useCallback(async () => {
+
+    if (!report || !contract) return;
+
+    setButtonsDisabled(true);
+
+    try {
+      const tx = await contractAsModerator.approveReport(report.id);
+
+      await tx.wait();
+
+      refreshReport();
+    } finally {
+      setButtonsDisabled(false);
+    }
+
+  }, [
+    contract,
+    report
+  ]);
 
   const checkIfTheUserIsAlreadySubscribedToClean = useCallback(async () => {
     if (!contract || !report || !ownerAddress) {
@@ -55,6 +84,8 @@ export const Report = () => {
   }, [checkIfTheUserIsAlreadySubscribedToClean]);
 
   const { blobImage } = useBase64Image(report?.metadata.images[0] ?? "");
+
+  const canVerify = hasModeratorRole && report?.state === 0;
 
   if (!report)
     return (
@@ -85,17 +116,31 @@ export const Report = () => {
                   colorScheme="blue"
                   mr={3}
                   onClick={onOpenDonationModal}
-                  isDisabled={report.state !== ReportState.Available}
+                  isDisabled={report.state !== ReportState.Available || buttonsDisabled}
                 >
                   Donate
                 </Button>
                 <Button
-                  isDisabled={isUserAlreadySubscribedToClean}
+                  isDisabled={isUserAlreadySubscribedToClean || buttonsDisabled}
                   colorScheme="green"
                   onClick={onOpenIWantToCleanModal}
+                  mr={3}
                 >
                   Clean
                 </Button>
+
+                {
+                  canVerify && (
+                    <Button
+                      isDisabled={buttonsDisabled}
+                      colorScheme="yellow"
+                      onClick={verifyReport}
+                    >
+                      Verify
+                    </Button>
+                  )
+                }
+
               </Box>
             )}
           </Box>

@@ -31,7 +31,7 @@ export const MapMarker = ({
       position={report.metadata.location}
       onClick={() => handleActiveMarker(report)}
       icon={{
-        url: activeReportID === report.id ? ColoredTrashIcon : GreyTrashIcon,
+        url: report.state === 0 ? GreyTrashIcon : ColoredTrashIcon,
         scaledSize: { width: 50, height: 50, equals: () => true },
       }}
     >

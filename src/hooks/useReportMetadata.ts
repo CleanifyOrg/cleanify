@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getFromIPFS } from "@/utils";
+import {getFromIPFS, isIpfsCid} from "@/utils";
 import { BaseReport, ReportMetadata, Report } from "@models/report.ts";
 
 export const useReportMetadata = (baseReport?: BaseReport) => {
@@ -11,7 +11,12 @@ export const useReportMetadata = (baseReport?: BaseReport) => {
     );
 
     metadata.images = await Promise.all(
-      metadata.images.map((image) => getFromIPFS(image))
+      metadata.images.map((image) => {
+        if (isIpfsCid(image))
+          return getFromIPFS(image)
+
+        return image
+      })
     );
 
     const report: Report = {
