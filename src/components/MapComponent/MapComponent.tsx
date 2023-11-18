@@ -5,7 +5,6 @@ import { useMapConfig } from "./useMapConfig";
 import { Routes } from "@/router";
 import { useNavigate } from "react-router-dom";
 import { MapMarker } from "@components/MapMarker.tsx";
-import { useTrashifyReports } from "@/hooks";
 import { useReports } from "@/api/hooks";
 
 const containerStyle = {
