@@ -41,7 +41,6 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log({ acceptedFiles });
 
-    u
     const parsedUploads = acceptedFiles.map((file) => ({
       file,
       image: URL.createObjectURL(file),

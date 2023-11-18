@@ -1,12 +1,14 @@
 import { MapComponent } from "@/components";
-import { useReport } from "@/hooks";
 import { Routes } from "@/router";
 import { Box, Button, HStack, Image, Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 
 export const Report = () => {
   const params = useParams();
-  const report = useReport(Number(params.id));
+
+
+
+
   if (!report) return null;
   return (
     <HStack w={"full"} h={"full"}>

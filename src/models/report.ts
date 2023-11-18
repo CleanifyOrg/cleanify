@@ -1,4 +1,4 @@
-import {AnalyzeImageResponse} from "@api/chatgpt"
+import { AnalyzeImageResponse } from "@api/chatgpt";
 
 export type BaseReport = {
   id: number;
@@ -6,36 +6,25 @@ export type BaseReport = {
   metadata: string;
   totalRewards: number;
   state: ReportState;
-
 };
-export type ContractReport = {
-  metadata: string;
-} & BaseReport;
 
 export type Report = {
   metadata: ReportMetadata;
-} & BaseReport;
+} & Omit<BaseReport, "metadata">;
 
-export type ReportMetadata = AnalyzeImageResponse & {
+export type ReportMetadata = {
   // entered by the user
   name: string;
-  description: string;
   images: string[];
   location: {
     lat: number;
     lng: number;
   };
+  analysis: AnalyzeImageResponse;
 };
 
-enum WasteKind {
-  Plastic = "plastic",
-  Glass = "glass",
-  Paper = "paper",
-  Generic = "generic",
-}
-
 enum ReportState {
-  InReview ,
+  InReview,
   Available,
   PendingVerification,
   Cleaned,

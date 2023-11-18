@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useSubmitReport } from "@hooks";
-import { ReportMetadata} from "@models/report.ts";
+import { ReportMetadata } from "@models/report.ts";
 import React from "react";
 
 const loremIpsum = "Lorem ipsum loret isset ipster";
@@ -33,11 +33,11 @@ export const ConfirmDetailsStep: React.FC<Props> = ({
 
   const processReport = async () => {
     const report: ReportMetadata = {
-        name: "Hello Word",
-        description: "Hello Word",
-        images: uploadedImages.map((image) => image.image),
-        location: { lat: 41.0263678, lng: 28.9363605 },
-        ...data,
+      ...data,
+      name: "Hello Word",
+      images: uploadedImages.map((image) => image.image),
+      location: { lat: 41.0263678, lng: 28.9363605 },
+      analysis: data,
     };
 
     const tx = await createReport(report);

@@ -1,7 +1,7 @@
 import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
 import { useEffect, useState } from "react";
 import { Trashify } from "@/typechain";
-import {BaseReport} from "@models/report.ts"
+import { BaseReport } from "@models/report.ts";
 
 export const useTrashifyReports = () => {
   const { contract } = useTrashifyContract();
@@ -22,7 +22,7 @@ export const useTrashifyReports = () => {
           id: report.id.toNumber(),
           creator: report.creator,
           metadata: report.metadata,
-          totalRewards: report.totalRewards,
+          totalRewards: report.totalRewards.toNumber(),
           state: report.state,
         };
 

@@ -1,12 +1,13 @@
 import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
-import { NewReportSubmitedEvent } from "@/typechain/Trashify.ts";
-import {uploadToIpfs} from "@utils"
-import {Report, ReportMetadata} from "@models/report.ts"
+import { uploadToIpfs } from "@utils";
+import { ReportMetadata } from "@models/report.ts";
+import { NewReportSubmitedEvent } from "@/typechain/contracts/Trashify";
 
 export const useSubmitReport = () => {
   const { contract } = useTrashifyContract();
-  const createReport = async (metadata: ReportMetadata): Promise<NewReportSubmitedEvent> => {
-
+  const createReport = async (
+    metadata: ReportMetadata
+  ): Promise<NewReportSubmitedEvent> => {
     metadata.images = await Promise.all(
       metadata.images.map((image) => uploadToIpfs(image))
     );

@@ -1,21 +1,27 @@
-import {useCallback, useEffect, useState} from "react";
-import {getFromIPFS} from "@/utils";
-import {BaseReport, ReportMetadata} from "@models/report.ts"
+import { useCallback, useEffect, useState } from "react";
+import { getFromIPFS } from "@/utils";
+import { BaseReport, ReportMetadata, Report } from "@models/report.ts";
 
 export const useReportMetadata = (baseReport: BaseReport) => {
-  const [report,setReport] = useState<BaseReport>(baseReport)
+  const [report, setReport] = useState<Report>();
 
   const fetchMetadata = useCallback(async (baseReport: BaseReport) => {
-    const metadata = JSON.parse(await getFromIPFS(baseReport.metadata)) as ReportMetadata;
+    const metadata: ReportMetadata = JSON.parse(
+      await getFromIPFS(baseReport.metadata)
+    );
 
     metadata.images = await Promise.all(
       metadata.images.map((image) => getFromIPFS(image))
     );
 
-    setReport({
+    const report: Report = {
       ...baseReport,
       metadata,
-    })
+    };
+
+    report.metadata.location;
+
+    setReport(report);
   }, []);
 
   useEffect(() => {
@@ -25,6 +31,6 @@ export const useReportMetadata = (baseReport: BaseReport) => {
   }, [fetchMetadata, baseReport]);
 
   return {
-    report
+    report,
   };
 };
