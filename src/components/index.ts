@@ -7,3 +7,4 @@ export * from "./Navbar";
 export * from "./NetworkSelector";
 export * from "./SafeInfo";
 export * from "./MapComponent";
+export * from "./DonationModal";

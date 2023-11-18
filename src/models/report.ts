@@ -23,7 +23,7 @@ export type ReportMetadata = {
   analysis: AnalyzeImageResponse;
 };
 
-enum ReportState {
+export enum ReportState {
   InReview,
   Available,
   PendingVerification,
