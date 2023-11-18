@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react"
+import { useCallback, useState } from "react";
 
 import {
   Button,
@@ -12,32 +12,34 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  VStack
-} from "@chakra-ui/react"
-import {UploadPictureStep} from "@components/NewReportModal/NewReportModalStepsContent/UploadPictureStep"
-import {FaInfoCircle} from "react-icons/fa"
+  VStack,
+} from "@chakra-ui/react";
+import { UploadPictureStep } from "@components/NewReportModal/NewReportModalStepsContent/UploadPictureStep";
+import { FaInfoCircle } from "react-icons/fa";
 import { Report } from "@/models/report";
-import {blobToBase64, uploadToIpfs} from "@utils"
-import {useCleanifyContract} from "@hooks"
-
+import { blobToBase64, uploadToIpfs } from "@utils";
+import { useCleanifyContract } from "@hooks";
 
 type Props = {
-  report: Report
+  report: Report;
   isOpen: boolean;
   onClose: () => void;
   refreshReport: () => void;
-}
+};
 
-
-export const AddCleaningProofModal = ({report, isOpen, onClose, refreshReport}: Props) => {
+export const AddCleaningProofModal = ({
+  report,
+  isOpen,
+  onClose,
+  refreshReport,
+}: Props) => {
   const [uploadedImages, setUploadedImages] = useState<
     { file: File; image: string }[]
   >([]);
 
-  const {contract } = useCleanifyContract()
+  const { contract } = useCleanifyContract();
 
   const onSubmit = async () => {
-
     if (uploadedImages.length === 0) return;
 
     const base64Image = await blobToBase64(uploadedImages[0].file);
@@ -48,36 +50,36 @@ export const AddCleaningProofModal = ({report, isOpen, onClose, refreshReport}: 
 
     await tx.wait();
 
-    refreshReport()
+    refreshReport();
 
-    onClose()
-  }
+    onClose();
+  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log({acceptedFiles});
+    console.log({ acceptedFiles });
 
     const parsedUploads = acceptedFiles.map((file) => ({
       file,
-      image: URL.createObjectURL(file)
+      image: URL.createObjectURL(file),
     }));
-    console.log({parsedUploads});
+    console.log({ parsedUploads });
     setUploadedImages(parsedUploads);
   }, []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
-      <ModalOverlay/>
+      <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <HStack spacing={2}>
-            <Icon as={FaInfoCircle} boxSize={5}/>
+            <Icon as={FaInfoCircle} boxSize={5} />
             <Heading size="md"> New report</Heading>
           </HStack>
         </ModalHeader>
-        <ModalCloseButton/>
+        <ModalCloseButton />
         <ModalBody>
           <VStack w="full" spacing={4}>
-            <UploadPictureStep onDrop={onDrop} uploadedFiles={uploadedImages}/>
+            <UploadPictureStep onDrop={onDrop} uploadedFiles={uploadedImages} />
           </VStack>
         </ModalBody>
 
@@ -101,7 +103,6 @@ export const AddCleaningProofModal = ({report, isOpen, onClose, refreshReport}: 
             <Button onClick={onClose} variant="ghost">
               Cancel
             </Button>
-
           </HStack>
         </ModalFooter>
       </ModalContent>

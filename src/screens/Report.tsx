@@ -5,13 +5,15 @@ import {useParams} from "react-router-dom";
 import {useReportById} from "@hooks/useReportById.ts";
 import {ReportState} from "@/models/report";
 import IWantToCleanModal from "@/components/IWantToCleanModal";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useState} from "react";
 import {useBase64Image, useCleanifyContract} from "@/hooks";
 import {useAccountAbstraction} from "@/store";
 import {useHasModeratorRole} from "@hooks/useHasModeratorRole.ts";
 import {useCleanifyAsModerator} from "@hooks/useCleanifyAsModerator.ts";
-import {AddCleaningProofModal} from "@components/AddCleaningProofModal/AddCleaningProofModal.tsx"
-import {useHasSubscribed} from "@hooks/useHasSubscribed.ts"
+import {AddCleaningProofModal} from "@components/AddCleaningProofModal/AddCleaningProofModal.tsx";
+import {useHasSubscribed} from "@hooks/useHasSubscribed.ts";
+import {useSubmittedProof} from "@hooks/useSubmittedProof.ts";
+import {ProofComponent} from "@components/ProofComponent.tsx";
 
 export const Report = () => {
   const params = useParams();
@@ -21,7 +23,9 @@ export const Report = () => {
   const {report, refreshReport} = useReportById(Number(params.id));
 
   const {hasModeratorRole} = useHasModeratorRole();
-  const {hasSubscribed} = useHasSubscribed(Number(params.id))
+  const {hasSubscribed} = useHasSubscribed(Number(params.id));
+
+  const {proofBase64} = useSubmittedProof(report);
 
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
@@ -70,7 +74,6 @@ export const Report = () => {
       </VStack>
     );
 
-
   const getStateMessage = () => {
     switch (report.state) {
       case ReportState.PendingVerification:
@@ -83,12 +86,10 @@ export const Report = () => {
         return "This report has already been cleaned";
       case ReportState.InReview:
         return "The report has been made, but it has not been verified yet";
-
     }
-  }
+  };
 
-
-  console.log({state: report.state, hasSubscribed})
+  console.log({state: report.state, hasSubscribed});
 
   return (
     <>
@@ -96,9 +97,8 @@ export const Report = () => {
         <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
           <Image src={blobImage} w={"full"}/>
 
-
           {isAuthenticated && (
-            <HStack pb={4} pt={4} justifyContent={"center"} >
+            <HStack pb={4} pt={4} justifyContent={"center"}>
               <Button
                 colorScheme="blue"
                 mr={3}
@@ -110,7 +110,8 @@ export const Report = () => {
                 Donate
               </Button>
 
-              {hasSubscribed && report.state !== ReportState.PendingVerification ? (
+              {hasSubscribed &&
+              report.state !== ReportState.PendingVerification ? (
                 <Button
                   isDisabled={buttonsDisabled}
                   colorScheme="green"
@@ -119,19 +120,21 @@ export const Report = () => {
                 >
                   Submit Cleaned
                 </Button>
-              ) : (<Button
-                isDisabled={
-                  hasSubscribed ||
-                  buttonsDisabled ||
-                  report.state === ReportState.PendingVerification ||
-                  report.state === ReportState.Cleaned
-                }
-                colorScheme="green"
-                onClick={onOpenIWantToCleanModal}
-                mr={3}
-              >
-                Subscribe
-              </Button>)}
+              ) : (
+                <Button
+                  isDisabled={
+                    hasSubscribed ||
+                    buttonsDisabled ||
+                    report.state === ReportState.PendingVerification ||
+                    report.state === ReportState.Cleaned
+                  }
+                  colorScheme="green"
+                  onClick={onOpenIWantToCleanModal}
+                  mr={3}
+                >
+                  Subscribe
+                </Button>
+              )}
 
               {canVerify && (
                 <Button
@@ -144,7 +147,6 @@ export const Report = () => {
               )}
             </HStack>
           )}
-
 
           <Box py={4}>
             <Box pb={2}>
@@ -164,6 +166,7 @@ export const Report = () => {
               </Text>
             </Box>
 
+            <ProofComponent report={report} imageBase64={proofBase64} refreshReport={refreshReport}/>
           </Box>
         </Box>
         <Box h={"full"} w={["full", "50%"]}>

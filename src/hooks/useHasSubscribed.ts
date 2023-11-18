@@ -7,10 +7,12 @@ export const useHasSubscribed = (id: number) => {
 
   const { contract } = useCleanifyContract();
 
-  const { ownerAddress } = useAccountAbstraction();
+  const { getSafeAccount } = useAccountAbstraction();
 
   const checkCanClean = async () => {
-    if (!ownerAddress) return;
+    const ownerAddress = await getSafeAccount();
+
+    console.log("ownerAddress: ", ownerAddress);
 
     const isSubscribed = await contract.isUserSubscribedAsCleaner(
       id,
@@ -24,7 +26,7 @@ export const useHasSubscribed = (id: number) => {
 
   useEffect(() => {
     checkCanClean();
-  }, [id, ownerAddress]);
+  }, [id, getSafeAccount]);
 
   return {
     hasSubscribed,

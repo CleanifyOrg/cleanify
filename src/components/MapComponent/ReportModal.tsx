@@ -69,7 +69,11 @@ export const ReportModal = ({
                 </Text>
               </Box>
 
-              {report && <Box px={4} pb={4} ><ReportDetails report={report} /></Box>}
+              {report && (
+                <Box px={4} pb={4}>
+                  <ReportDetails report={report} />
+                </Box>
+              )}
             </Flex>
           </ModalBody>
         </Link>

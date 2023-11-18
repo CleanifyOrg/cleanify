@@ -11,16 +11,16 @@ export const useReportById = (id: number) => {
   const { report } = useReportMetadata(baseReport);
 
   const getReport = useCallback(async () => {
-      contract.getReportById(id).then((baseReport) => {
-        setBaseReport(undefined)
-        setBaseReport({
-          id: baseReport.id.toNumber(),
-          creator: baseReport.creator,
-          metadata: baseReport.metadata,
-          totalRewards: baseReport.totalRewards.toNumber(),
-          state: baseReport.state,
-        });
+    contract.getReportById(id).then((baseReport) => {
+      setBaseReport(undefined);
+      setBaseReport({
+        id: baseReport.id.toNumber(),
+        creator: baseReport.creator,
+        metadata: baseReport.metadata,
+        totalRewards: baseReport.totalRewards.toNumber(),
+        state: baseReport.state,
       });
+    });
   }, [contract, id]);
 
   useEffect(() => {

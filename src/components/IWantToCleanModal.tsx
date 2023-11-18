@@ -19,7 +19,12 @@ type Props = {
   refreshReport: () => void;
 };
 
-export const IWantToCleanModal = ({ isOpen, onClose, reportId, refreshReport }: Props) => {
+export const IWantToCleanModal = ({
+  isOpen,
+  onClose,
+  reportId,
+  refreshReport,
+}: Props) => {
   const { contract } = useCleanifyContract();
 
   const handleCreateCleaningRequest = useCallback(async () => {
