@@ -20,6 +20,7 @@ import { useBase64Image, useCleanifyContract } from "@/hooks";
 import { useAccountAbstraction } from "@/store";
 import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts"
 import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts"
+import { ReportDetails } from "@/components/ReportDetails";
 
 export const Report = () => {
   const params = useParams();
@@ -136,6 +137,8 @@ export const Report = () => {
             </HStack>
           )}
 
+          {report && <ReportDetails report={report} />}
+
           <Box py={4}>
             <Box pb={2}>
               <Text fontSize="lg" fontWeight={"bold"}>
@@ -147,7 +150,9 @@ export const Report = () => {
                 {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
-
+            <HStack w={"full"}>
+              <Text>Reported by: {report.creator}</Text>
+            </HStack>
           </Box>
         </Box>
         <Box h={"full"} w={["full", "50%"]}>
