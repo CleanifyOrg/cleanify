@@ -20,9 +20,8 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
  * After the report is approved, the report will be in a Available state and users can subscribe to clean it.
  * When a user cleans the field, they have to provide a proof of the cleaning and the report will be in a PendingVerification state.
  * A moderator or the cretor of the report will verify the proof and approve or deny the cleaning verification.
- * If the cleaning verification is approved, the report will be in a Cleaned state and the reward pool will be distributed equally between the cleaners.
+ * If the cleaning verification is approved, the rewards will be distributed and the report will be in considered complete.
  * If the cleaning verification is denied, the report will be in a Available state and users can subscribe to clean it again or provide more proofs.
- * After the reward pool is distributed, the report will be in a Rewarded state and can be considered closed.
  */
 contract Cleanify is AccessControl {
     constructor(address[] memory moderators) {
@@ -62,8 +61,7 @@ contract Cleanify is AccessControl {
         InReview, // user submitted a report and moderators are reviewing it
         Available, // moderators verified the content and approved it
         PendingVerification, // user cleaned the field and submitted the proof for verification
-        Cleaned, // moderators verified the proof and closed the report
-        Rewarded // users claimed their rewards and the report can be considered closed
+        Cleaned // moderators verified the proof and closed the report
     }
 
     struct Report {
@@ -319,6 +317,8 @@ contract Cleanify is AccessControl {
             report.state = ReportState.Cleaned;
             emit ReportStateChanged(_reportId, ReportState.Cleaned);
             emit CleaningVerificationApproved(_reportId);
+
+            _distributeRewards(_reportId);
         } else {
             report.state = ReportState.Available;
             emit ReportStateChanged(_reportId, ReportState.Available);
@@ -350,7 +350,7 @@ contract Cleanify is AccessControl {
 
     // When a report is in the Cleaned state, whoever can call this function
     // and the contract will distribute the rewards equally between the cleaners
-    function distributeRewards(uint256 _reportId) public {
+    function _distributeRewards(uint256 _reportId) internal {
         Report storage report = reports[reportIdToIndex[_reportId]];
 
         require(report.id != 0, "Report ID does not exist");
@@ -369,10 +369,7 @@ contract Cleanify is AccessControl {
             payable(report.cleaners[i]).transfer(reward);
         }
 
-        report.state = ReportState.Rewarded;
-
         emit RewardsDistributed(_reportId, report.cleaners);
-        emit ReportStateChanged(_reportId, ReportState.Rewarded);
     }
 
     /* Modifiers */
