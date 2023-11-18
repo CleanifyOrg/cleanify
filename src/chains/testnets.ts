@@ -21,7 +21,7 @@ const goerliWithSafeConfig: ChainWithSafeConfig = {
   isStripePaymentsEnabled: false,
   isMoneriumPaymentsEnabled: true,
   icon: "/icons/ethereum.png",
-  contractAddress: "0x151892c5dcf44afe384d09c4ff9b54012ac441c2",
+  contractAddress: "0x508feb03c74efece326ea37bf6f85a5c565e23e3",
 };
 
 export const testnets: ChainWithSafeConfig[] = [
