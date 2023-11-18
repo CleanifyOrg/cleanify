@@ -38,9 +38,6 @@ export const Report = () => {
   const { ownerAddress } = useAccountAbstraction();
 
   const checkIfTheUserIsAlreadySubscribedToClean = useCallback(async () => {
-    console.log("$$$$contract", contract);
-    console.log("$$$$report", report?.id);
-    console.log("ownerAddress", ownerAddress);
     if (!contract || !report || !ownerAddress) {
       setIsUserAlreadySubscribedToClean(true); // so the button is disabled
     }
@@ -48,10 +45,6 @@ export const Report = () => {
     const isUserAlreadySubscribedToClean =
       await contract.isUserSubscribedAsCleaner(report!.id, ownerAddress!);
 
-    console.log(
-      "isUserAlreadySubscribedToClean",
-      isUserAlreadySubscribedToClean
-    );
     setIsUserAlreadySubscribedToClean(isUserAlreadySubscribedToClean);
   }, [contract, report, ownerAddress]);
 
