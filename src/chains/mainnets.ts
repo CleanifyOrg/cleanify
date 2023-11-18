@@ -8,6 +8,7 @@ import {
     mainnet,
     celo,
 } from "viem/chains"
+import {ethers} from "ethers"
 
 
 const baseWithSafeConfig: ChainWithSafeConfig = {
@@ -17,7 +18,9 @@ const baseWithSafeConfig: ChainWithSafeConfig = {
     isMoneriumPaymentsEnabled: false,
     color: '#3e6957',
     transactionServiceUrl: 'https://safe-transaction-base.safe.global',
-    icon: "/icons/base.png"
+    icon: "/icons/base.png",
+    //TODO
+    contractAddress: ethers.constants.AddressZero,
 }
 
 const celoWithSafeConfig: ChainWithSafeConfig = {
@@ -26,7 +29,9 @@ const celoWithSafeConfig: ChainWithSafeConfig = {
     isStripePaymentsEnabled: false,
     isMoneriumPaymentsEnabled: false,
     transactionServiceUrl: 'https://safe-transaction-celo.safe.global',
-    icon: "/icons/celo-logo.png"
+    icon: "/icons/celo-logo.png",
+    //TODO
+    contractAddress: ethers.constants.AddressZero,
 }
 
 const gnosisWithSafeConfig: ChainWithSafeConfig = {
@@ -36,7 +41,9 @@ const gnosisWithSafeConfig: ChainWithSafeConfig = {
     isMoneriumPaymentsEnabled: false,
     color: '#3e6957',
     transactionServiceUrl: 'https://safe-transaction-gnosis-chain.safe.global',
-    icon: "/icons/gnosis.png"
+    icon: "/icons/gnosis.png",
+    //TODO
+    contractAddress: ethers.constants.AddressZero,
 }
 
 
@@ -47,7 +54,9 @@ const polygonZkEvmWithSafeConfig: ChainWithSafeConfig = {
     isMoneriumPaymentsEnabled: false,
     color: '#8248E5',
     transactionServiceUrl: 'https://safe-transaction-zkevm.safe.global',
-    icon: "/icons/zkevm.png"
+    icon: "/icons/zkevm.png",
+    //TODO
+    contractAddress: ethers.constants.AddressZero,
 }
 
 
@@ -59,7 +68,9 @@ const arbitrumWithSafeConfig: ChainWithSafeConfig = {
     isMoneriumPaymentsEnabled: false,
     color: '#3e6957',
     transactionServiceUrl: 'https://safe-transaction-arbitrum.safe.global',
-    icon: "/icons/arbitrum.png"
+    icon: "/icons/arbitrum.png",
+    //TODO
+    contractAddress: ethers.constants.AddressZero,
 }
 
 const mainnetWithSafeConfig: ChainWithSafeConfig = {
@@ -69,7 +80,9 @@ const mainnetWithSafeConfig: ChainWithSafeConfig = {
     isMoneriumPaymentsEnabled: false,
     color: '#DDDDDD',
     transactionServiceUrl: 'https://safe-transaction-mainnet.safe.global',
-    icon: "/icons/ethereum.png"
+    icon: "/icons/ethereum.png",
+    //TODO
+    contractAddress: ethers.constants.AddressZero,
 }
 
 

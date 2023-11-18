@@ -30,7 +30,7 @@ type accountAbstractionContextValue = {
   ownerLoading: boolean;
   chainId: string;
   safes: string[];
-  chain?: ChainWithSafeConfig;
+  chain: ChainWithSafeConfig;
   isAuthenticated: boolean;
   web3Provider?: ethers.providers.Web3Provider;
   loginWeb3Auth: () => void;
@@ -55,6 +55,7 @@ const initialState = {
   setSafeSelected: () => {},
   onRampWithStripe: async () => {},
   safes: [],
+  chain: defaultTestnetChain,
   chainId: defaultTestnetChain.id,
   isRelayerLoading: true,
 };
