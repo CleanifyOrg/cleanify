@@ -11,8 +11,8 @@ export const useReportById = (id: number) => {
   const { report } = useReportMetadata(baseReport);
 
   const getReport = useCallback(async () => {
-    if (contract) {
       contract.getReportById(id).then((baseReport) => {
+        setBaseReport(undefined)
         setBaseReport({
           id: baseReport.id.toNumber(),
           creator: baseReport.creator,
@@ -21,7 +21,6 @@ export const useReportById = (id: number) => {
           state: baseReport.state,
         });
       });
-    }
   }, [contract, id]);
 
   useEffect(() => {
@@ -30,10 +29,10 @@ export const useReportById = (id: number) => {
 
   const refreshReport = () => {
     getReport();
-  }
+  };
 
   return {
     report,
-    refreshReport
+    refreshReport,
   };
 };

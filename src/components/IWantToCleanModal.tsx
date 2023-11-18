@@ -16,15 +16,18 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   reportId: number;
+  refreshReport: () => void;
 };
 
-export const IWantToCleanModal = ({ isOpen, onClose, reportId }: Props) => {
+export const IWantToCleanModal = ({ isOpen, onClose, reportId, refreshReport }: Props) => {
   const { contract } = useCleanifyContract();
 
   const handleCreateCleaningRequest = useCallback(async () => {
     const tx = await contract.subscribeToClean(reportId);
 
     await tx.wait();
+
+    refreshReport();
 
     onClose();
   }, [contract, reportId]);
@@ -33,7 +36,7 @@ export const IWantToCleanModal = ({ isOpen, onClose, reportId }: Props) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Clean an area</ModalHeader>
+        <ModalHeader>Subscribe to Clean</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text>

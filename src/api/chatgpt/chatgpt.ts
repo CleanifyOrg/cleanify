@@ -1,29 +1,29 @@
 import { OpenAIHelper, blobToBase64, downloadBlob } from "@/utils";
 
 export type AnalyzeImageResponse = {
-    isWastePresent: boolean;
-    isWastePollution: boolean;
-    wasteKind: string[];
-    wasteDescription: string;
-    estimatedWeight: string;
-    estimatedCost: string;
+  isWastePresent: boolean;
+  isWastePollution: boolean;
+  wasteKind: string[];
+  wasteDescription: string;
+  estimatedWeight: string;
+  estimatedCost: string;
 };
 
 const FALLBACK_RESPONSE = {
-    isWastePresent: false,
-    isWastePollution: false,
-    wasteKind: [],
-    wasteDescription: "N.A.",
-    estimatedWeight: "N.A.",
-    estimatedCost: "N.A.",
+  isWastePresent: false,
+  isWastePollution: false,
+  wasteKind: [],
+  wasteDescription: "N.A.",
+  estimatedWeight: "N.A.",
+  estimatedCost: "N.A.",
 };
 
 export const analyzeImage = async (
-    imageBlobUrl: string
+  imageBlobUrl: string
 ): Promise<AnalyzeImageResponse> => {
-    const imageBlob = await downloadBlob(imageBlobUrl);
-    const base64Image = await blobToBase64(imageBlob);
-    const prompt = `
+  const imageBlob = await downloadBlob(imageBlobUrl);
+  const base64Image = await blobToBase64(imageBlob);
+  const prompt = `
                     I will send you several images depicting places that need cleaning. Please respond using a JSON object without comments and do not add any other descriptions and comments:
                     {
                     'isWastePresent': boolean,
@@ -35,20 +35,20 @@ export const analyzeImage = async (
                     }
                 `;
 
-    const openaiHelper = new OpenAIHelper();
-    try {
-        const response = await openaiHelper.askChatGPTAboutImage({
-            base64Image,
-            prompt,
-        });
-        const jsonString = openaiHelper.getResponseJSONString(response);
-        const result =
-            openaiHelper.parseChatGPTJSONString<AnalyzeImageResponse>(jsonString);
-        if (result) {
-            return result;
-        }
-    } catch (e) {
-        console.error("Failing fetching Chat GPT response:", e);
+  const openaiHelper = new OpenAIHelper();
+  try {
+    const response = await openaiHelper.askChatGPTAboutImage({
+      base64Image,
+      prompt,
+    });
+    const jsonString = openaiHelper.getResponseJSONString(response);
+    const result =
+      openaiHelper.parseChatGPTJSONString<AnalyzeImageResponse>(jsonString);
+    if (result) {
+      return result;
     }
-    return FALLBACK_RESPONSE;
+  } catch (e) {
+    console.error("Failing fetching Chat GPT response:", e);
+  }
+  return FALLBACK_RESPONSE;
 };

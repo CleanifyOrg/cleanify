@@ -1,53 +1,47 @@
-import { DonationModal, MapComponent } from "@/components";
-import { Routes } from "@/router";
-import {
-  Box,
-  Button,
-  HStack,
-  Image,
-  Spinner,
-  Stack,
-  Text,
-  VStack,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
-import { useReportById } from "@hooks/useReportById.ts";
-import { ReportState } from "@/models/report";
+import {DonationModal, MapComponent} from "@/components";
+import {Routes} from "@/router";
+import {Box, Button, HStack, Image, Spinner, Stack, Text, useDisclosure, VStack} from "@chakra-ui/react";
+import {useParams} from "react-router-dom";
+import {useReportById} from "@hooks/useReportById.ts";
+import {ReportState} from "@/models/report";
 import IWantToCleanModal from "@/components/IWantToCleanModal";
-import { useCallback, useEffect, useState } from "react";
-import { useBase64Image, useCleanifyContract } from "@/hooks";
-import { useAccountAbstraction } from "@/store";
-import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts";
-import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts";
-import { FaMoneyBillWave, FaRecycle } from "react-icons/fa";
-import { ReportDetails } from "@/components/ReportDetails";
+import {useCallback, useEffect, useState} from "react";
+import {useBase64Image, useCleanifyContract} from "@/hooks";
+import {useAccountAbstraction} from "@/store";
+import {useHasModeratorRole} from "@hooks/useHasModeratorRole.ts";
+import {useCleanifyAsModerator} from "@hooks/useCleanifyAsModerator.ts";
+import {AddCleaningProofModal} from "@components/AddCleaningProofModal/AddCleaningProofModal.tsx"
+import {useHasSubscribed} from "@hooks/useHasSubscribed.ts"
 
 export const Report = () => {
   const params = useParams();
-  const { contract } = useCleanifyContract();
-  const { contractAsModerator } = useCleanifyAsModerator();
-  const [isUserAlreadySubscribedToClean, setIsUserAlreadySubscribedToClean] =
-    useState(true);
+  const {contract} = useCleanifyContract();
+  const {contractAsModerator} = useCleanifyAsModerator();
 
-  const { report, refreshReport } = useReportById(Number(params.id));
+  const {report, refreshReport} = useReportById(Number(params.id));
 
-  const { hasModeratorRole } = useHasModeratorRole();
+  const {hasModeratorRole} = useHasModeratorRole();
+  const {hasSubscribed} = useHasSubscribed(Number(params.id))
 
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
   const {
     onOpen: onOpenDonationModal,
     onClose: onCloseDonationModal,
-    isOpen: isOpenDonationModal,
+    isOpen: isOpenDonationModal
   } = useDisclosure();
   const {
     onOpen: onOpenIWantToCleanModal,
     onClose: onCloseIWantToCleanModal,
-    isOpen: isOpenIWantToCleanModal,
+    isOpen: isOpenIWantToCleanModal
+  } = useDisclosure();
+  const {
+    onOpen: onOpenCleanProodModal,
+    onClose: onCloseCleanProodModal,
+    isOpen: isOpenCleanProodModal
   } = useDisclosure();
 
-  const { ownerAddress, isAuthenticated } = useAccountAbstraction();
+  const {isAuthenticated} = useAccountAbstraction();
 
   const verifyReport = useCallback(async () => {
     if (!report || !contract) return;
@@ -65,45 +59,49 @@ export const Report = () => {
     }
   }, [contract, report]);
 
-  const checkIfTheUserIsAlreadySubscribedToClean = useCallback(async () => {
-    if (!contract || !report || !ownerAddress) {
-      setIsUserAlreadySubscribedToClean(true); // so the button is disabled
-      return;
-    }
-
-    const isUserAlreadySubscribedToClean =
-      await contract.isUserSubscribedAsCleaner(report.id, ownerAddress!);
-
-    setIsUserAlreadySubscribedToClean(isUserAlreadySubscribedToClean);
-  }, [contract, report, ownerAddress]);
-
-  useEffect(() => {
-    checkIfTheUserIsAlreadySubscribedToClean();
-  }, [checkIfTheUserIsAlreadySubscribedToClean]);
-
-  const { blobImage } = useBase64Image(report?.metadata.images[0] ?? "");
+  const {blobImage} = useBase64Image(report?.metadata.images[0] ?? "");
 
   const canVerify = hasModeratorRole && report?.state === 0;
 
   if (!report)
     return (
       <VStack align={"center"} justify={"center"} w={"full"} h={"full"}>
-        <Spinner />
+        <Spinner/>
       </VStack>
     );
+
+
+  const getStateMessage = () => {
+    switch (report.state) {
+      case ReportState.PendingVerification:
+        return "Proof of cleaning has been submitted, but it has not been verified yet";
+      case ReportState.Available:
+        if (hasSubscribed) {
+          return "You are subscribed to clean this report";
+        } else return "This report is available to be cleaned";
+      case ReportState.Cleaned:
+        return "This report has already been cleaned";
+      case ReportState.InReview:
+        return "The report has been made, but it has not been verified yet";
+
+    }
+  }
+
+
+  console.log({state: report.state, hasSubscribed})
 
   return (
     <>
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
         <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
-          <Image src={blobImage} w={"full"} />
+          <Image src={blobImage} w={"full"}/>
+
 
           {isAuthenticated && (
-            <HStack pb={4} pt={4} justifyContent={"center"}>
+            <HStack pb={4} pt={4} justifyContent={"center"} >
               <Button
-                leftIcon={<FaMoneyBillWave />}
                 colorScheme="blue"
-                w={"full"}
+                mr={3}
                 onClick={onOpenDonationModal}
                 isDisabled={
                   report.state !== ReportState.Available || buttonsDisabled
@@ -111,19 +109,32 @@ export const Report = () => {
               >
                 Donate
               </Button>
-              <Button
-                w={"full"}
-                leftIcon={<FaRecycle />}
-                isDisabled={isUserAlreadySubscribedToClean || buttonsDisabled}
+
+              {hasSubscribed && report.state !== ReportState.PendingVerification ? (
+                <Button
+                  isDisabled={buttonsDisabled}
+                  colorScheme="green"
+                  onClick={onOpenCleanProodModal}
+                  mr={3}
+                >
+                  Submit Cleaned
+                </Button>
+              ) : (<Button
+                isDisabled={
+                  hasSubscribed ||
+                  buttonsDisabled ||
+                  report.state === ReportState.PendingVerification ||
+                  report.state === ReportState.Cleaned
+                }
                 colorScheme="green"
                 onClick={onOpenIWantToCleanModal}
+                mr={3}
               >
-                Clean
-              </Button>
+                Subscribe
+              </Button>)}
 
               {canVerify && (
                 <Button
-                  w={"full"}
                   isDisabled={buttonsDisabled}
                   colorScheme="yellow"
                   onClick={verifyReport}
@@ -134,7 +145,6 @@ export const Report = () => {
             </HStack>
           )}
 
-          {report && <ReportDetails report={report} />}
 
           <Box py={4}>
             <Box pb={2}>
@@ -147,6 +157,13 @@ export const Report = () => {
                 {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
+
+            <Box pb={6}>
+              <Text fontSize="md" textAlign={"justify"}>
+                {getStateMessage()}
+              </Text>
+            </Box>
+
           </Box>
         </Box>
         <Box h={"full"} w={["full", "50%"]}>
@@ -166,6 +183,13 @@ export const Report = () => {
         isOpen={isOpenIWantToCleanModal}
         onClose={onCloseIWantToCleanModal}
         reportId={report.id}
+        refreshReport={refreshReport}
+      />
+      <AddCleaningProofModal
+        isOpen={isOpenCleanProodModal}
+        onClose={onCloseCleanProodModal}
+        report={report}
+        refreshReport={refreshReport}
       />
     </>
   );
