@@ -17,19 +17,19 @@ import IWantToCleanModal from "@/components/IWantToCleanModal";
 import { useCallback, useEffect, useState } from "react";
 import { useBase64Image, useCleanifyContract } from "@/hooks";
 import { useAccountAbstraction } from "@/store";
-import {useHasModeratorRole} from "@hooks/useHasModeratorRole.ts"
-import {useCleanifyAsModerator} from "@hooks/useCleanifyAsModerator.ts"
+import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts"
+import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts"
 
 export const Report = () => {
   const params = useParams();
   const { contract } = useCleanifyContract();
-  const { contractAsModerator} = useCleanifyAsModerator();
+  const { contractAsModerator } = useCleanifyAsModerator();
   const [isUserAlreadySubscribedToClean, setIsUserAlreadySubscribedToClean] =
     useState(true);
 
   const { report, refreshReport } = useReportById(Number(params.id));
 
-  const { hasModeratorRole} = useHasModeratorRole();
+  const { hasModeratorRole } = useHasModeratorRole();
 
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
@@ -99,6 +99,44 @@ export const Report = () => {
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
         <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
           <Image src={blobImage} w={"full"} />
+
+          {isAuthenticated && (
+            <Box pb={4} pt={4} justifyContent={"center"} display={"flex"}>
+              <Button
+                colorScheme="blue"
+                w={"full"}
+                mr={3}
+                onClick={onOpenDonationModal}
+                isDisabled={report.state !== ReportState.Available || buttonsDisabled}
+              >
+                Donate
+              </Button>
+              <Button
+                w={"full"}
+                isDisabled={isUserAlreadySubscribedToClean || buttonsDisabled}
+                colorScheme="green"
+                onClick={onOpenIWantToCleanModal}
+                mr={3}
+              >
+                Clean
+              </Button>
+
+              {
+                canVerify && (
+                  <Button
+                    w={"full"}
+                    isDisabled={buttonsDisabled}
+                    colorScheme="yellow"
+                    onClick={verifyReport}
+                  >
+                    Verify
+                  </Button>
+                )
+              }
+
+            </Box>
+          )}
+
           <Box py={4}>
             <Box pb={2}>
               <Text fontSize="lg" fontWeight={"bold"}>
@@ -110,39 +148,7 @@ export const Report = () => {
                 {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
-            {isAuthenticated && (
-              <Box pb={4} justifyContent={"center"} display={"flex"}>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={onOpenDonationModal}
-                  isDisabled={report.state !== ReportState.Available || buttonsDisabled}
-                >
-                  Donate
-                </Button>
-                <Button
-                  isDisabled={isUserAlreadySubscribedToClean || buttonsDisabled}
-                  colorScheme="green"
-                  onClick={onOpenIWantToCleanModal}
-                  mr={3}
-                >
-                  Clean
-                </Button>
 
-                {
-                  canVerify && (
-                    <Button
-                      isDisabled={buttonsDisabled}
-                      colorScheme="yellow"
-                      onClick={verifyReport}
-                    >
-                      Verify
-                    </Button>
-                  )
-                }
-
-              </Box>
-            )}
           </Box>
         </Box>
         <Box h={"full"} w={["full", "50%"]}>
