@@ -2,7 +2,7 @@ import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
 import { useEffect, useState } from "react";
 import { Trashify } from "@/typechain";
 import { TrashifyReport } from "@models";
-import {BigNumberish} from "ethers"
+import { BigNumberish } from "ethers";
 
 export const useTrashifyReports = () => {
   const { contract } = useTrashifyContract();
@@ -12,7 +12,6 @@ export const useTrashifyReports = () => {
     const totalReports = await contract.totalReports();
 
     console.log("totalReports: ", totalReports.toNumber());
-
 
     const allReports = await Promise.all(
       Array.from(Array(totalReports.toNumber()).keys()).map((i) =>
@@ -25,10 +24,10 @@ export const useTrashifyReports = () => {
           creator: report.creator,
           metadata: report.metadata,
           totalRewards: report.totalRewards,
-          state: report.state
+          state: report.state,
         };
-      })
-    })
+      });
+    });
 
     setReports(allReports);
   };

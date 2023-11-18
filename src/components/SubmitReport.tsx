@@ -1,5 +1,6 @@
 import { useSubmitReport } from "@hooks";
 import { useEffect } from "react";
+import {Button} from "@chakra-ui/react"
 
 export const SubmitReport = () => {
   const {
@@ -18,18 +19,9 @@ export const SubmitReport = () => {
     setTitle("Hello World");
   }, []);
 
-  //TODO: create on user click, otherwise this will be called on every render
-  useEffect(() => {
-    if (canCreate) {
-      console.warn("ready to submit report:", typeof createReport);
-    } else {
-      console.warn("not ready to submit report:", typeof createReport);
-    }
-  }, [canCreate, createReport]);
-
   return (
     <div>
-      <h1>Submit Report</h1>
+      <Button onClick={createReport} disabled={!canCreate}>Submit Report</Button>
     </div>
   );
 };
