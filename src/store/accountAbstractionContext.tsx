@@ -262,19 +262,9 @@ const AccountAbstractionProvider = ({
 
         await safeAccountAbstraction.init({ relayPack });
 
-        // we use a dump safe transfer as a demo transaction
-        const transactionData: MetaTransactionData[] = [
-          {
-            to,
-            value: value ?? "0x0",
-            data: data,
-            operation: 1, // OperationType.Call,
-          },
-        ];
-
         const _chainId = parseInt(chainId);
 
-        const response = await relayPack.sendSponsorTransaction(transactionData[0].to, transactionData[0].data, _chainId)
+        const response = await relayPack.sendSponsorTransaction(to, data, _chainId)
 
 
         console.log(
