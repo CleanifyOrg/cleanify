@@ -1,2 +1,2 @@
-export * from "./FormattingUtils"
-export * from "./HexUtils"
+export * from "./FormattingUtils";
+export * from "./HexUtils";

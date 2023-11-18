@@ -1,11 +1,9 @@
-import {
-  __commonJS
-} from "./chunk-Y2F7D3TJ.js";
+import { __commonJS } from "./chunk-Y2F7D3TJ.js";
 
 // node_modules/process/browser.js
 var require_browser = __commonJS({
   "node_modules/process/browser.js"(exports, module) {
-    var process = module.exports = {};
+    var process = (module.exports = {});
     var cachedSetTimeout;
     var cachedClearTimeout;
     function defaultSetTimout() {
@@ -14,7 +12,7 @@ var require_browser = __commonJS({
     function defaultClearTimeout() {
       throw new Error("clearTimeout has not been defined");
     }
-    (function() {
+    (function () {
       try {
         if (typeof setTimeout === "function") {
           cachedSetTimeout = setTimeout;
@@ -38,7 +36,10 @@ var require_browser = __commonJS({
       if (cachedSetTimeout === setTimeout) {
         return setTimeout(fun, 0);
       }
-      if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+      if (
+        (cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) &&
+        setTimeout
+      ) {
         cachedSetTimeout = setTimeout;
         return setTimeout(fun, 0);
       }
@@ -56,7 +57,10 @@ var require_browser = __commonJS({
       if (cachedClearTimeout === clearTimeout) {
         return clearTimeout(marker);
       }
-      if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+      if (
+        (cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) &&
+        clearTimeout
+      ) {
         cachedClearTimeout = clearTimeout;
         return clearTimeout(marker);
       }
@@ -110,7 +114,7 @@ var require_browser = __commonJS({
       draining = false;
       runClearTimeout(timeout);
     }
-    process.nextTick = function(fun) {
+    process.nextTick = function (fun) {
       var args = new Array(arguments.length - 1);
       if (arguments.length > 1) {
         for (var i = 1; i < arguments.length; i++) {
@@ -126,7 +130,7 @@ var require_browser = __commonJS({
       this.fun = fun;
       this.array = array;
     }
-    Item.prototype.run = function() {
+    Item.prototype.run = function () {
       this.fun.apply(null, this.array);
     };
     process.title = "browser";
@@ -135,8 +139,7 @@ var require_browser = __commonJS({
     process.argv = [];
     process.version = "";
     process.versions = {};
-    function noop() {
-    }
+    function noop() {}
     process.on = noop;
     process.addListener = noop;
     process.once = noop;
@@ -146,22 +149,22 @@ var require_browser = __commonJS({
     process.emit = noop;
     process.prependListener = noop;
     process.prependOnceListener = noop;
-    process.listeners = function(name) {
+    process.listeners = function (name) {
       return [];
     };
-    process.binding = function(name) {
+    process.binding = function (name) {
       throw new Error("process.binding is not supported");
     };
-    process.cwd = function() {
+    process.cwd = function () {
       return "/";
     };
-    process.chdir = function(dir) {
+    process.chdir = function (dir) {
       throw new Error("process.chdir is not supported");
     };
-    process.umask = function() {
+    process.umask = function () {
       return 0;
     };
-  }
+  },
 });
 export default require_browser();
 //# sourceMappingURL=process.js.map

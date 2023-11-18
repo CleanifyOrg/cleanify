@@ -11,8 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { useAccountAbstraction } from "./store";
 import { ConnectedWalletOwner } from "./components";
-import {AllReports} from "@components/AllReports.tsx"
-import {SubmitReport} from "@components/SubmitReport.tsx"
+import { AllReports } from "@components/AllReports.tsx";
+import { SubmitReport } from "@components/SubmitReport.tsx";
 
 function App() {
   const { isAuthenticated, loginWeb3Auth } = useAccountAbstraction();
@@ -29,7 +29,6 @@ function App() {
           <Heading textAlign={"center"} size="lg">
             Welcome to Trashify
           </Heading>
-
 
           <AllReports />
           <SubmitReport />
