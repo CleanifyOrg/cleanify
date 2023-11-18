@@ -50,7 +50,9 @@ const initialState = {
   ownerLoading: false,
   loginWeb3Auth: () => {},
   logoutWeb3Auth: () => {},
-  relayTransaction: async () => {throw new Error("Not ready")},
+  relayTransaction: async () => {
+    throw new Error("Not ready");
+  },
   setChainId: () => {},
   setSafeSelected: () => {},
   onRampWithStripe: async () => {},
@@ -116,7 +118,7 @@ const AccountAbstractionProvider = ({
     (async () => {
       const options: Web3AuthOptions = {
         clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID ?? "",
-        web3AuthNetwork: "testnet",
+        web3AuthNetwork: "testnet", // "mainnet" | "testnet
         chainConfig: {
           chainNamespace: CHAIN_NAMESPACES.EIP155,
           chainId: chain.id,
@@ -125,7 +127,7 @@ const AccountAbstractionProvider = ({
         uiConfig: {
           theme: "dark",
           loginMethodsOrder: ["google", "facebook"],
-          appName: "Trashify",
+          appName: "Cleanify",
         },
       };
 
@@ -261,7 +263,11 @@ const AccountAbstractionProvider = ({
 
         const _chainId = parseInt(chainId);
 
-        const response = await relayPack.sendSponsorTransaction(to, data, _chainId)
+        const response = await relayPack.sendSponsorTransaction(
+          to,
+          data,
+          _chainId
+        );
 
         console.log(
           `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
