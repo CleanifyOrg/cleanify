@@ -33,7 +33,7 @@ export const IWantToCleanModal = ({ isOpen, onClose, reportId }: Props) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Make a Donation</ModalHeader>
+        <ModalHeader>Clean an area</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text>

@@ -18,8 +18,9 @@ import IWantToCleanModal from "@/components/IWantToCleanModal";
 import { useCallback, useEffect, useState } from "react";
 import { useBase64Image, useCleanifyContract } from "@/hooks";
 import { useAccountAbstraction } from "@/store";
-import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts"
-import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts"
+import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts";
+import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts";
+import { FaMoneyBillWave, FaRecycle } from "react-icons/fa";
 import { ReportDetails } from "@/components/ReportDetails";
 
 export const Report = () => {
@@ -49,7 +50,6 @@ export const Report = () => {
   const { ownerAddress, isAuthenticated } = useAccountAbstraction();
 
   const verifyReport = useCallback(async () => {
-
     if (!report || !contract) return;
 
     setButtonsDisabled(true);
@@ -63,11 +63,7 @@ export const Report = () => {
     } finally {
       setButtonsDisabled(false);
     }
-
-  }, [
-    contract,
-    report
-  ]);
+  }, [contract, report]);
 
   const checkIfTheUserIsAlreadySubscribedToClean = useCallback(async () => {
     if (!contract || !report || !ownerAddress) {
@@ -103,17 +99,21 @@ export const Report = () => {
           <Image src={blobImage} w={"full"} />
 
           {isAuthenticated && (
-            <HStack pb={4} pt={4} justifyContent={"center"} >
+            <HStack pb={4} pt={4} justifyContent={"center"}>
               <Button
+                leftIcon={<FaMoneyBillWave />}
                 colorScheme="blue"
                 w={"full"}
                 onClick={onOpenDonationModal}
-                isDisabled={report.state !== ReportState.Available || buttonsDisabled}
+                isDisabled={
+                  report.state !== ReportState.Available || buttonsDisabled
+                }
               >
                 Donate
               </Button>
               <Button
                 w={"full"}
+                leftIcon={<FaRecycle />}
                 isDisabled={isUserAlreadySubscribedToClean || buttonsDisabled}
                 colorScheme="green"
                 onClick={onOpenIWantToCleanModal}
@@ -121,19 +121,16 @@ export const Report = () => {
                 Clean
               </Button>
 
-              {
-                canVerify && (
-                  <Button
-                    w={"full"}
-                    isDisabled={buttonsDisabled}
-                    colorScheme="yellow"
-                    onClick={verifyReport}
-                  >
-                    Verify
-                  </Button>
-                )
-              }
-
+              {canVerify && (
+                <Button
+                  w={"full"}
+                  isDisabled={buttonsDisabled}
+                  colorScheme="yellow"
+                  onClick={verifyReport}
+                >
+                  Verify
+                </Button>
+              )}
             </HStack>
           )}
 
@@ -150,9 +147,6 @@ export const Report = () => {
                 {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
-            <HStack w={"full"}>
-              <Text>Reported by: {report.creator}</Text>
-            </HStack>
           </Box>
         </Box>
         <Box h={"full"} w={["full", "50%"]}>
