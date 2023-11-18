@@ -1,4 +1,3 @@
-import { chains } from "@/chains";
 import { useAccountAbstraction } from "@/store";
 import {
   Box,

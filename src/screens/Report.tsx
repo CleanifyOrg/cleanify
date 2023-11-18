@@ -4,8 +4,10 @@ import {
   Box,
   Button,
   Image,
+  Spinner,
   Stack,
   Text,
+  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
@@ -13,7 +15,7 @@ import { useReportById } from "@hooks/useReportById.ts";
 import { ReportState } from "@/models/report";
 import IWantToCleanModal from "@/components/IWantToCleanModal";
 import { useCallback, useEffect, useState } from "react";
-import { useCleanifyContract } from "@/hooks";
+import { useBase64Image, useCleanifyContract } from "@/hooks";
 import { useAccountAbstraction } from "@/store";
 
 export const Report = () => {
@@ -52,13 +54,20 @@ export const Report = () => {
     checkIfTheUserIsAlreadySubscribedToClean();
   }, [checkIfTheUserIsAlreadySubscribedToClean]);
 
-  if (!report) return null;
+  const { blobImage } = useBase64Image(report?.metadata.images[0] ?? "");
+
+  if (!report)
+    return (
+      <VStack align={"center"} justify={"center"} w={"full"} h={"full"}>
+        <Spinner />
+      </VStack>
+    );
 
   return (
     <>
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
         <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
-          <Image src={report.metadata.images[0]} w={"full"} />
+          <Image src={blobImage} w={"full"} />
           <Box py={4}>
             <Box pb={2}>
               <Text fontSize="lg" fontWeight={"bold"}>

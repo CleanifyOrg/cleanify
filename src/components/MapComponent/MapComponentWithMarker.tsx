@@ -29,8 +29,6 @@ const MapWithMarkerComponentContent = ({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
   });
 
-  console.log({ markerLocation });
-
   const [map, setMap] = React.useState(null);
 
   const onLoad = React.useCallback(
