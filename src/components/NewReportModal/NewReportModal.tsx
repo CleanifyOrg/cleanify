@@ -63,6 +63,13 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
     mutationFn: analyzeImage,
   });
 
+  const [description, setDescription] = useState(data?.wasteDescription ?? "");
+
+  useEffect(() => {
+    if (!data) return;
+    setDescription(data.wasteDescription);
+  }, [data]);
+
   const {
     activeStep: activeStepIndex,
     goToNext,
@@ -101,6 +108,8 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
             isPending={isPending}
             data={data}
             uploadedImages={uploadedImages}
+            description={description}
+            setDescription={setDescription}
           />
         ),
       },
@@ -111,7 +120,7 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <ConfirmPosition
             selectedLocation={selectedPosition}
             setSelectedLocation={setSelectedPosition}
-            data={data}
+            data={data ? { ...data, wasteDescription: description } : undefined}
             uploadedImages={uploadedImages}
             closeModal={onClose}
           />

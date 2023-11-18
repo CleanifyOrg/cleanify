@@ -3,6 +3,7 @@ import {
   Card,
   Heading,
   HStack,
+  IconButton,
   Image,
   ScaleFade,
   Skeleton,
@@ -11,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { FaCheck, FaEdit } from "react-icons/fa";
 
 const loremIpsum = "Lorem ipsum loret isset ipster";
 
@@ -18,13 +20,17 @@ type Props = {
   uploadedImages: { file: File; image: string }[];
   data?: AnalyzeImageResponse;
   isPending: boolean;
+  description: string;
+  setDescription: (value: string) => void;
 };
 export const ConfirmMetadataStep: React.FC<Props> = ({
   data,
   uploadedImages,
   isPending,
+  description,
+  setDescription,
 }) => {
-  const [description, setDescription] = useState(data?.wasteDescription ?? "");
+  const [isEditing, setIsEditing] = useState(false);
   if (!data) return null;
 
   return (
@@ -61,12 +67,27 @@ export const ConfirmMetadataStep: React.FC<Props> = ({
             </VStack>
             <VStack spacing={2} align="flex-start" flex={1.5}>
               <Skeleton isLoaded={!isPending} w="full">
-                <Heading size="sm">Description</Heading>
-                <Textarea
-                  w="full"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
+                <HStack justify="space-between">
+                  <Heading size="sm">Description</Heading>
+                  <IconButton
+                    variant="empty"
+                    icon={isEditing ? <FaCheck /> : <FaEdit />}
+                    onClick={() => setIsEditing((prev) => !prev)}
+                    aria-label="Edit description"
+                    boxSize={4}
+                  />
+                </HStack>
+                {isEditing ? (
+                  <Textarea
+                    p={0}
+                    mt={2}
+                    w="full"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                ) : (
+                  <Text fontWeight="thin">{description}</Text>
+                )}
               </Skeleton>
               <Skeleton isLoaded={!isPending}>
                 <Heading size="sm">Estimated weight</Heading>
