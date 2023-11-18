@@ -22,7 +22,6 @@ export const MapMarker = ({
   setActiveReportId,
 }: Props) => {
   const { report } = useReportMetadata(baseReport);
-
   if (!report) return <></>;
 
   return (

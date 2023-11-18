@@ -9,11 +9,9 @@ import {
 } from "@chakra-ui/react";
 import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
-import { useReports } from "@/api/hooks";
 
 export const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: baseReports } = useReports();
 
   return (
     <Box h={"full"} w={"full"}>
@@ -35,7 +33,7 @@ export const Home = () => {
           <Button onClick={onOpen}>New report</Button>
         </HStack>
 
-        <MapComponent route={Routes.Home} reports={baseReports} />
+        <MapComponent route={Routes.Home} />
       </VStack>
       <NewReportModal isOpen={isOpen} onClose={onClose} />
     </Box>
