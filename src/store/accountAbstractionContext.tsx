@@ -10,16 +10,13 @@ import { ethers, utils } from "ethers";
 import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
 import { Web3AuthOptions } from "@web3auth/modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-
 import AccountAbstraction from "@safe-global/account-abstraction-kit-poc";
 import { Web3AuthModalPack } from "@safe-global/auth-kit";
-import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 
 //gasless transactions https://docs.safe.global/safe-core-aa-sdk/relay-kit/guides/gelato
 import { GelatoRelayPack } from "@safe-global/relay-kit";
 import {
   MetaTransactionData,
-  MetaTransactionOptions,
 } from "@safe-global/safe-core-sdk-types";
 
 import { defaultTestnetChain, getChain } from "@/chains";
@@ -56,7 +53,7 @@ const initialState = {
   ownerLoading: false,
   loginWeb3Auth: () => {},
   logoutWeb3Auth: () => {},
-  relayTransaction: async () => {},
+  relayTransaction: async () => {throw new Error("Not ready")},
   setChainId: () => {},
   setSafeSelected: () => {},
   onRampWithStripe: async () => {},
@@ -266,52 +263,19 @@ const AccountAbstractionProvider = ({
         await safeAccountAbstraction.init({ relayPack });
 
         // we use a dump safe transfer as a demo transaction
-        const dumpSafeTransafer: MetaTransactionData[] = [
+        const transactionData: MetaTransactionData[] = [
           {
             to,
             value: value ?? "0x0",
             data: data,
-            operation: 0, // OperationType.Call,
+            operation: 1, // OperationType.Call,
           },
         ];
 
-        const options: MetaTransactionOptions = {
-          isSponsored: true,
-          gasLimit: "600000", // in this alfa version we need to manually set the gas limit
-          gasToken: ethers.constants.AddressZero, // native token
-        };
+        const _chainId = parseInt(chainId);
 
-        const ethAdapter = new EthersAdapter({
-          ethers,
-          signerOrProvider: signer,
-        });
+        const response = await relayPack.sendSponsorTransaction(transactionData[0].to, transactionData[0].data, _chainId)
 
-        console.log(
-          "safeAddress",
-          await safeAccountAbstraction.getSafeAddress()
-        );
-
-        const safeSDK = await Safe.create({
-          ethAdapter,
-          safeAddress: await safeAccountAbstraction.getSafeAddress(),
-        });
-
-        const safeTransaction = await relayPack.createRelayedTransaction({
-          safe: safeSDK,
-          transactions: dumpSafeTransafer,
-          options,
-        });
-
-        const signedSafeTransaction = await safeSDK.signTransaction(
-          safeTransaction,
-          "eth_sign"
-        );
-
-        const response = await relayPack.executeRelayTransaction(
-          signedSafeTransaction,
-          safeSDK,
-          options
-        );
 
         console.log(
           `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`

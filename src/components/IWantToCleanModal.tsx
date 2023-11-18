@@ -22,7 +22,10 @@ export const IWantToCleanModal = ({ isOpen, onClose, reportId }: Props) => {
   const { contract } = useCleanifyContract();
 
   const handleCreateCleaningRequest = useCallback(async () => {
-    await contract.subscribeToClean(reportId);
+    const tx = await contract.subscribeToClean(reportId);
+
+    await tx.wait();
+
     onClose();
   }, [contract, reportId]);
 
