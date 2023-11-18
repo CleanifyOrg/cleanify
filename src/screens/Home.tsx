@@ -9,10 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
+import { useAccountAbstraction } from "@/store";
 
 export const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const { isAuthenticated, loginWeb3Auth } = useAccountAbstraction();
   return (
     <Box h={"full"} w={"full"}>
       <VStack w={"full"} h={"full"}>
@@ -24,13 +25,15 @@ export const Home = () => {
           pt={4}
         >
           <VStack alignItems={"left"}>
-            <Heading size="lg">Welcome to Trashify</Heading>
+            <Heading size="lg">Welcome to Cleanify</Heading>
             <Text fontWeight="normal">
               The decentralized waste management platform that allows users to
               earn rewards for recycling.
             </Text>
           </VStack>
-          <Button onClick={onOpen}>New report</Button>
+          <Button onClick={isAuthenticated ? onOpen : loginWeb3Auth}>
+            New report
+          </Button>
         </HStack>
 
         <MapComponent route={Routes.Home} />

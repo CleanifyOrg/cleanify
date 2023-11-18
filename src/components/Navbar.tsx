@@ -1,4 +1,3 @@
-import { chains } from "@/chains";
 import { useAccountAbstraction } from "@/store";
 import {
   Box,
@@ -59,7 +58,7 @@ export const Navbar = () => {
     >
       <ConnectedWalletModal isOpen={isOpen} onClose={onClose} />
       <Heading size="md" flex={2} cursor={"pointer"} onClick={onLogoClick}>
-        Trashify
+        Cleanify
       </Heading>
       <HStack spacing={4} flex={1.5} justify={"flex-end"}>
         <NetworkSelector
