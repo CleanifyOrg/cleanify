@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardBody,
   HStack,
@@ -25,17 +26,35 @@ export const BaseDropzone: React.FC<Props> = ({
   const renderInnerDropzoneArea = useCallback(() => {
     if (uploadedFiles.length)
       return (
-        <VStack spacing={0} alignItems={"center"} justify={"center"} h="full">
-          {uploadedFiles.map((file) => (
-            <Image src={file.image} w={"20%"} />
-          ))}
-          <HStack mt={4} spacing={2} align={"center"}>
-            <Icon as={FaCheck} boxSize={4} color="green" />
-            <Text color={"green"}>Your images has been loaded correctly</Text>
-          </HStack>
-          <Text textAlign={"center"}>
-            If you want to ovverride them, drop or click here
-          </Text>
+        <VStack
+          position={"absolute"}
+          left={0}
+          top={0}
+          w="full"
+          h="full"
+          align={"center"}
+          justify={"flex-end"}
+          bgImage={uploadedFiles[0].image}
+          bgSize={"cover"}
+          bgPosition={"center"}
+          bgRepeat={"no-repeat"}
+          borderRadius={"lg"}
+          py={4}
+          px={8}
+        >
+          <Card>
+            <CardBody h="full">
+              <HStack spacing={2} align={"center"}>
+                <Icon as={FaCheck} boxSize={4} color="green" />
+                <Text color={"green"}>
+                  Your images has been loaded correctly
+                </Text>
+              </HStack>
+              <Text textAlign={"center"}>
+                If you want to ovverride them, drop or click here
+              </Text>
+            </CardBody>
+          </Card>
         </VStack>
       );
 
@@ -50,6 +69,7 @@ export const BaseDropzone: React.FC<Props> = ({
   }, [uploadedFiles]);
   return (
     <Card
+      position={"relative"}
       {...getRootProps()}
       boxShadow={"0px 0px 1px 1px #000000"}
       borderRadius={"xl"}
