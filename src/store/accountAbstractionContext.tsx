@@ -13,6 +13,7 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 
 import AccountAbstraction from "@safe-global/account-abstraction-kit-poc";
 import { Web3AuthModalPack } from "@safe-global/auth-kit";
+import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 
 //gasless transactions https://docs.safe.global/safe-core-aa-sdk/relay-kit/guides/gelato
 import { GelatoRelayPack } from "@safe-global/relay-kit";
@@ -272,12 +273,35 @@ const AccountAbstractionProvider = ({
         gasToken: ethers.constants.AddressZero, // native token
       };
 
-      const gelatoTaskId = await safeAccountAbstraction.relayTransaction(
-        dumpSafeTransafer,
+      const ethAdapter = new EthersAdapter({
+        ethers,
+        signerOrProvider: signer,
+      });
+
+      const safeSDK = await Safe.create({
+        ethAdapter,
+        safeAddress: await safeAccountAbstraction.getSafeAddress(),
+      });
+
+      const safeTransaction = await relayPack.createRelayedTransaction({
+        safe: safeSDK,
+        transactions: dumpSafeTransafer,
+        options,
+      });
+
+      const signedSafeTransaction = await safeSDK.signTransaction(
+        safeTransaction,
+        "eth_sign"
+      );
+
+      const response = await relayPack.executeRelayTransaction(
+        signedSafeTransaction,
+        safeSDK,
         options
       );
+
       console.log(
-        `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${gelatoTaskId}`
+        `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
       );
 
       setIsRelayerLoading(false);
