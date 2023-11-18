@@ -4,8 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { providers } from "ethers";
 import { getSafeInfo, isContractAddress } from "./safe";
 import { useCleanifyContract } from "@/hooks";
-import { queryReports } from "./contract";
+import { getReportMetadata, queryReports } from "./contract";
 import { Trashify } from "@/typechain/contracts/Trashify";
+import { BaseReport } from "@/models";
 
 const getIsSafeDeployedQueryKey = (
     safeAddress: string,
@@ -54,5 +55,16 @@ export const useReports = () => {
     return useQuery({
         queryKey: reportsKey(),
         queryFn: () => queryReports(contract),
+    });
+}
+
+
+export const reportMetadataKey = (baseReport: BaseReport) => ["REPORT_METADATA", baseReport.id];
+
+export const useGetReportMetadata = (baseReport: BaseReport) => {
+
+    return useQuery({
+        queryKey: reportMetadataKey(baseReport),
+        queryFn: () => getReportMetadata(baseReport),
     });
 }

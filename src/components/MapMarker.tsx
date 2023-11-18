@@ -5,6 +5,7 @@ import GreyTrashIcon from "@/assets/grey-trash.png";
 import { Routes } from "@/router.tsx";
 import { ReportModal } from "@components/MapComponent/ReportModal.tsx";
 import { MarkerF as Marker } from "@react-google-maps/api";
+import { useGetReportMetadata } from "@/api/hooks";
 
 type Props = {
   baseReport: BaseReport;
@@ -21,8 +22,8 @@ export const MapMarker = ({
   handleActiveMarker,
   setActiveReportId,
 }: Props) => {
-  const { report } = useReportMetadata(baseReport);
-  if (!report) return <></>;
+  const { data: report } = useGetReportMetadata(baseReport);
+  if (!report) return null;
 
   return (
     <Marker

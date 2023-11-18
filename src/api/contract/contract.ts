@@ -1,5 +1,6 @@
-import { BaseReport } from "@/models/report";
+import { BaseReport, Report, ReportMetadata } from "@/models/report";
 import { Trashify } from "@/typechain/contracts/Trashify";
+import { getFromIPFS } from "@/utils";
 
 export const queryReports = async (contract: Trashify) => {
     const totalReports = await contract.totalReports();
@@ -27,3 +28,22 @@ export const queryReports = async (contract: Trashify) => {
     return allReports;
 
 };
+
+export const getReportMetadata = async (baseReport: BaseReport) => {
+    const metadata: ReportMetadata = JSON.parse(
+        await getFromIPFS(baseReport.metadata)
+    );
+
+    metadata.images = await Promise.all(
+        metadata.images.map((image) => getFromIPFS(image))
+    );
+
+    const report: Report = {
+        ...baseReport,
+        metadata,
+    };
+
+    report.metadata.location;
+
+    return report;
+}
