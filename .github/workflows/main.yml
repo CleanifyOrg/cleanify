@@ -33,10 +33,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node v16 & GitHub registry
+      - name: Use Node v18 & GitHub registry
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
