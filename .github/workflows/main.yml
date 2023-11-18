@@ -40,6 +40,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+      - name: Install dependencies
+        run: yarn install    
+
       - name: Build React App
         run: yarn build
         env:
