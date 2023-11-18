@@ -1,3 +1,4 @@
+import { base64ToBlob } from "@/utils";
 import {
   Modal,
   ModalOverlay,
@@ -10,6 +11,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { Report } from "@models/report.ts";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const formatDescription = (description: string) => {
@@ -27,8 +29,18 @@ export const ReportModal = ({
   report: Report;
   onClose: () => void;
 }) => {
+  console.log({ report });
 
-  console.log(report)
+  const [imageUrl, setImageUrl] = useState<string>();
+
+  useEffect(() => {
+    const parseImageUrl = async () => {
+      const parsedImage = await base64ToBlob(report.metadata.images[0]);
+      const imgUrl = URL.createObjectURL(parsedImage);
+      setImageUrl(imgUrl);
+    };
+    parseImageUrl();
+  }, [report]);
 
   return (
     <Modal isOpen={true} onClose={onClose}>
@@ -38,7 +50,7 @@ export const ReportModal = ({
         <Link to={`/report/${report.id}`} state={{ report }}>
           <ModalBody p={0}>
             <Flex direction="column" justify="center">
-              <Image src={report.metadata.images[0]} borderTopRadius={"2xl"} />
+              <Image src={imageUrl} borderTopRadius={"2xl"} />
               <Box px={4} py={2}>
                 <Text fontSize="lg" fontWeight={"bold"}>
                   {report.metadata.name}
@@ -52,7 +64,9 @@ export const ReportModal = ({
                   textOverflow={"ellipses"}
                   whiteSpace={"normal"}
                 >
-                  {formatDescription(report.metadata.analysis.description ?? "")}
+                  {formatDescription(
+                    report.metadata.analysis.wasteDescription ?? ""
+                  )}
                 </Text>
               </Box>
             </Flex>

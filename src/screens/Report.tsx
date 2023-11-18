@@ -42,7 +42,7 @@ export const Report = () => {
             </Box>
             <Box pb={6}>
               <Text fontSize="md" textAlign={"justify"}>
-                {report.metadata.analysis.description}
+                {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
             <Box pb={4} justifyContent={"center"} display={"flex"}>
