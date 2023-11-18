@@ -28,10 +28,8 @@ export const useTrashifyReports = () => {
   }
 
   useEffect(() => {
-    if (contract) {
-      console.log("contract: ", contract)
+      setReports([])
       queryReports(contract)
-    }
   }, [contract])
 
   return {

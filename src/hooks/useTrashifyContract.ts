@@ -1,24 +1,33 @@
 import {useAccountAbstraction} from "@store"
-import {useEffect, useState} from "react"
-import {Trashify} from "@/typechain"
+import { useMemo} from "react"
 import {Trashify__factory as TrashifyFactory} from "@/typechain"
+import {ethers} from "ethers"
 
 export const useTrashifyContract = () => {
   const {web3Provider, chain} = useAccountAbstraction()
 
-  const [contract, setContract] = useState<Trashify>()
 
-  useEffect(() => {
-    if (web3Provider && chain?.contractAddress) {
-      const contract = TrashifyFactory.connect(
-        chain.contractAddress,
-        web3Provider.getSigner(),
-      )
-      setContract(contract)
+  const providerOrSigner = useMemo(() => {
+    if (web3Provider) {
+      return web3Provider.getSigner()
+    } else {
+      return new ethers.providers.JsonRpcProvider(chain.rpcUrls.default.http[0])
     }
-  }, [chain?.contractAddress, web3Provider])
+  }, [
+    web3Provider,
+    chain
+  ])
+
+  const contract = useMemo(() => {
+    return TrashifyFactory.connect(chain.contractAddress, providerOrSigner)
+  }, [
+    chain.contractAddress,
+    providerOrSigner
+  ])
+
 
   return {
-    contract
+    contract,
+    providerOrSigner,
   }
 }
