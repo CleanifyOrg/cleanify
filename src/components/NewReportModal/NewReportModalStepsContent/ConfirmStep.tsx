@@ -33,12 +33,11 @@ export const ConfirmDetailsStep: React.FC<Props> = ({
 
   const processReport = async () => {
     const report: ReportMetadata = {
-      ...data,
       name: "Hello Word",
       images: uploadedImages.map((image) => image.image),
-      location: { lat: 41.0263678, lng: 28.9363605 },
+      location: { lat: 41.012742, lng: 28.973443 },
       analysis: data,
-    };
+    }
 
     const tx = await createReport(report);
     console.log({ tx });
