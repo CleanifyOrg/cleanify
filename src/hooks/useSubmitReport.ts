@@ -2,7 +2,8 @@ import {useMemo, useState} from "react"
 import {useTrashifyContract} from "@hooks/useTrashifyContract.ts"
 import {Coordinates, RecordMetadata} from "@models"
 import {uploadToIpfs} from "@utils/IPFSUtil.ts"
-import {NewReportSubmitedEvent} from "@/typechain/Trashify.ts"
+import {NewReportSubmitedEvent} from "@/typechain/contracts/Trashify.ts"
+
 
 export const useSubmitReport = () => {
 
@@ -26,7 +27,7 @@ export const useSubmitReport = () => {
 
 
   const createReport = async (): Promise<NewReportSubmitedEvent> => {
-    if (!contract || !title || !description || !images || !coordinates || !contract)
+    if (!title || !description || !images || !coordinates)
       throw new Error("Can't create report")
 
     const imageUris = await Promise.all(images.map((image) => {
