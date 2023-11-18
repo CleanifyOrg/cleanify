@@ -19,7 +19,7 @@ import safeLogo from "src/assets/safe-info-logo-light.svg";
 import { NetworkSelector } from "./NetworkSelector";
 import { Routes } from "@/router";
 import { ConnectedWalletModal } from "./ConnectedWalletModal";
-const safeLogoDark = "src/assets/safe-info-logo-dark.svg";
+import safeLogoDark from "src/assets/safe-info-logo-dark.svg";
 
 import { useNavigate } from "react-router-dom";
 
