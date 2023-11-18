@@ -1,6 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox-viem";
-import "@typechain/hardhat"
+import "@typechain/hardhat";
 import fs from "fs";
 import "@nomicfoundation/hardhat-verify";
 
@@ -11,7 +11,7 @@ const accounts = {
   path: "m/44'/60'/0'/0",
   initialIndex: 0,
   count: 20,
-}
+};
 
 const config: HardhatUserConfig = {
   solidity: "0.8.20",
@@ -19,14 +19,14 @@ const config: HardhatUserConfig = {
     outDir: "src/typechain",
   },
   networks: {
-    'base-mainnet': {
-      url: 'https://mainnet.base.org',
+    "base-mainnet": {
+      url: "https://mainnet.base.org",
       accounts: accounts,
       gasPrice: 1000000000,
     },
     // for testnet
-    'base-goerli': {
-      url: 'https://goerli.base.org',
+    "base-goerli": {
+      url: "https://goerli.base.org",
       accounts: accounts,
       gasPrice: 1000000000,
     },
@@ -41,8 +41,8 @@ const config: HardhatUserConfig = {
   sourcify: {
     // Disabled by default
     // Doesn't need an API key
-    enabled: false
-  }
+    enabled: false,
+  },
 };
 
 export default config;
