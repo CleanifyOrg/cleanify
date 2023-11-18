@@ -32,7 +32,7 @@ const MapComponentContent = ({
 }) => {
   const { data: reports } = useReports();
   const [center, setCenter] = useState(
-    defaultMapCenter || { lat: 40.7485612, lng: -73.9881861 }
+    defaultMapCenter || { lat: 41.0463678, lng: 28.9863605 }
   );
   const [activeReportID, setActiveReportId] = useState<number | undefined>(
     defaultActiveReport

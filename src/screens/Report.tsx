@@ -34,7 +34,7 @@ export const Report = () => {
     isOpen: isOpenIWantToCleanModal,
   } = useDisclosure();
 
-  const { ownerAddress } = useAccountAbstraction();
+  const { ownerAddress, isAuthenticated } = useAccountAbstraction();
 
   const checkIfTheUserIsAlreadySubscribedToClean = useCallback(async () => {
     if (!contract || !report || !ownerAddress) {
@@ -70,23 +70,25 @@ export const Report = () => {
                 {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
-            <Box pb={4} justifyContent={"center"} display={"flex"}>
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={onOpenDonationModal}
-                isDisabled={report.state !== ReportState.Available}
-              >
-                Donate
-              </Button>
-              <Button
-                isDisabled={isUserAlreadySubscribedToClean}
-                colorScheme="green"
-                onClick={onOpenIWantToCleanModal}
-              >
-                Clean
-              </Button>
-            </Box>
+            {isAuthenticated && (
+              <Box pb={4} justifyContent={"center"} display={"flex"}>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={onOpenDonationModal}
+                  isDisabled={report.state !== ReportState.Available}
+                >
+                  Donate
+                </Button>
+                <Button
+                  isDisabled={isUserAlreadySubscribedToClean}
+                  colorScheme="green"
+                  onClick={onOpenIWantToCleanModal}
+                >
+                  Clean
+                </Button>
+              </Box>
+            )}
           </Box>
         </Box>
         <Box h={"full"} w={["full", "50%"]}>
