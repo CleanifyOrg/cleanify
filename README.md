@@ -50,5 +50,5 @@ npx hardhat verify --constructor-args scripts/arguments.ts --network goerli DEPL
 
 ## Latest deploy
 
-Goerli: [0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b](https://goerli.etherscan.io/address/0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b)
-Base Goerli: [0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b](https://goerli.basescan.org/address/0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b)
+Goerli: [0x9661b85fd3ebf9db9aa25fabf84967b2873a667b](https://goerli.etherscan.io/address/0x9661b85fd3ebf9db9aa25fabf84967b2873a667b)
+Base Goerli: [0xd4e71f1409a81e3a7af9c8cde7a400cb83d6f2fe](https://goerli.basescan.org/address/0xd4e71f1409a81e3a7af9c8cde7a400cb83d6f2fe)
