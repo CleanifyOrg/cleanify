@@ -5,15 +5,19 @@ import {
   Button,
   HStack,
   Heading,
+  IconButton,
   Image,
   Skeleton,
   Text,
+  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { BsSun, BsMoon } from "react-icons/bs";
 import { AddressLabel } from ".";
 
 import safeLogo from "src/assets/safe-info-logo-light.svg";
 import { NetworkSelector } from "./NetworkSelector";
+import { Routes } from "@/router";
 const safeLogoDark = "src/assets/safe-info-logo-dark.svg";
 
 export const Navbar = () => {
@@ -28,11 +32,14 @@ export const Navbar = () => {
   const safeLogSrc = useColorModeValue(safeLogo, safeLogoDark);
 
   console.log({ chains });
+
+  const { toggleColorMode } = useColorMode();
+
   return (
     <HStack
       spacing={4}
       justify={"space-between"}
-      position={"sticky"}
+      position={"static"}
       top={0}
       right={0}
       w="100%"
@@ -40,7 +47,12 @@ export const Navbar = () => {
       px={8}
       py={2}
     >
-      <Heading size="md" flex={2}>
+      <Heading
+        size="md"
+        flex={2}
+        cursor={"pointer"}
+        onClick={() => window.location.replace(Routes.Home)}
+      >
         Trashify
       </Heading>
       <HStack spacing={4} flex={1.5} justify={"flex-end"}>
@@ -48,7 +60,21 @@ export const Navbar = () => {
           selectedChainId={chainId}
           setSelectedChainId={setChainId}
         />
-
+        {/* <Select
+          flex={2}
+          placeholder="Select chain"
+          value={chainId}
+          onChange={(e) => setChainId(e.target.value)}
+        > */}
+        {/* {chains.map((chain) => (
+            <option value={chain.id}>
+              <HStack>
+                <Image src={chain.icon} boxSize={4} />
+                <Text>{chain.name}</Text>
+              </HStack>
+            </option>
+          ))}
+        </Select> */}
         <Box>
           {!isAuthenticated ? (
             <Button size="md" onClick={loginWeb3Auth} isLoading={ownerLoading}>
@@ -63,6 +89,14 @@ export const Navbar = () => {
             </Skeleton>
           )}
         </Box>
+        <IconButton
+          aria-label="Mode Change"
+          variant="empty"
+          colorScheme="black"
+          size="lg"
+          icon={useColorModeValue(<BsMoon />, <BsSun />)}
+          onClick={toggleColorMode}
+        />
       </HStack>
     </HStack>
   );
