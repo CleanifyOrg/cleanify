@@ -28,6 +28,7 @@
     "@web3auth/openlogin-adapter": "4.6.0",
     "axios": "^1.6.2",
     "chakra-react-select": "^4.7.6",
+    "dotenv": "^16.3.1",
     "framer-motion": "^10.16.5",
     "hardhat": "^2.14.0",
     "ipfs-http-client": "^60.0.1",
