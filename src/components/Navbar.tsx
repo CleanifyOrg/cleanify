@@ -11,6 +11,7 @@ import {
   Text,
   useColorMode,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { BsSun, BsMoon } from "react-icons/bs";
 import { AddressLabel } from ".";
@@ -18,6 +19,7 @@ import { AddressLabel } from ".";
 import safeLogo from "src/assets/safe-info-logo-light.svg";
 import { NetworkSelector } from "./NetworkSelector";
 import { Routes } from "@/router";
+import { ConnectedWalletModal } from "./ConnectedWalletModal";
 const safeLogoDark = "src/assets/safe-info-logo-dark.svg";
 
 export const Navbar = () => {
@@ -29,6 +31,8 @@ export const Navbar = () => {
     ownerAddress,
     ownerLoading,
   } = useAccountAbstraction();
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const safeLogSrc = useColorModeValue(safeLogo, safeLogoDark);
 
   console.log({ chains });
@@ -47,6 +51,7 @@ export const Navbar = () => {
       px={8}
       py={2}
     >
+      <ConnectedWalletModal isOpen={isOpen} onClose={onClose} />
       <Heading
         size="md"
         flex={2}
@@ -85,7 +90,14 @@ export const Navbar = () => {
             </Button>
           ) : (
             <Skeleton isLoaded={!!ownerAddress}>
-              {ownerAddress && <AddressLabel address={ownerAddress} />}
+              {ownerAddress && (
+                <Button size="md" onClick={onOpen}>
+                  <AddressLabel
+                    address={ownerAddress}
+                    showCopyIntoClipboardButton={false}
+                  />
+                </Button>
+              )}
             </Skeleton>
           )}
         </Box>

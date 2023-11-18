@@ -55,31 +55,18 @@ export const ConnectedWalletOwner = () => {
         <SafeInfo safeAddress={safeSelected} chainId={chainId} />
       )}
 
-      <HStack spacing={4}>
+      <HStack spacing={4} alignSelf={"center"}>
         <Tooltip label="Logout" alignSelf={"center"}>
           <Button
             onClick={logoutWeb3Auth}
-            size="sm"
+            size="md"
             w="full"
             leftIcon={<FaDoorOpen />}
           >
             Logout
           </Button>
         </Tooltip>
-        <VStack spacing={2}>
-          <Button
-            onClick={relayTransaction}
-            isLoading={isRelayerLoading}
-            size="sm"
-            w="full"
-            leftIcon={<FaPiggyBank />}
-          >
-            Relay transaction
-          </Button>
-          <Text fontSize="xs" textAlign="center">
-            {gelatoTaskId ?? "No task id"}
-          </Text>
-        </VStack>
+        <VStack spacing={2}></VStack>
       </HStack>
     </VStack>
   );

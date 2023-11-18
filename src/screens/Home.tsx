@@ -1,26 +1,16 @@
 import {
   Box,
   Button,
-  Card,
-  CardBody,
-  CardHeader,
   HStack,
   Heading,
   Text,
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  ConnectedWalletOwner,
-  MapComponent,
-  NewReportModal,
-} from "../components";
-import { useAccountAbstraction } from "../store";
+import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
 
 export const Home = () => {
-  const { isAuthenticated } = useAccountAbstraction();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -42,26 +32,7 @@ export const Home = () => {
           </VStack>
           <Button onClick={onOpen}>New report</Button>
         </HStack>
-        {isAuthenticated && (
-          <Box
-            alignItems={"center"}
-            justifyContent={"center"}
-            px={8}
-            maxW={"xl"}
-          >
-            <Card py={4} px={8}>
-              <CardHeader>
-                <HStack spacing={4}>
-                  <Heading size="md">Connected account</Heading>
-                </HStack>
-              </CardHeader>
 
-              <CardBody>
-                <ConnectedWalletOwner />
-              </CardBody>
-            </Card>
-          </Box>
-        )}
         <MapComponent route={Routes.Home} />
       </VStack>
       <NewReportModal isOpen={isOpen} onClose={onClose} />
