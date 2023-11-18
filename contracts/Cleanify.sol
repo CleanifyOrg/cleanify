@@ -76,6 +76,8 @@ contract Cleanify is AccessControl {
         uint256 totalRewards; //amount of ETH that the report contains as reward
     }
 
+    //TODO: return all the reports a use has subscribed to clean
+
     Report[] public reports;
     uint256 reportIdCounter = 1;
     // Mapping to store the index of a report based on its ID
