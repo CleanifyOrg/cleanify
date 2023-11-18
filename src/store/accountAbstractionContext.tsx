@@ -279,6 +279,10 @@ const AccountAbstractionProvider = ({
           status = await relayPack.getTaskStatus(response.taskId);
           console.log("status", status);
 
+          if (status?.lastCheckMessage?.includes("Execution error")) {
+            throw new Error("Transaction failed: " + JSON.stringify(status));
+          }
+
           if (status && status.transactionHash) {
             break;
           }
