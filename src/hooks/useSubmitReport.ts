@@ -1,10 +1,10 @@
-import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
+import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 import { uploadToIpfs } from "@utils";
 import { ReportMetadata } from "@models/report.ts";
 import { NewReportSubmitedEvent } from "@/typechain/contracts/Trashify";
 
 export const useSubmitReport = () => {
-  const { contract } = useTrashifyContract();
+  const { contract } = useCleanifyContract();
   const createReport = async (
     metadata: ReportMetadata
   ): Promise<NewReportSubmitedEvent> => {

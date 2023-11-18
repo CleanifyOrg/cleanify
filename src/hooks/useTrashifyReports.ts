@@ -1,10 +1,10 @@
-import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
+import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 import { useEffect, useState } from "react";
 import { Trashify } from "@/typechain";
 import { BaseReport } from "@models/report.ts";
 
 export const useTrashifyReports = () => {
-  const { contract } = useTrashifyContract();
+  const { contract } = useCleanifyContract();
   const [baseReports, setBaseReports] = useState<BaseReport[]>([]);
 
   const queryReports = async (contract: Trashify) => {
