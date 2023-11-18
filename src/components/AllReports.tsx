@@ -3,15 +3,15 @@ import { TrashifyReport } from "@components/TrashifyReport.tsx";
 import { useEffect } from "react";
 
 export const AllReports = () => {
-  const { reports } = useTrashifyReports();
+  const { baseReports } = useTrashifyReports();
 
   useEffect(() => {
-    console.log("reports", reports);
-  }, [reports]);
+    console.log("reports", baseReports);
+  }, [baseReports]);
 
   return (
     <>
-      {reports.map((report) => {
+      {baseReports.map((report) => {
         return <TrashifyReport key={report.id.toString()} report={report} />;
       })}
     </>

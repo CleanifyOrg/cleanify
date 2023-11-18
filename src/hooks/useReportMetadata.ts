@@ -1,30 +1,30 @@
-import { RecordMetadata } from "@models";
-import { useCallback, useEffect, useState } from "react";
-import { getFromIPFS } from "@/utils";
+import {useCallback, useEffect, useState} from "react";
+import {getFromIPFS} from "@/utils";
+import {BaseReport, ReportMetadata} from "@models/report.ts"
 
-export const useReportMetadata = (metadataUri: string) => {
-  const [metadata, setMetadata] = useState<RecordMetadata | null>(null);
-  const [images, setImages] = useState<string[]>([]);
+export const useReportMetadata = (baseReport: BaseReport) => {
+  const [report,setReport] = useState<BaseReport>(baseReport)
 
-  const fetchMetadata = useCallback(async (uri: string) => {
-    const metadata = JSON.parse(await getFromIPFS(uri)) as RecordMetadata;
+  const fetchMetadata = useCallback(async (baseReport: BaseReport) => {
+    const metadata = JSON.parse(await getFromIPFS(baseReport.metadata)) as ReportMetadata;
 
-    const images = await Promise.all(
+    metadata.images = await Promise.all(
       metadata.images.map((image) => getFromIPFS(image))
     );
 
-    setImages(images);
-    setMetadata(metadata);
+    setReport({
+      ...baseReport,
+      metadata,
+    })
   }, []);
 
   useEffect(() => {
-    fetchMetadata(metadataUri).catch((e) => {
+    fetchMetadata(baseReport).catch((e) => {
       console.error("Error fetching metadata:", e);
     });
-  }, [fetchMetadata, metadataUri]);
+  }, [fetchMetadata, baseReport]);
 
   return {
-    metadata,
-    images,
+    report
   };
 };

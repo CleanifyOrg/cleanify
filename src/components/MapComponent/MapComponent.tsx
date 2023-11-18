@@ -5,7 +5,7 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import { ReportModal } from "./ReportModal";
-import { Report } from "@/types/report";
+import { Report } from "@models/report.ts";
 import { useMapConfig } from "./useMapConfig";
 import ColoredTrashIcon from "@/assets/colored-trash.png";
 import GreyTrashIcon from "@/assets/grey-trash.png";

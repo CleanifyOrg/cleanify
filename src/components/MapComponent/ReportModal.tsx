@@ -9,7 +9,7 @@ import {
   Box,
   Flex,
 } from "@chakra-ui/react";
-import { Report } from "@/types/report";
+import { Report } from "@models/report.ts";
 import { Link } from "react-router-dom";
 
 const formatDescription = (description: string) => {

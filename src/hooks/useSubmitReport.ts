@@ -1,24 +1,15 @@
-import { useMemo, useState } from "react";
 import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
-import { Coordinates, RecordMetadata } from "@models";
 import { NewReportSubmitedEvent } from "@/typechain/Trashify.ts";
 import {uploadToIpfs} from "@utils"
-import {AnalyzeImageResponse} from "@api/chatgpt"
+import {Report, ReportMetadata} from "@models/report.ts"
 
 export const useSubmitReport = () => {
   const { contract } = useTrashifyContract();
-  const createReport = async (analysis: AnalyzeImageResponse, images: string[]): Promise<NewReportSubmitedEvent> => {
+  const createReport = async (metadata: ReportMetadata): Promise<NewReportSubmitedEvent> => {
 
-    const imageUris = await Promise.all(
-      images.map((image) => {
-        return uploadToIpfs(image);
-      })
+    metadata.images = await Promise.all(
+      metadata.images.map((image) => uploadToIpfs(image))
     );
-
-    const metadata: RecordMetadata = {
-      ...analysis,
-      imageUris,
-    };
 
     const metadataUri = await uploadToIpfs(JSON.stringify(metadata));
 

@@ -1,4 +1,4 @@
-import { Report } from "@/types/report";
+import { Report } from "@models/report.ts";
 
 export const reports: Report[] = [
   {
