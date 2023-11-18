@@ -61,7 +61,6 @@ export const ConfirmPosition: React.FC<Props> = ({
     if (!data || !image || !selectedLocation) return;
 
     const base64Image = await blobToBase64(image.file);
-    console.log({ base64Image });
     const report: ReportMetadata = {
       images: [base64Image],
       location: selectedLocation,
