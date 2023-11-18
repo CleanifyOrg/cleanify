@@ -28,11 +28,13 @@ const getFromIPFS = async (cid: string) => {
 
   const result = await ipfs.cat(cid);
 
+  const data = [];
+
   for await (const file of result) {
-    return Buffer.from(file).toString("utf8");
+    data.push(Buffer.from(file).toString("utf8"));
   }
 
-  throw new Error("No file found for CID: " + cid);
+  return data.join("");
 };
 
 export { uploadToIpfs, getFromIPFS };
