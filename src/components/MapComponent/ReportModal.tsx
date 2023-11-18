@@ -29,8 +29,6 @@ export const ReportModal = ({
   report: Report;
   onClose: () => void;
 }) => {
-  console.log({ report });
-
   const [imageUrl, setImageUrl] = useState<string>();
 
   useEffect(() => {

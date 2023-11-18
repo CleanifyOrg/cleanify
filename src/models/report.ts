@@ -1,32 +1,33 @@
 import { AnalyzeImageResponse } from "@api/chatgpt";
 
 export type BaseReport = {
-    id: number;
-    creator: string;
-    metadata: string;
-    totalRewards: number;
-    state: ReportState;
+  id: number;
+  creator: string;
+  metadata: string;
+  totalRewards: number;
+  state: ReportState;
 };
 
 export type Report = {
-    metadata: ReportMetadata;
+  metadata: ReportMetadata;
 } & Omit<BaseReport, "metadata">;
 
 export type ReportMetadata = {
-    // entered by the user
-    name?: string;
-    images: string[];
-    location: {
-        lat: number;
-        lng: number;
-    };
-    analysis: AnalyzeImageResponse;
+  // entered by the user
+  name?: string;
+  description?: string;
+  images: string[];
+  location: {
+    lat: number;
+    lng: number;
+  };
+  analysis: AnalyzeImageResponse;
 };
 
 export enum ReportState {
-    InReview,
-    Available,
-    PendingVerification,
-    Cleaned,
-    Rewarded,
+  InReview,
+  Available,
+  PendingVerification,
+  Cleaned,
+  Rewarded,
 }
