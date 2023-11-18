@@ -17,7 +17,13 @@ export const UploadPictureStep: React.FC<Props> = ({
     >
       <VStack spacing={4} w="full" align={"flex-start"} h="full">
         <Heading size="sm">Upload a picture of the area to report</Heading>
-        <BaseDropzone onDrop={onDrop} uploadedFiles={uploadedFiles} />
+        <BaseDropzone
+          onDrop={onDrop}
+          uploadedFiles={uploadedFiles}
+          accept={{
+            "image/*": [".jpeg", ".png"],
+          }}
+        />
       </VStack>
     </ScaleFade>
   );
