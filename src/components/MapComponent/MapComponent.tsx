@@ -6,6 +6,7 @@ import { Routes } from "@/router";
 import { useNavigate } from "react-router-dom";
 import { MapMarker } from "@components/MapMarker.tsx";
 import { useTrashifyReports } from "@/hooks";
+import { useReports } from "@/api/hooks";
 
 const containerStyle = {
   height: "100%",
@@ -29,7 +30,7 @@ const MapComponentContent = ({
   defaultCenterCurrentLocation?: boolean;
   onMapClick?: (le: google.maps.MapMouseEvent) => void;
 }) => {
-  const { baseReports: reports } = useTrashifyReports();
+  const { data: reports } = useReports();
   const [center, setCenter] = useState(
     defaultMapCenter || { lat: 40.7485612, lng: -73.9881861 }
   );
