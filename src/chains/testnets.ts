@@ -10,7 +10,7 @@ const baseGoerliWithSafeConfig: ChainWithSafeConfig = {
   transactionServiceUrl: "https://safe-transaction-base-testnet.safe.global",
   color: "#3e6957",
   icon: "/icons/base.png",
-  contractAddress: "0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b",
+  contractAddress: "0xd4e71f1409a81e3a7af9c8cde7a400cb83d6f2fe",
 };
 
 const goerliWithSafeConfig: ChainWithSafeConfig = {
@@ -21,7 +21,7 @@ const goerliWithSafeConfig: ChainWithSafeConfig = {
   isStripePaymentsEnabled: false,
   isMoneriumPaymentsEnabled: true,
   icon: "/icons/ethereum.png",
-  contractAddress: "0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b",
+  contractAddress: "0x9661b85fd3ebf9db9aa25fabf84967b2873a667b",
 };
 
 export const testnets: ChainWithSafeConfig[] = [

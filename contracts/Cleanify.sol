@@ -118,6 +118,13 @@ contract Cleanify is AccessControl {
         return reports.length;
     }
 
+    // Function to get a report by its ID
+    function getReportById(
+        uint256 _reportId
+    ) public view returns (Report memory) {
+        return reports[reportIdToIndex[_reportId]];
+    }
+
     // Function to get a paginated list of reports
     function getPaginatedReports(
         uint256 page,
