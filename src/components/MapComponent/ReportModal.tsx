@@ -27,6 +27,9 @@ export const ReportModal = ({
   report: Report;
   onClose: () => void;
 }) => {
+
+  console.log(report)
+
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalOverlay />
@@ -35,7 +38,7 @@ export const ReportModal = ({
         <Link to={`/report/${report.id}`} state={{ report }}>
           <ModalBody p={0}>
             <Flex direction="column" justify="center">
-              <Image src={report.metadata.image} borderTopRadius={"2xl"} />
+              <Image src={report.metadata.images[0]} borderTopRadius={"2xl"} />
               <Box px={4} py={2}>
                 <Text fontSize="lg" fontWeight={"bold"}>
                   {report.metadata.name}
@@ -49,7 +52,7 @@ export const ReportModal = ({
                   textOverflow={"ellipses"}
                   whiteSpace={"normal"}
                 >
-                  {formatDescription(report.metadata.description)}
+                  {formatDescription(report.metadata.analysis.description ?? "")}
                 </Text>
               </Box>
             </Flex>

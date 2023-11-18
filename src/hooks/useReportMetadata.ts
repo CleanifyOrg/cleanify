@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getFromIPFS } from "@/utils";
 import { BaseReport, ReportMetadata, Report } from "@models/report.ts";
 
-export const useReportMetadata = (baseReport: BaseReport) => {
+export const useReportMetadata = (baseReport?: BaseReport) => {
   const [report, setReport] = useState<Report>();
 
   const fetchMetadata = useCallback(async (baseReport: BaseReport) => {
@@ -25,6 +25,9 @@ export const useReportMetadata = (baseReport: BaseReport) => {
   }, []);
 
   useEffect(() => {
+
+    if (baseReport)
+
     fetchMetadata(baseReport).catch((e) => {
       console.error("Error fetching metadata:", e);
     });
