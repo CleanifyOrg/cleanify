@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  GoogleMap,
-  MarkerF as Marker,
-  useJsApiLoader,
-} from "@react-google-maps/api";
-import { ReportModal } from "./ReportModal";
-import { Report } from "@/types/report";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { BaseReport, Report } from "@models/report.ts";
 import { useMapConfig } from "./useMapConfig";
-import ColoredTrashIcon from "@/assets/colored-trash.png";
-import GreyTrashIcon from "@/assets/grey-trash.png";
 import { Routes } from "@/router";
 import { useNavigate } from "react-router-dom";
-import { useReportList } from "@/hooks";
+import { useTrashifyReports } from "@hooks";
+import { MapMarker } from "@components/MapMarker.tsx";
 
 const containerStyle = {
   height: "100%",
@@ -40,12 +34,12 @@ const MapComponentContent = ({
 
   const { colorConfig } = useMapConfig();
 
+  const { baseReports } = useTrashifyReports();
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
   });
-
-  const reports = useReportList();
 
   const [map, setMap] = React.useState(null);
 
@@ -96,25 +90,17 @@ const MapComponentContent = ({
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {(reports as Report[]).map((report: Report) => (
-        <Marker
-          key={activeReportID === report.id ? `${report.id}-active` : report.id}
-          position={report.metadata.location}
-          onClick={() => handleActiveMarker(report)}
-          icon={{
-            url:
-              activeReportID === report.id ? ColoredTrashIcon : GreyTrashIcon,
-            scaledSize: { width: 50, height: 50, equals: () => true },
-          }}
-        >
-          {activeReportID === report.id && route === Routes.Home && (
-            <ReportModal
-              report={report}
-              onClose={() => setActiveReportId(undefined)}
-            />
-          )}
-        </Marker>
-      ))}
+      {(baseReports as BaseReport[]).map((baseReport: BaseReport) => {
+        return (
+          <MapMarker
+            route={route}
+            baseReport={baseReport}
+            activeReportID={activeReportID}
+            setActiveReportId={setActiveReportId}
+            handleActiveMarker={handleActiveMarker}
+          />
+        );
+      })}
     </GoogleMap>
   ) : null;
 };

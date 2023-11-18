@@ -1,43 +1,44 @@
-import { useTrashifyContract } from "@hooks/useTrashifyContract.ts";
+import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 import { useEffect, useState } from "react";
 import { Trashify } from "@/typechain";
-import { TrashifyReport } from "@models";
-import { BigNumberish } from "ethers";
+import { BaseReport } from "@models/report.ts";
 
 export const useTrashifyReports = () => {
-  const { contract } = useTrashifyContract();
-  const [reports, setReports] = useState<TrashifyReport[]>([]);
+  const { contract } = useCleanifyContract();
+  const [baseReports, setBaseReports] = useState<BaseReport[]>([]);
 
   const queryReports = async (contract: Trashify) => {
     const totalReports = await contract.totalReports();
 
     console.log("totalReports: ", totalReports.toNumber());
 
-    const allReports = await Promise.all(
+    const allReports: BaseReport[] = await Promise.all(
       Array.from(Array(totalReports.toNumber()).keys()).map((i) =>
         contract.reports(i)
       )
     ).then((reports) => {
       return reports.map((report) => {
-        return {
+        const baseReport: BaseReport = {
           id: report.id.toNumber(),
           creator: report.creator,
           metadata: report.metadata,
-          totalRewards: report.totalRewards,
+          totalRewards: report.totalRewards.toNumber(),
           state: report.state,
         };
+
+        return baseReport;
       });
     });
 
-    setReports(allReports);
+    setBaseReports(allReports);
   };
 
   useEffect(() => {
-    setReports([]);
+    setBaseReports([]);
     queryReports(contract);
   }, [contract]);
 
   return {
-    reports,
+    baseReports,
   };
 };

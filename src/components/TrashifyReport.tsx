@@ -1,11 +1,14 @@
 import { TrashifyReport as Report, useReportMetadata } from "@hooks";
+import { BaseReport } from "@models/report.ts";
 
 type ITrashifyReport = {
-  report: Report;
+  baseReport: BaseReport;
 };
 
-export const TrashifyReport = ({ report }: ITrashifyReport) => {
-  const { images, metadata } = useReportMetadata(report.metadata);
+export const TrashifyReport = ({ baseReport }: ITrashifyReport) => {
+  const { report } = useReportMetadata(baseReport);
+
+  console.log(report);
 
   return <></>;
 };

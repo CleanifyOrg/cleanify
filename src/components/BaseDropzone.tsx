@@ -1,13 +1,4 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  HStack,
-  Icon,
-  Image,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Card, CardBody, HStack, Icon, Text, VStack } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 import { useDropzone, DropzoneOptions } from "react-dropzone";
 import { FaCamera, FaCheck } from "react-icons/fa";

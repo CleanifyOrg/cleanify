@@ -47,3 +47,8 @@ Run the following command to verify the contracts:
 npx hardhat verify --constructor-args scripts/arguments.ts --network goerli DEPLOYED_CONTRACT_ADDRESS
 
 ```
+
+## Latest deploy
+
+Goerli: [0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b](https://goerli.etherscan.io/address/0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b)
+Base Goerli: [0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b](https://goerli.basescan.org/address/0xa4a3f1fa20995f9bf9805f226db4e5a042f8628b)

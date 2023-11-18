@@ -4,8 +4,8 @@ import "@typechain/hardhat";
 import fs from "fs";
 import "@nomicfoundation/hardhat-verify";
 
-const mnemonic = fs.readFileSync(".mnemonic").toString().trim();
-const infuraProjectID = fs.readFileSync(".infura").toString().trim();
+const infuraProjectID = fs.existsSync(".infura") ? fs.readFileSync(".infura").toString().trim() : ""
+const mnemonic = fs.existsSync(".mnemonic") ? fs.readFileSync(".mnemonic").toString().trim() : ""
 const accounts = {
   mnemonic,
   path: "m/44'/60'/0'/0",
@@ -36,7 +36,7 @@ const config: HardhatUserConfig = {
     },
   },
   etherscan: {
-    apiKey: fs.readFileSync(".etherscan").toString().trim(),
+    apiKey: fs.existsSync(".etherscan") ? fs.readFileSync(".etherscan").toString().trim() : "",
   },
   sourcify: {
     // Disabled by default

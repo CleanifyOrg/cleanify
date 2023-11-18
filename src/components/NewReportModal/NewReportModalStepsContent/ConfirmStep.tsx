@@ -1,15 +1,19 @@
 import { AnalyzeImageResponse } from "@/api/chatgpt";
 import {
   Box,
+  Button,
   Card,
-  HStack,
   Heading,
+  HStack,
   Image,
   ScaleFade,
   Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useSubmitReport } from "@hooks";
+import { ReportMetadata } from "@models/report.ts";
+import React from "react";
 
 const loremIpsum = "Lorem ipsum loret isset ipster";
 
@@ -24,6 +28,21 @@ export const ConfirmDetailsStep: React.FC<Props> = ({
   isPending,
 }) => {
   if (!data) return null;
+
+  const { createReport } = useSubmitReport();
+
+  const processReport = async () => {
+    const report: ReportMetadata = {
+      name: "Hello Word",
+      images: uploadedImages.map((image) => image.image),
+      location: { lat: 41.012742, lng: 28.973443 },
+      analysis: data,
+    }
+
+    const tx = await createReport(report);
+    console.log({ tx });
+  };
+
   return (
     <ScaleFade
       initialScale={0.9}
@@ -45,8 +64,8 @@ export const ConfirmDetailsStep: React.FC<Props> = ({
         >
           <HStack spacing={2} w="full" h="full">
             <VStack spacing={2} flex={1} h="full">
-              {uploadedImages.map((image) => (
-                <Skeleton isLoaded={!isPending} h="full">
+              {uploadedImages.map((image, index) => (
+                <Skeleton key={index} isLoaded={!isPending} h="full">
                   <Image
                     src={image.image}
                     borderLeftRadius={"xl"}
@@ -80,6 +99,10 @@ export const ConfirmDetailsStep: React.FC<Props> = ({
                     {data?.estimatedCost ?? loremIpsum}
                   </Text>
                 </Skeleton>
+              </Box>
+
+              <Box>
+                <Button onClick={processReport}>Submit Report</Button>
               </Box>
             </VStack>
           </HStack>

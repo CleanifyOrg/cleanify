@@ -9,17 +9,18 @@ export const useWeb3Provider = () => {
     if (web3Provider) {
       const signer = web3Provider.getSigner();
 
-      signer.sendTransaction = async (
-        transaction: ethers.providers.TransactionRequest
-      ): Promise<ethers.providers.TransactionResponse> => {
-        const txHash = await relayTransaction({
-          data: transaction.data,
-          to: transaction.to,
-          value: transaction.value,
-        });
-
-        return await signer.provider.getTransaction(txHash);
-      };
+      //TODO: Uncomment below to use relayer
+      // signer.sendTransaction = async (
+      //   transaction: ethers.providers.TransactionRequest
+      // ): Promise<ethers.providers.TransactionResponse> => {
+      //   const txHash = await relayTransaction({
+      //     data: transaction.data,
+      //     to: transaction.to,
+      //     value: transaction.value,
+      //   });
+      //
+      //   return await signer.provider.getTransaction(txHash);
+      // };
 
       return signer;
     } else {
