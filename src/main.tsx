@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import { Home } from "./App";
 import { CSSReset, ChakraProvider, Container } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AccountAbstractionProvider } from "./store/accountAbstractionContext.tsx";
@@ -18,10 +18,12 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Container
             alignItems={"center"}
             justifyContent={"center"}
-            px={8}
-            maxW={"xl"}
+            maxW={"6xl"}
+            display={"flex"}
+            flexGrow={1}
+            overflow={"auto"}
           >
-            <App />
+            <Home />
           </Container>
         </ChakraProvider>
       </QueryClientProvider>

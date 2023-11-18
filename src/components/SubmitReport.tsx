@@ -21,7 +21,9 @@ export const SubmitReport = () => {
   //TODO: create on user click, otherwise this will be called on every render
   useEffect(() => {
     if (canCreate) {
-      // console.warn('ready to submit report:', typeof createReport)
+      console.warn("ready to submit report:", typeof createReport);
+    } else {
+      console.warn("not ready to submit report:", typeof createReport);
     }
   }, [canCreate, createReport]);
 

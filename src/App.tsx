@@ -8,57 +8,57 @@ import {
   Heading,
   Text,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useAccountAbstraction } from "./store";
-import { ConnectedWalletOwner } from "./components";
-import { AllReports } from "@components/AllReports.tsx";
-import { SubmitReport } from "@components/SubmitReport.tsx";
+import { ConnectedWalletOwner, NewReportModal } from "@/components";
+import { useAccountAbstraction } from "@/store";
 
-function App() {
-  const { isAuthenticated, loginWeb3Auth } = useAccountAbstraction();
+export const Home = () => {
+  const { isAuthenticated } = useAccountAbstraction();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <VStack
-      h={"100vh"}
-      w={"full"}
-      alignItems={"center"}
-      justifyContent={"center"}
-    >
-      <VStack spacing={4} alignItems={"center"} justifyContent={"center"}>
-        <Box>
-          <Heading textAlign={"center"} size="lg">
-            Welcome to Trashify
-          </Heading>
-
-          <AllReports />
-          <SubmitReport />
-
-          <Text fontWeight="normal" textAlign="center">
-            The decentralized waste management platform that allows users to
-            earn rewards for recycling.
-          </Text>
-        </Box>
-        {!isAuthenticated && (
-          <Button onClick={loginWeb3Auth} size="lg" w="full">
-            Connect Wallet
-          </Button>
-        )}
+    <Box h={"full"} w={"full"}>
+      <NewReportModal isOpen={isOpen} onClose={onClose} />
+      <VStack w={"full"} h={"full"}>
+        <HStack
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          w="100%"
+          pb={4}
+          pt={4}
+        >
+          <VStack alignItems={"left"}>
+            <Heading size="lg">Welcome to Trashify</Heading>
+            <Text fontWeight="normal">
+              The decentralized waste management platform that allows users to
+              earn rewards for recycling.
+            </Text>
+          </VStack>
+          <Button onClick={onOpen}>New report</Button>
+        </HStack>
         {isAuthenticated && (
-          <Card py={4} px={8}>
-            <CardHeader>
-              <HStack spacing={4}>
-                <Heading size="md">Connected account</Heading>
-              </HStack>
-            </CardHeader>
+          <Box
+            alignItems={"center"}
+            justifyContent={"center"}
+            px={8}
+            maxW={"xl"}
+          >
+            <Card py={4} px={8}>
+              <CardHeader>
+                <HStack spacing={4}>
+                  <Heading size="md">Connected account</Heading>
+                </HStack>
+              </CardHeader>
 
-            <CardBody>
-              <ConnectedWalletOwner />
-            </CardBody>
-          </Card>
+              <CardBody>
+                <ConnectedWalletOwner />
+              </CardBody>
+            </Card>
+          </Box>
         )}
       </VStack>
-    </VStack>
+    </Box>
   );
-}
-
-export default App;
+};
