@@ -5,6 +5,7 @@ import {
   Button,
   HStack,
   Image,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -31,8 +32,13 @@ export const Report = () => {
   console.log("report.state", report.state);
   return (
     <>
-      <HStack w={"full"} h={"full"}>
-        <Box h={"full"} w={"50%"} overflow={"auto"} pr={4}>
+      <DonationModal
+        isOpen={isOpenDonationModal}
+        onClose={onCloseDonationModal}
+        reportId={report.id}
+      />
+      <Stack direction={["column", "row"]} w={"full"} h={["auto", "full"]}>
+        <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
           <Image src={report.metadata.images[0]} w={"full"} />
           <Box py={4}>
             <Box pb={2}>
@@ -57,20 +63,15 @@ export const Report = () => {
               <Button colorScheme="green">Clean</Button>
             </Box>
           </Box>
-          <Box h={"full"} w={"50%"}>
-            <MapComponent
-              defaultActiveReport={report.id}
-              defaultMapCenter={report.metadata.location}
-              route={Routes.Report}
-            />
-          </Box>
         </Box>
-      </HStack>
-      <DonationModal
-        isOpen={isOpenDonationModal}
-        onClose={onCloseDonationModal}
-        reportId={report.id}
-      />
+        <Box h={"full"} w={["full", "50%"]}>
+          <MapComponent
+            defaultActiveReport={report.id}
+            defaultMapCenter={report.metadata.location}
+            route={Routes.Report}
+          />
+        </Box>
+      </Stack>
     </>
   );
 };

@@ -22,6 +22,8 @@ import { Routes } from "@/router";
 import { ConnectedWalletModal } from "./ConnectedWalletModal";
 const safeLogoDark = "src/assets/safe-info-logo-dark.svg";
 
+import { useNavigate } from "react-router-dom";
+
 export const Navbar = () => {
   const {
     chainId,
@@ -39,6 +41,12 @@ export const Navbar = () => {
 
   const { toggleColorMode } = useColorMode();
 
+  const navigate = useNavigate();
+
+  const onLogoClick = () => {
+    navigate(Routes.Home);
+  };
+
   return (
     <HStack
       spacing={4}
@@ -52,12 +60,7 @@ export const Navbar = () => {
       py={2}
     >
       <ConnectedWalletModal isOpen={isOpen} onClose={onClose} />
-      <Heading
-        size="md"
-        flex={2}
-        cursor={"pointer"}
-        onClick={() => window.location.replace(Routes.Home)}
-      >
+      <Heading size="md" flex={2} cursor={"pointer"} onClick={onLogoClick}>
         Trashify
       </Heading>
       <HStack spacing={4} flex={1.5} justify={"flex-end"}>
