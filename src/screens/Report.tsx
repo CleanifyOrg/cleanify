@@ -3,6 +3,7 @@ import { Routes } from "@/router";
 import {
   Box,
   Button,
+  HStack,
   Image,
   Spinner,
   Stack,
@@ -101,11 +102,10 @@ export const Report = () => {
           <Image src={blobImage} w={"full"} />
 
           {isAuthenticated && (
-            <Box pb={4} pt={4} justifyContent={"center"} display={"flex"}>
+            <HStack pb={4} pt={4} justifyContent={"center"} >
               <Button
                 colorScheme="blue"
                 w={"full"}
-                mr={3}
                 onClick={onOpenDonationModal}
                 isDisabled={report.state !== ReportState.Available || buttonsDisabled}
               >
@@ -116,7 +116,6 @@ export const Report = () => {
                 isDisabled={isUserAlreadySubscribedToClean || buttonsDisabled}
                 colorScheme="green"
                 onClick={onOpenIWantToCleanModal}
-                mr={3}
               >
                 Clean
               </Button>
@@ -134,7 +133,7 @@ export const Report = () => {
                 )
               }
 
-            </Box>
+            </HStack>
           )}
 
           <Box py={4}>
