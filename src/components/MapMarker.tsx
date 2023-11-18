@@ -1,6 +1,7 @@
 import { BaseReport, Report } from "@models/report.ts";
 import { useReportMetadata } from "@hooks";
 import ColoredTrashIcon from "@/assets/colored-trash.png";
+import Pointer from "@/assets/pointer.png";
 import GreyTrashIcon from "@/assets/grey-trash.png";
 import { Routes } from "@/router.tsx";
 import { ReportModal } from "@components/MapComponent/ReportModal.tsx";
@@ -30,7 +31,10 @@ export const MapMarker = ({
       key={report.id}
       position={report.metadata.location}
       onClick={() => handleActiveMarker(report)}
-      icon={{
+      icon={activeReportID === report.id ? {
+        url: Pointer,
+        scaledSize: { width: 50, height: 50, equals: () => true },
+      } : {
         url: report.state === 0 ? GreyTrashIcon : ColoredTrashIcon,
         scaledSize: { width: 50, height: 50, equals: () => true },
       }}
