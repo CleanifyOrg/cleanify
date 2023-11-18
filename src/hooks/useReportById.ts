@@ -1,6 +1,6 @@
 import { useReportMetadata } from "@hooks/useReportMetadata.ts";
 import { BaseReport } from "@models/report.ts";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 
 export const useReportById = (id: number) => {
@@ -10,7 +10,7 @@ export const useReportById = (id: number) => {
 
   const { report } = useReportMetadata(baseReport);
 
-  const getReport = async () => {
+  const getReport = useCallback(async () => {
     if (contract) {
       contract.getReportById(id).then((baseReport) => {
         setBaseReport({
@@ -22,11 +22,11 @@ export const useReportById = (id: number) => {
         });
       });
     }
-  };
+  }, [contract, id]);
 
   useEffect(() => {
     getReport();
-  }, []);
+  }, [getReport]);
 
   const refreshReport = () => {
     getReport();
