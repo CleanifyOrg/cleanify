@@ -37,4 +37,12 @@ const getFromIPFS = async (cid: string) => {
   return data.join("");
 };
 
-export { uploadToIpfs, getFromIPFS };
+const isIpfsCid = (cid: string) => {
+  //Qm[1-9A-Za-z]{44}
+
+  const regex = new RegExp("Qm[1-9A-Za-z]{44}");
+
+  return regex.test(cid) && cid.length === 46;
+}
+
+export { uploadToIpfs, getFromIPFS, isIpfsCid };

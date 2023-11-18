@@ -15,9 +15,6 @@ import { Web3AuthModalPack } from "@safe-global/auth-kit";
 
 //gasless transactions https://docs.safe.global/safe-core-aa-sdk/relay-kit/guides/gelato
 import { GelatoRelayPack } from "@safe-global/relay-kit";
-import {
-  MetaTransactionData,
-} from "@safe-global/safe-core-sdk-types";
 
 import { defaultTestnetChain, getChain } from "@/chains";
 import { usePolling } from "@hooks";
@@ -265,7 +262,6 @@ const AccountAbstractionProvider = ({
         const _chainId = parseInt(chainId);
 
         const response = await relayPack.sendSponsorTransaction(to, data, _chainId)
-
 
         console.log(
           `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`

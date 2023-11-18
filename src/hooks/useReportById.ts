@@ -28,7 +28,12 @@ export const useReportById = (id: number) => {
     getReport();
   }, []);
 
+  const refreshReport = () => {
+    getReport();
+  }
+
   return {
     report,
+    refreshReport
   };
 };
