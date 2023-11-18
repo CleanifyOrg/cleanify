@@ -96,7 +96,7 @@ const MapComponentContent = ({
       onUnmount={onUnmount}
       onClick={onMapClick}
     >
-      {reports.map((baseReport: BaseReport) => {
+      {reports?.map((baseReport: BaseReport) => {
         return (
           <MapMarker
             key={
