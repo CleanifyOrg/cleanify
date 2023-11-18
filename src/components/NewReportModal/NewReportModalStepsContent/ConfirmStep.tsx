@@ -37,10 +37,9 @@ export const ConfirmDetailsStep: React.FC<Props> = ({
       images: uploadedImages.map((image) => image.image),
       location: { lat: 41.012742, lng: 28.973443 },
       analysis: data,
-    }
+    };
 
     const tx = await createReport(report);
-    console.log({ tx });
   };
 
   return (
