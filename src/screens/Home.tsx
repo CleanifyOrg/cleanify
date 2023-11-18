@@ -3,6 +3,7 @@ import {
   Button,
   HStack,
   Heading,
+  Hide,
   Text,
   VStack,
   useDisclosure,
@@ -10,6 +11,7 @@ import {
 import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
 import { useAccountAbstraction } from "@/store";
+import { FaPlus } from "react-icons/fa";
 
 export const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,15 +27,31 @@ export const Home = () => {
           pt={4}
         >
           <VStack alignItems={"left"}>
-            <Heading size="lg">Welcome to Cleanify</Heading>
+            <HStack justify={"space-between"} w="full">
+              <Heading size={["md", "lg"]}>Welcome to Cleanify</Heading>
+              <Hide above="sm">
+                <Button
+                  leftIcon={<FaPlus />}
+                  size="sm"
+                  onClick={isAuthenticated ? onOpen : loginWeb3Auth}
+                >
+                  New report
+                </Button>
+              </Hide>
+            </HStack>
             <Text fontWeight="normal">
               The decentralized waste management platform that allows users to
               earn rewards for recycling.
             </Text>
           </VStack>
-          <Button onClick={isAuthenticated ? onOpen : loginWeb3Auth}>
-            New report
-          </Button>
+          <Hide below="sm">
+            <Button
+              leftIcon={<FaPlus />}
+              onClick={isAuthenticated ? onOpen : loginWeb3Auth}
+            >
+              New report
+            </Button>
+          </Hide>
         </HStack>
 
         <MapComponent route={Routes.Home} />
