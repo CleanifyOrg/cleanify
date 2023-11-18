@@ -9,8 +9,8 @@ import { Trashify } from "@/typechain/contracts/Trashify";
 import { BaseReport } from "@/models";
 
 const getIsSafeDeployedQueryKey = (
-    safeAddress: string,
-    provider?: providers.Web3Provider
+  safeAddress: string,
+  provider?: providers.Web3Provider
 ) => ["IS_SAFE_DEPLOYED", safeAddress, provider?.network?.chainId];
 /**
  *  Returns true if the provided address is a contract
@@ -19,19 +19,19 @@ const getIsSafeDeployedQueryKey = (
  * @returns  true if the provided address is a contract
  */
 export const useIsSafeDeployed = (
-    safeAddress: string,
-    provider?: providers.Web3Provider
+  safeAddress: string,
+  provider?: providers.Web3Provider
 ) => {
-    return useQuery({
-        queryKey: getIsSafeDeployedQueryKey(safeAddress, provider),
-        queryFn: () => isContractAddress(safeAddress, provider),
-    });
+  return useQuery({
+    queryKey: getIsSafeDeployedQueryKey(safeAddress, provider),
+    queryFn: () => isContractAddress(safeAddress, provider),
+  });
 };
 
 const getSafeInfoQueryKey = (safeAddress: string, connectedChainId: string) => [
-    "SAFE_INFO",
-    safeAddress,
-    connectedChainId,
+  "SAFE_INFO",
+  safeAddress,
+  connectedChainId,
 ];
 /**
  *  Get the exchange rate of a coin
@@ -40,31 +40,32 @@ const getSafeInfoQueryKey = (safeAddress: string, connectedChainId: string) => [
  * @returns  the exchange rate
  */
 export const useSafeInfo = (safeAddress: string, connectedChainId: string) => {
-    return useQuery({
-        queryKey: getSafeInfoQueryKey(safeAddress, connectedChainId),
-        queryFn: () => getSafeInfo(safeAddress, connectedChainId),
-    });
+  return useQuery({
+    queryKey: getSafeInfoQueryKey(safeAddress, connectedChainId),
+    queryFn: () => getSafeInfo(safeAddress, connectedChainId),
+  });
 };
 
 //TODO: are these contracts related to a specific chain ? if so, we should add the chainId to the queryKey
 export const reportsKey = () => ["REPORTS"];
 
 export const useReports = () => {
-    const { contract } = useCleanifyContract();
+  const { contract } = useCleanifyContract();
 
-    return useQuery({
-        queryKey: reportsKey(),
-        queryFn: () => queryReports(contract),
-    });
-}
+  return useQuery({
+    queryKey: reportsKey(),
+    queryFn: () => queryReports(contract),
+  });
+};
 
-
-export const reportMetadataKey = (baseReport: BaseReport) => ["REPORT_METADATA", baseReport.id];
+export const reportMetadataKey = (baseReport: BaseReport) => [
+  "REPORT_METADATA",
+  baseReport.id,
+];
 
 export const useGetReportMetadata = (baseReport: BaseReport) => {
-
-    return useQuery({
-        queryKey: reportMetadataKey(baseReport),
-        queryFn: () => getReportMetadata(baseReport),
-    });
-}
+  return useQuery({
+    queryKey: reportMetadataKey(baseReport),
+    queryFn: () => getReportMetadata(baseReport),
+  });
+};

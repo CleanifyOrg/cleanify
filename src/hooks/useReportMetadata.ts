@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {getFromIPFS, isIpfsCid} from "@/utils";
+import { getFromIPFS, isIpfsCid } from "@/utils";
 import { BaseReport, ReportMetadata, Report } from "@models/report.ts";
 
 export const useReportMetadata = (baseReport?: BaseReport) => {
@@ -12,10 +12,9 @@ export const useReportMetadata = (baseReport?: BaseReport) => {
 
     metadata.images = await Promise.all(
       metadata.images.map((image) => {
-        if (isIpfsCid(image))
-          return getFromIPFS(image)
+        if (isIpfsCid(image)) return getFromIPFS(image);
 
-        return image
+        return image;
       })
     );
 
@@ -30,12 +29,10 @@ export const useReportMetadata = (baseReport?: BaseReport) => {
   }, []);
 
   useEffect(() => {
-
     if (baseReport)
-
-    fetchMetadata(baseReport).catch((e) => {
-      console.error("Error fetching metadata:", e);
-    });
+      fetchMetadata(baseReport).catch((e) => {
+        console.error("Error fetching metadata:", e);
+      });
   }, [fetchMetadata, baseReport]);
 
   return {

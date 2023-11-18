@@ -31,13 +31,17 @@ export const MapMarker = ({
       key={report.id}
       position={report.metadata.location}
       onClick={() => handleActiveMarker(report)}
-      icon={activeReportID === report.id ? {
-        url: Pointer,
-        scaledSize: { width: 50, height: 50, equals: () => true },
-      } : {
-        url: report.state === 0 ? GreyTrashIcon : ColoredTrashIcon,
-        scaledSize: { width: 50, height: 50, equals: () => true },
-      }}
+      icon={
+        activeReportID === report.id
+          ? {
+              url: Pointer,
+              scaledSize: { width: 50, height: 50, equals: () => true },
+            }
+          : {
+              url: report.state === 0 ? GreyTrashIcon : ColoredTrashIcon,
+              scaledSize: { width: 50, height: 50, equals: () => true },
+            }
+      }
     >
       {activeReportID === report.id && route === Routes.Home && (
         <ReportModal

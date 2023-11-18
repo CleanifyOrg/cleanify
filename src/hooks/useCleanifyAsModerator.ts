@@ -1,10 +1,10 @@
-import {useAccountAbstraction} from "@store"
-import {useMemo} from "react"
-import {ethers} from "ethers"
+import { useAccountAbstraction } from "@store";
+import { useMemo } from "react";
+import { ethers } from "ethers";
 import { Cleanify__factory as CleanifyFactory } from "@/typechain";
 
 export const useCleanifyAsModerator = () => {
-  const { web3Provider, chain } = useAccountAbstraction()
+  const { web3Provider, chain } = useAccountAbstraction();
 
   const provider = useMemo(() => {
     if (web3Provider) {
@@ -18,14 +18,10 @@ export const useCleanifyAsModerator = () => {
 
   const contract = useMemo(() => {
     return CleanifyFactory.connect(chain.contractAddress, provider);
-  }, [
-    chain.contractAddress,
-    provider
-  ])
+  }, [chain.contractAddress, provider]);
 
   return {
     contractAsModerator: contract,
-    provider
-  }
-
-}
+    provider,
+  };
+};

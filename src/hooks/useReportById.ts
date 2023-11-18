@@ -30,10 +30,10 @@ export const useReportById = (id: number) => {
 
   const refreshReport = () => {
     getReport();
-  }
+  };
 
   return {
     report,
-    refreshReport
+    refreshReport,
   };
 };

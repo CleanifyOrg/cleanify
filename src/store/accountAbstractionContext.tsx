@@ -43,23 +43,27 @@ type accountAbstractionContextValue = {
     to: string;
   }) => Promise<string>;
   gelatoTaskId?: string;
+  getSafeAccount : () => Promise<string>;
 };
 
 const initialState = {
   isAuthenticated: false,
   ownerLoading: false,
-  loginWeb3Auth: () => { },
-  logoutWeb3Auth: () => { },
+  loginWeb3Auth: () => {},
+  logoutWeb3Auth: () => {},
   relayTransaction: async () => {
     throw new Error("Not ready");
   },
-  setChainId: () => { },
-  setSafeSelected: () => { },
-  onRampWithStripe: async () => { },
+  setChainId: () => {},
+  setSafeSelected: () => {},
+  onRampWithStripe: async () => {},
   safes: [],
   chain: defaultTestnetChain,
   chainId: defaultTestnetChain.id,
   isRelayerLoading: true,
+  getSafeAccount: async () => {
+    throw new Error("Not ready");
+  }
 };
 
 const accountAbstractionContext =
@@ -314,6 +318,25 @@ const AccountAbstractionProvider = ({
 
   const safeBalance = usePolling(fetchSafeBalance);
 
+  const getSafeAccount = useCallback(async () => {
+    if (!web3Provider)
+      return "";
+
+    const key: string = import.meta.env.VITE_GELATO_RELAY_API_KEY;
+    const relayPack = new GelatoRelayPack(key);
+
+    const signer = web3Provider.getSigner();
+
+    const safeAccountAbstraction = new AccountAbstraction(signer);
+
+    await safeAccountAbstraction.init({relayPack})
+
+    return await safeAccountAbstraction.getSafeAddress();
+  }, [
+    web3Provider,
+  ]);
+
+
   const state = {
     ownerAddress,
     ownerLoading,
@@ -334,6 +357,9 @@ const AccountAbstractionProvider = ({
     safeBalance,
     setSafeSelected,
     safeSelectedLoading,
+
+
+    getSafeAccount,
 
     isRelayerLoading,
     relayTransaction,
