@@ -1,32 +1,34 @@
-import { useReportMetadata } from "@hooks/useReportMetadata.ts"
-import { BaseReport } from "@models/report.ts"
-import { useEffect, useState } from "react"
-import { useCleanifyContract } from "@hooks/useCleanifyContract.ts"
+import { useReportMetadata } from "@hooks/useReportMetadata.ts";
+import { BaseReport } from "@models/report.ts";
+import { useEffect, useState } from "react";
+import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 
 export const useReportById = (id: number) => {
+  const { contract } = useCleanifyContract();
 
-  const { contract } = useCleanifyContract()
+  const [baseReport, setBaseReport] = useState<BaseReport>();
 
-  const [baseReport, setBaseReport] = useState<BaseReport>()
+  const { report } = useReportMetadata(baseReport);
 
-  const { report } = useReportMetadata(baseReport)
-
-  useEffect(() => {
+  const getReport = async () => {
     if (contract) {
-      contract.reports(id).then((baseReport) => {
+      contract.getReportById(id).then((baseReport) => {
         setBaseReport({
           id: baseReport.id.toNumber(),
           creator: baseReport.creator,
           metadata: baseReport.metadata,
           totalRewards: baseReport.totalRewards.toNumber(),
           state: baseReport.state,
-        })
-      })
+        });
+      });
     }
-  }, [id])
+  };
+
+  useEffect(() => {
+    getReport();
+  }, []);
 
   return {
     report,
-  }
-
-}
+  };
+};

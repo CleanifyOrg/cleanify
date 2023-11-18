@@ -53,6 +53,7 @@ jobs:
           VITE_IPFS_API_KEY: ${{secrets.VITE_IPFS_API_KEY}}
           VITE_IPFS_SECRET_KEY: ${{secrets.VITE_IPFS_SECRET_KEY}}
           VITE_IPFS_GATEWAY: ${{secrets.VITE_IPFS_GATEWAY}}
+          VITE_IS_PROD: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
