@@ -1,4 +1,4 @@
-import { TrashifyReport as Report, useReportMetadata } from "@hooks";
+import { useReportMetadata } from "@hooks";
 import { BaseReport } from "@models/report.ts";
 
 type ITrashifyReport = {

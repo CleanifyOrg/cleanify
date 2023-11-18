@@ -4,7 +4,7 @@ import ColoredTrashIcon from "@/assets/colored-trash.png";
 import GreyTrashIcon from "@/assets/grey-trash.png";
 import { Routes } from "@/router.tsx";
 import { ReportModal } from "@components/MapComponent/ReportModal.tsx";
-import { Marker } from "@react-google-maps/api";
+import { MarkerF as Marker } from "@react-google-maps/api";
 
 type Props = {
   baseReport: BaseReport;

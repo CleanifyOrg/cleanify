@@ -18,9 +18,11 @@ import { useMutation } from "@tanstack/react-query";
 import { FaArrowLeft, FaArrowRight, FaInfoCircle } from "react-icons/fa";
 import { UploadPictureStep } from "./NewReportModalStepsContent/UploadPictureStep";
 import { ValidatePictureStep } from "./NewReportModalStepsContent/ValidatePictureStep";
-import { ConfirmDetailsStep } from "./NewReportModalStepsContent/ConfirmStep";
+import { ConfirmMetadataStep } from "./NewReportModalStepsContent/ConfirmMetadataStep";
 import { NewReportModalSteps } from "../Step";
 import { analyzeImage } from "@/api/chatgpt";
+import { ConfirmPosition } from "./NewReportModalStepsContent/ConfirmPosition";
+import { SendReport } from "./NewReportModalStepsContent/SendReport";
 
 type Step = {
   title: string;
@@ -38,6 +40,11 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
     { file: File; image: string }[]
   >([]);
 
+  const [selectedPosition, setSelectedPosition] = useState<{
+    lat: number;
+    lng: number;
+  }>();
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log({ acceptedFiles });
 
@@ -45,6 +52,7 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
       file,
       image: URL.createObjectURL(file),
     }));
+    console.log({ parsedUploads });
     setUploadedImages(parsedUploads);
   }, []);
 
@@ -62,7 +70,7 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
     goToPrevious,
   } = useSteps({
     index: 0,
-    count: 3,
+    count: 4,
   });
 
   const steps: Step[] = useMemo(
@@ -87,13 +95,36 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
         ),
       },
       {
-        title: "confirm",
+        title: "Details",
         description: "Confirm the details",
         component: (
-          <ConfirmDetailsStep
+          <ConfirmMetadataStep
             isPending={isPending}
             data={data}
             uploadedImages={uploadedImages}
+          />
+        ),
+      },
+      {
+        title: "position",
+        description: "Confirm the position",
+        component: (
+          <ConfirmPosition
+            selectedLocation={selectedPosition}
+            setSelectedLocation={setSelectedPosition}
+          />
+        ),
+      },
+      {
+        title: "send",
+        description: "Send the report",
+        component: (
+          <SendReport
+            data={data}
+            isPending={isPending}
+            uploadedImages={uploadedImages}
+            selectedLocation={selectedPosition}
+            closeModal={onClose}
           />
         ),
       },
@@ -111,7 +142,7 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
     [activeStepIndex]
   );
   const isNextDisabled = useMemo(() => {
-    if (activeStepIndex === steps.length - 1) return true;
+    if (activeStepIndex === steps.length) return true;
     if (activeStepIndex === 0 && uploadedImages.length === 0) return true;
     if (activeStepIndex === 1 && !data?.isWastePollution) return true;
     return false;

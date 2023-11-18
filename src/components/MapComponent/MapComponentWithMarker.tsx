@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { BaseReport, Report } from "@models/report.ts";
+import { GoogleMap, useJsApiLoader, MarkerF } from "@react-google-maps/api";
 import { useMapConfig } from "./useMapConfig";
-import { Routes } from "@/router";
-import { useNavigate } from "react-router-dom";
-import { MapMarker } from "@components/MapMarker.tsx";
+import GreyTrashIcon from "@/assets/grey-trash.png";
 
 const containerStyle = {
   height: "100%",
@@ -12,31 +9,18 @@ const containerStyle = {
 };
 
 //TODO: refactor to be more generic and with less conditionals
-const MapComponentContent = ({
-  defaultMapCenter,
-  defaultActiveReport,
-  route,
+const MapWithMarkerComponentContent = ({
+  markerLocation,
   onMapClick,
-  reports = [],
   defaultCenterCurrentLocation = true,
+  onIsMapLoaded,
 }: {
-  reports?: BaseReport[];
-  route: Routes;
-  defaultActiveReport?: number;
-  defaultMapCenter?: {
-    lat: number;
-    lng: number;
-  };
+  markerLocation?: google.maps.LatLng | google.maps.LatLngLiteral;
   defaultCenterCurrentLocation?: boolean;
   onMapClick?: (le: google.maps.MapMouseEvent) => void;
+  onIsMapLoaded?: (isLoaded: boolean) => void;
 }) => {
-  const [center, setCenter] = useState(
-    defaultMapCenter || { lat: 40.7485612, lng: -73.9881861 }
-  );
-  const [activeReportID, setActiveReportId] = useState<number | undefined>(
-    defaultActiveReport
-  );
-  const navigate = useNavigate();
+  const [center, setCenter] = useState<{ lat: number; lng: number }>();
 
   const { colorConfig } = useMapConfig();
 
@@ -44,6 +28,8 @@ const MapComponentContent = ({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
   });
+
+  console.log({ markerLocation });
 
   const [map, setMap] = React.useState(null);
 
@@ -55,9 +41,14 @@ const MapComponentContent = ({
       // map.fitBounds(bounds);
 
       setMap(map);
+      onIsMapLoaded?.(true);
     },
     []
   );
+
+  useEffect(() => {
+    onIsMapLoaded?.(isLoaded);
+  }, [isLoaded, onIsMapLoaded]);
 
   const onUnmount = React.useCallback(() => {
     setMap(null);
@@ -75,15 +66,6 @@ const MapComponentContent = ({
     }
   }, [defaultCenterCurrentLocation]);
 
-  const handleActiveMarker = (report: Report) => {
-    if (report.id !== activeReportID) {
-      setActiveReportId(report.id);
-    }
-    if (route === Routes.Report) {
-      navigate(`/report/${report.id}`);
-    }
-  };
-
   return isLoaded ? (
     <GoogleMap
       options={{
@@ -96,19 +78,17 @@ const MapComponentContent = ({
       onUnmount={onUnmount}
       onClick={onMapClick}
     >
-      {reports.map((baseReport: BaseReport) => {
-        return (
-          <MapMarker
-            route={route}
-            baseReport={baseReport}
-            activeReportID={activeReportID}
-            setActiveReportId={setActiveReportId}
-            handleActiveMarker={handleActiveMarker}
-          />
-        );
-      })}
+      {markerLocation && (
+        <MarkerF
+          position={markerLocation}
+          icon={{
+            url: GreyTrashIcon,
+            scaledSize: { width: 50, height: 50, equals: () => true },
+          }}
+        />
+      )}
     </GoogleMap>
   ) : null;
 };
 
-export const MapComponent = React.memo(MapComponentContent);
+export const MapWithMarkerComponent = React.memo(MapWithMarkerComponentContent);

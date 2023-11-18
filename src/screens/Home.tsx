@@ -9,9 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
+import { useTrashifyReports } from "@/hooks";
 
 export const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { baseReports } = useTrashifyReports();
 
   return (
     <Box h={"full"} w={"full"}>
@@ -33,7 +35,7 @@ export const Home = () => {
           <Button onClick={onOpen}>New report</Button>
         </HStack>
 
-        <MapComponent route={Routes.Home} />
+        <MapComponent route={Routes.Home} reports={baseReports} />
       </VStack>
       <NewReportModal isOpen={isOpen} onClose={onClose} />
     </Box>

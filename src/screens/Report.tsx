@@ -5,33 +5,65 @@ import {
   Button,
   HStack,
   Image,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useReportById } from "@hooks/useReportById.ts";
 import { ReportState } from "@/models/report";
+import IWantToCleanModal from "@/components/IWantToCleanModal";
+import { useCallback, useEffect, useState } from "react";
+import { useCleanifyContract } from "@/hooks";
+import { useAccountAbstraction } from "@/store";
 
 export const Report = () => {
   const params = useParams();
-
-  console.log("params.id", params.id);
+  const { contract } = useCleanifyContract();
+  const [isUserAlreadySubscribedToClean, setIsUserAlreadySubscribedToClean] =
+    useState(true);
 
   const { report } = useReportById(Number(params.id));
-  console.log("report", report);
-
-  console.log(params);
   const {
     onOpen: onOpenDonationModal,
     onClose: onCloseDonationModal,
     isOpen: isOpenDonationModal,
   } = useDisclosure();
+  const {
+    onOpen: onOpenIWantToCleanModal,
+    onClose: onCloseIWantToCleanModal,
+    isOpen: isOpenIWantToCleanModal,
+  } = useDisclosure();
+
+  const { ownerAddress } = useAccountAbstraction();
+
+  const checkIfTheUserIsAlreadySubscribedToClean = useCallback(async () => {
+    console.log("$$$$contract", contract);
+    console.log("$$$$report", report?.id);
+    console.log("ownerAddress", ownerAddress);
+    if (!contract || !report || !ownerAddress) {
+      setIsUserAlreadySubscribedToClean(true); // so the button is disabled
+    }
+
+    const isUserAlreadySubscribedToClean =
+      await contract.isUserSubscribedAsCleaner(report!.id, ownerAddress!);
+
+    console.log(
+      "isUserAlreadySubscribedToClean",
+      isUserAlreadySubscribedToClean
+    );
+    setIsUserAlreadySubscribedToClean(isUserAlreadySubscribedToClean);
+  }, [contract, report, ownerAddress]);
+
+  useEffect(() => {
+    checkIfTheUserIsAlreadySubscribedToClean();
+  }, [checkIfTheUserIsAlreadySubscribedToClean]);
 
   if (!report) return null;
-  console.log("report.state", report.state);
+
   return (
     <>
-      <HStack w={"full"} h={"full"}>
+      <Stack direction={["column", "row"]} w={"full"} h={"full"}>
         <Box h={"full"} w={"50%"} overflow={"auto"} pr={4}>
           <Image src={report.metadata.images[0]} w={"full"} />
           <Box py={4}>
@@ -42,7 +74,7 @@ export const Report = () => {
             </Box>
             <Box pb={6}>
               <Text fontSize="md" textAlign={"justify"}>
-                {report.metadata.analysis.description}
+                {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
             <Box pb={4} justifyContent={"center"} display={"flex"}>
@@ -54,21 +86,32 @@ export const Report = () => {
               >
                 Donate
               </Button>
-              <Button colorScheme="green">Clean</Button>
+              <Button
+                isDisabled={isUserAlreadySubscribedToClean}
+                colorScheme="green"
+                onClick={onOpenIWantToCleanModal}
+              >
+                Clean
+              </Button>
             </Box>
           </Box>
-          <Box h={"full"} w={"50%"}>
-            <MapComponent
-              defaultActiveReport={report.id}
-              defaultMapCenter={report.metadata.location}
-              route={Routes.Report}
-            />
-          </Box>
         </Box>
-      </HStack>
+        <Box h={"full"} w={"50%"}>
+          <MapComponent
+            defaultActiveReport={report.id}
+            defaultMapCenter={report.metadata.location}
+            route={Routes.Report}
+          />
+        </Box>
+      </Stack>
       <DonationModal
         isOpen={isOpenDonationModal}
         onClose={onCloseDonationModal}
+        reportId={report.id}
+      />
+      <IWantToCleanModal
+        isOpen={isOpenIWantToCleanModal}
+        onClose={onCloseIWantToCleanModal}
         reportId={report.id}
       />
     </>
