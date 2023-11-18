@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
+import { SubmitReport } from "@/components/SubmitReport";
 
 export const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,6 +24,7 @@ export const Home = () => {
           pb={4}
           pt={4}
         >
+          <SubmitReport />
           <VStack alignItems={"left"}>
             <Heading size="lg">Welcome to Trashify</Heading>
             <Text fontWeight="normal">

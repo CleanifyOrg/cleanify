@@ -1,6 +1,6 @@
-import { useReportList } from "./useReportList";
+import { useReports } from "@/api/hooks";
 
 export const useReport = (reportId?: number) => {
-  const reports = useReportList();
-  return reports.find((report) => report.id === reportId);
+    const { data: reports } = useReports();
+    return reports?.find((report) => report.id === reportId);
 };

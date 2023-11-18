@@ -10,7 +10,7 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
-import { FaDoorOpen, FaPiggyBank } from "react-icons/fa";
+import { FaDoorOpen } from "react-icons/fa";
 import { AddressLabel } from "./AddressLabel";
 import { useAccountAbstraction } from "@/store";
 import authLogo from "src/assets/web3Auth_logo.png";
@@ -23,10 +23,7 @@ export const ConnectedWalletOwner = () => {
     safeSelected,
     safeSelectedLoading,
     chainId,
-    isRelayerLoading,
-    gelatoTaskId,
     logoutWeb3Auth,
-    relayTransaction,
   } = useAccountAbstraction();
 
   if (!isAuthenticated) return <Heading size="md">Not connected</Heading>;

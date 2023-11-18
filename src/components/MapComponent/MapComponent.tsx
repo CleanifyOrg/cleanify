@@ -11,7 +11,7 @@ import ColoredTrashIcon from "@/assets/colored-trash.png";
 import GreyTrashIcon from "@/assets/grey-trash.png";
 import { Routes } from "@/router";
 import { useNavigate } from "react-router-dom";
-import { useReportList } from "@/hooks";
+import { useReports } from "@/api/hooks";
 
 const containerStyle = {
   height: "100%",
@@ -33,7 +33,7 @@ const MapComponentContent = ({
   const [center, setCenter] = useState(
     defaultMapCenter || { lat: 40.7485612, lng: -73.9881861 }
   );
-  const [activeReportID, setActiveReportId] = useState<number | undefined>(
+  const [activeReportId, setActiveReportId] = useState<number | undefined>(
     defaultActiveReport
   );
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const MapComponentContent = ({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
   });
 
-  const reports = useReportList();
+  const { data: reports } = useReports();
 
   const [map, setMap] = React.useState(null);
 
@@ -77,7 +77,7 @@ const MapComponentContent = ({
   }, [map, route]);
 
   const handleActiveMarker = (report: Report) => {
-    if (report.id !== activeReportID) {
+    if (report.id !== activeReportId) {
       setActiveReportId(report.id);
     }
     if (route === Routes.Report) {
@@ -96,18 +96,18 @@ const MapComponentContent = ({
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {(reports as Report[]).map((report: Report) => (
+      {reports?.map((report: Report) => (
         <Marker
-          key={activeReportID === report.id ? `${report.id}-active` : report.id}
+          key={activeReportId === report.id ? `${report.id}-active` : report.id}
           position={report.metadata.location}
           onClick={() => handleActiveMarker(report)}
           icon={{
             url:
-              activeReportID === report.id ? ColoredTrashIcon : GreyTrashIcon,
+              activeReportId === report.id ? ColoredTrashIcon : GreyTrashIcon,
             scaledSize: { width: 50, height: 50, equals: () => true },
           }}
         >
-          {activeReportID === report.id && route === Routes.Home && (
+          {activeReportId === report.id && route === Routes.Home && (
             <ReportModal
               report={report}
               onClose={() => setActiveReportId(undefined)}

@@ -1,9 +1,9 @@
-import { useTrashifyReports } from "@hooks";
 import { TrashifyReport } from "@components/TrashifyReport.tsx";
 import { useEffect } from "react";
+import { useReports } from "@/api/hooks";
 
 export const AllReports = () => {
-  const { reports } = useTrashifyReports();
+  const { data: reports } = useReports();
 
   useEffect(() => {
     console.log("reports", reports);
@@ -11,7 +11,7 @@ export const AllReports = () => {
 
   return (
     <>
-      {reports.map((report) => {
+      {reports?.map((report) => {
         return <TrashifyReport key={report.id.toString()} report={report} />;
       })}
     </>

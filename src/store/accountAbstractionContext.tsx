@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { ethers, utils } from "ethers";
+import { ethers } from "ethers";
 import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
 import { Web3AuthOptions } from "@web3auth/modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
@@ -25,7 +25,7 @@ import {
 import { defaultTestnetChain, getChain } from "@/chains";
 import { usePolling } from "@hooks";
 import { ChainWithSafeConfig } from "@models";
-import {TransactionStatusResponse} from "@gelatonetwork/relay-sdk"
+import { TransactionStatusResponse } from "@gelatonetwork/relay-sdk";
 
 type accountAbstractionContextValue = {
   ownerAddress?: string;
@@ -43,7 +43,11 @@ type accountAbstractionContextValue = {
   safeBalance?: string;
   setSafeSelected: React.Dispatch<React.SetStateAction<string>>;
   isRelayerLoading: boolean;
-  relayTransaction: (params: {data: string, value: string | undefined, to: string}) => Promise<string>;
+  relayTransaction: (params: {
+    data: string;
+    value: string | undefined;
+    to: string;
+  }) => Promise<string>;
   gelatoTaskId?: string;
 };
 
@@ -219,7 +223,7 @@ const AccountAbstractionProvider = ({
       if (web3Provider) {
         setSelectedSafeLoading(true);
         const signer = web3Provider.getSigner();
-        const key: string = import .meta.env.VITE_GELATO_RELAY_API_KEY
+        const key: string = import.meta.env.VITE_GELATO_RELAY_API_KEY;
         const relayPack = new GelatoRelayPack(key);
         const safeAccountAbstraction = new AccountAbstraction(signer);
 
@@ -249,90 +253,105 @@ const AccountAbstractionProvider = ({
   }, [chainId]);
 
   // relay-kit implementation using Gelato
-  const relayTransaction: accountAbstractionContextValue['relayTransaction'] = async ({data, value, to}): Promise<string> => {
-    if (web3Provider) {
-      setIsRelayerLoading(true);
+  const relayTransaction: accountAbstractionContextValue["relayTransaction"] =
+    async ({ data, value, to }): Promise<string> => {
+      if (web3Provider) {
+        setIsRelayerLoading(true);
 
-      const signer = web3Provider.getSigner();
-      const key: string = import .meta.env.VITE_GELATO_RELAY_API_KEY
-      const relayPack = new GelatoRelayPack(key);
-      const safeAccountAbstraction = new AccountAbstraction(signer);
+        const signer = web3Provider.getSigner();
+        const key: string = import.meta.env.VITE_GELATO_RELAY_API_KEY;
+        const relayPack = new GelatoRelayPack(key);
+        const safeAccountAbstraction = new AccountAbstraction(signer);
 
-      await safeAccountAbstraction.init({ relayPack });
+        await safeAccountAbstraction.init({ relayPack });
 
-      // we use a dump safe transfer as a demo transaction
-      const dumpSafeTransafer: MetaTransactionData[] = [
-        {
-          to,
-          value: value ?? "0x0",
-          data: data,
-          operation: 0, // OperationType.Call,
-        },
-      ];
+        // we use a dump safe transfer as a demo transaction
+        const dumpSafeTransafer: MetaTransactionData[] = [
+          {
+            to,
+            value: value ?? "0x0",
+            data: data,
+            operation: 0, // OperationType.Call,
+          },
+        ];
 
-      const options: MetaTransactionOptions = {
-        isSponsored: true,
-        gasLimit: "600000", // in this alfa version we need to manually set the gas limit
-        gasToken: ethers.constants.AddressZero, // native token
-      };
+        const options: MetaTransactionOptions = {
+          isSponsored: true,
+          gasLimit: "600000", // in this alfa version we need to manually set the gas limit
+          gasToken: ethers.constants.AddressZero, // native token
+        };
 
-      const ethAdapter = new EthersAdapter({
-        ethers,
-        signerOrProvider: signer,
-      });
+        const ethAdapter = new EthersAdapter({
+          ethers,
+          signerOrProvider: signer,
+        });
 
-      console.log('safeAddress', await safeAccountAbstraction.getSafeAddress())
+        console.log(
+          "safeAddress",
+          await safeAccountAbstraction.getSafeAddress()
+        );
 
-      const safeSDK = await Safe.create({
-        ethAdapter,
-        safeAddress: await safeAccountAbstraction.getSafeAddress(),
-      });
+        const safeSDK = await Safe.create({
+          ethAdapter,
+          safeAddress: await safeAccountAbstraction.getSafeAddress(),
+        });
 
-      const safeTransaction = await relayPack.createRelayedTransaction({
-        safe: safeSDK,
-        transactions: dumpSafeTransafer,
-        options,
-      });
+        let deployTransaction;
+        const isSafeDeployed = await safeSDK.isSafeDeployed();
+        console.log({ isSafeDeployed });
 
-      const signedSafeTransaction = await safeSDK.signTransaction(
-        safeTransaction,
-        "eth_sign"
-      );
-
-      const response = await relayPack.executeRelayTransaction(
-        signedSafeTransaction,
-        safeSDK,
-        options
-      );
-
-      console.log(
-        `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
-      );
-
-      let status: TransactionStatusResponse | undefined
-
-      for (let i = 0; i < 10; i++) {
-        status = await relayPack.getTaskStatus(response.taskId)
-        console.log('status', status)
-
-        if (status && status.transactionHash) {
-          break;
+        if (!isSafeDeployed) {
+          deployTransaction = await safeSDK.createSafeDeploymentTransaction();
+          console.log("created deployment tx", deployTransaction);
         }
 
-        await new Promise((r) => setTimeout(r, 3000));
+        const safeTransaction = await relayPack.createRelayedTransaction({
+          safe: safeSDK,
+          transactions: [
+            ...(deployTransaction ? [deployTransaction] : []),
+            ...dumpSafeTransafer,
+          ],
+          options,
+        });
+
+        const signedSafeTransaction = await safeSDK.signTransaction(
+          safeTransaction,
+          "eth_sign"
+        );
+
+        const response = await relayPack.executeRelayTransaction(
+          signedSafeTransaction,
+          safeSDK,
+          options
+        );
+
+        console.log(
+          `Relay Transaction Task ID: https://relay.gelato.digital/tasks/status/${response.taskId}`
+        );
+
+        let status: TransactionStatusResponse | undefined;
+
+        for (let i = 0; i < 10; i++) {
+          status = await relayPack.getTaskStatus(response.taskId);
+          console.log("status", status);
+
+          if (status?.transactionHash) {
+            break;
+          }
+
+          await new Promise((r) => setTimeout(r, 3000));
+        }
+
+        if (!status?.transactionHash) {
+          throw new Error("Transaction failed: " + JSON.stringify(status));
+        }
+
+        setIsRelayerLoading(false);
+        setGelatoTaskId(gelatoTaskId);
+
+        return status.transactionHash;
       }
-
-      if (!status?.transactionHash) {
-        throw new Error('Transaction failed: ' + JSON.stringify(status))
-      }
-
-      setIsRelayerLoading(false);
-      setGelatoTaskId(gelatoTaskId);
-
-      return status.transactionHash
-
-    }
-  };
+    };
 
   // we can pay Gelato tx relayer fees with native token & USDC
   // TODO: ADD native Safe Balance polling
