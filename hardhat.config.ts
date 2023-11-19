@@ -3,6 +3,7 @@ import "@nomicfoundation/hardhat-toolbox-viem";
 import "@typechain/hardhat";
 import fs from "fs";
 import "@nomicfoundation/hardhat-verify";
+import "dotenv/config";
 
 const infuraProjectID = fs.existsSync(".infura") ? fs.readFileSync(".infura").toString().trim() : ""
 const mnemonic = fs.existsSync(".mnemonic") ? fs.readFileSync(".mnemonic").toString().trim() : ""
@@ -54,10 +55,15 @@ const config: HardhatUserConfig = {
     },
   },
   etherscan: {
-    apiKey: fs.existsSync(".etherscan") ? fs.readFileSync(".etherscan").toString().trim() : "",
-    // apiKey: {
-    //   gnosis: fs.existsSync(".etherscan") ? fs.readFileSync(".etherscan").toString().trim() : "",
-    // },
+    apiKey: {
+      goerli: process.env.GOERLI_ETHERSCAN_API_KEY || "",
+      mainnet: process.env.ETHERSCAN_API_KEY || "",
+      "base-mainnet": process.env.BASE_ETHERSCAN_API_KEY || "",
+      zkEVM: process.env.ZKEVM_ETHERSCAN_API_KEY || "",
+      celo: process.env.CELO_ETHERSCAN_API_KEY || "",
+      gnosis: process.env.GNOSIS_ETHERSCAN_API_KEY || "",
+      arbitrumOne: process.env.ARBITRUM_ETHERSCAN_API_KEY || "",
+    },
     customChains: [
       {
         network: "gnosis",
@@ -70,6 +76,14 @@ const config: HardhatUserConfig = {
           //browserURL: "https://blockscout.com/xdai/mainnet",
         },
       },
+      {
+        network: "celo",
+        chainId: 42220,
+        urls: {
+          apiURL: "https://explorer.celo.org/api",
+          browserURL: "https://explorer.celo.org/",
+        },
+      }
     ],
   },
   sourcify: {
