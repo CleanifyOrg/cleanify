@@ -26,6 +26,7 @@ import { AddCleaningProofModal } from "@components/AddCleaningProofModal/AddClea
 import { useHasSubscribed } from "@hooks/useHasSubscribed.ts";
 import { useSubmittedProof } from "@hooks/useSubmittedProof.ts";
 import { ProofComponent } from "@components/ProofComponent.tsx";
+import { useOperationToast } from "@/hooks/useOperationToast";
 
 export const Report = () => {
   const params = useParams();
@@ -66,6 +67,7 @@ export const Report = () => {
   } = useDisclosure();
 
   const { isAuthenticated } = useAccountAbstraction();
+  const { success, error } = useOperationToast();
 
   const verifyReport = useCallback(async () => {
     if (!report || !contract) return;
@@ -78,7 +80,14 @@ export const Report = () => {
 
       await tx.wait();
 
+      success({
+        title: "Report approved",
+      });
+
       refreshReport();
+    } catch (e) {
+      console.log("e", e);
+      error();
     } finally {
       setButtonsDisabled(false);
       setIsTxLoading(false);
