@@ -49,14 +49,14 @@ type accountAbstractionContextValue = {
 const initialState = {
   isAuthenticated: false,
   ownerLoading: false,
-  loginWeb3Auth: () => { },
-  logoutWeb3Auth: () => { },
+  loginWeb3Auth: () => {},
+  logoutWeb3Auth: () => {},
   relayTransaction: async () => {
     throw new Error("Not ready");
   },
-  setChainId: () => { },
-  setSafeSelected: () => { },
-  onRampWithStripe: async () => { },
+  setChainId: () => {},
+  setSafeSelected: () => {},
+  onRampWithStripe: async () => {},
   safes: [],
   chain: defaultTestnetChain,
   chainId: defaultTestnetChain.id,
@@ -175,6 +175,7 @@ const AccountAbstractionProvider = ({
 
   // auth-kit implementation
   const loginWeb3Auth = useCallback(async () => {
+    console.log("web3AuthModalPack", web3AuthModalPack);
     if (!web3AuthModalPack) return;
 
     try {
@@ -330,9 +331,9 @@ const AccountAbstractionProvider = ({
 
     await safeAccountAbstraction.init({ relayPack });
 
-    const safeAddress = await safeAccountAbstraction.getSafeAddress()
+    const safeAddress = await safeAccountAbstraction.getSafeAddress();
 
-    console.log("safeAddress", safeAddress, ownerAddress)
+    console.log("safeAddress", safeAddress, ownerAddress);
 
     return safeAddress;
   }, [web3Provider, ownerAddress]);
