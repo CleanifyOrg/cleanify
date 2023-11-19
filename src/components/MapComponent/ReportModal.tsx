@@ -49,7 +49,12 @@ export const ReportModal = ({
         <Link to={`/report/${report.id}`} state={{ report }}>
           <ModalBody p={0}>
             <Flex direction="column" justify="center">
-              <Image src={imageUrl} borderTopRadius={"2xl"} />
+              <Image
+                src={imageUrl}
+                borderTopRadius={"2xl"}
+                maxH="400px"
+                objectFit={"cover"}
+              />
               <Box px={4} py={2}>
                 <Text fontSize="lg" fontWeight={"bold"}>
                   {report.metadata.name}
