@@ -18,7 +18,6 @@ const baseWithSafeConfig: ChainWithSafeConfig = {
   color: "#3e6957",
   transactionServiceUrl: "https://safe-transaction-base.safe.global",
   icon: "/icons/base.png",
-  //TODO
   contractAddress: "0x8fc968b4ef4d50798b45e7c734a452d83e04b014",
 };
 
@@ -51,8 +50,7 @@ const polygonZkEvmWithSafeConfig: ChainWithSafeConfig = {
   color: "#8248E5",
   transactionServiceUrl: "https://safe-transaction-zkevm.safe.global",
   icon: "/icons/zkevm.png",
-  //TODO
-  contractAddress: ethers.constants.AddressZero,
+  contractAddress: "0x8fc968b4ef4d50798b45e7c734a452d83e04b014",
 };
 
 const arbitrumWithSafeConfig: ChainWithSafeConfig = {

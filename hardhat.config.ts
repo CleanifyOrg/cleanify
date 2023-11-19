@@ -58,7 +58,7 @@ const config: HardhatUserConfig = {
       goerli: process.env.GOERLI_ETHERSCAN_API_KEY || "",
       mainnet: process.env.ETHERSCAN_API_KEY || "",
       "base": process.env.BASE_ETHERSCAN_API_KEY || "",
-      zkEVM: process.env.ZKEVM_ETHERSCAN_API_KEY || "",
+      polygonZkEVM: process.env.ZKEVM_ETHERSCAN_API_KEY || "",
       celo: process.env.CELO_ETHERSCAN_API_KEY || "",
       gnosis: process.env.GNOSIS_ETHERSCAN_API_KEY || "",
       arbitrumOne: process.env.ARBITRUM_ETHERSCAN_API_KEY || "",
