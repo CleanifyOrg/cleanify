@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { useCleanifyContract } from "@/hooks";
 import { useCallback } from "react";
+import { useOperationToast } from "@/hooks/useOperationToast";
 
 type Props = {
   isOpen: boolean;
@@ -26,11 +27,21 @@ export const IWantToCleanModal = ({
   refreshReport,
 }: Props) => {
   const { contract } = useCleanifyContract();
+  const { success, error } = useOperationToast();
 
   const handleCreateCleaningRequest = useCallback(async () => {
     const tx = await contract.subscribeToClean(reportId);
-
-    await tx.wait();
+    try {
+      await tx.wait();
+      success({
+        title: "Successfully requested",
+        description:
+          "Check the status of your request, to see when you can clean it.",
+      });
+    } catch (e) {
+      console.log("e", e);
+      error();
+    }
 
     refreshReport();
 

@@ -1,51 +1,61 @@
-import {DonationModal, MapComponent} from "@/components";
-import {Routes} from "@/router";
-import {Box, Button, HStack, Image, Spinner, Stack, Text, useDisclosure, VStack} from "@chakra-ui/react";
-import {useParams} from "react-router-dom";
-import {useReportById} from "@hooks/useReportById.ts";
-import {ReportState} from "@/models/report";
+import { DonationModal, MapComponent } from "@/components";
+import { Routes } from "@/router";
+import {
+  Box,
+  Button,
+  HStack,
+  Image,
+  Spinner,
+  Stack,
+  Text,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
+import { useReportById } from "@hooks/useReportById.ts";
+import { ReportState } from "@/models/report";
 import IWantToCleanModal from "@/components/IWantToCleanModal";
-import {useCallback, useState} from "react";
-import {useBase64Image, useCleanifyContract} from "@/hooks";
-import {useAccountAbstraction} from "@/store";
-import {useHasModeratorRole} from "@hooks/useHasModeratorRole.ts";
-import {useCleanifyAsModerator} from "@hooks/useCleanifyAsModerator.ts";
-import {AddCleaningProofModal} from "@components/AddCleaningProofModal/AddCleaningProofModal.tsx";
-import {useHasSubscribed} from "@hooks/useHasSubscribed.ts";
-import {useSubmittedProof} from "@hooks/useSubmittedProof.ts";
-import {ProofComponent} from "@components/ProofComponent.tsx";
+import { useCallback, useState } from "react";
+import { useBase64Image, useCleanifyContract } from "@/hooks";
+import { useAccountAbstraction } from "@/store";
+import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts";
+import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts";
+import { AddCleaningProofModal } from "@components/AddCleaningProofModal/AddCleaningProofModal.tsx";
+import { useHasSubscribed } from "@hooks/useHasSubscribed.ts";
+import { useSubmittedProof } from "@hooks/useSubmittedProof.ts";
+import { ProofComponent } from "@components/ProofComponent.tsx";
 
 export const Report = () => {
   const params = useParams();
-  const {contract} = useCleanifyContract();
-  const {contractAsModerator} = useCleanifyAsModerator();
+  const { contract } = useCleanifyContract();
+  const { contractAsModerator } = useCleanifyAsModerator();
 
-  const {report, refreshReport} = useReportById(Number(params.id));
+  const { report, refreshReport } = useReportById(Number(params.id));
 
-  const {hasModeratorRole} = useHasModeratorRole();
-  const {hasSubscribed} = useHasSubscribed(Number(params.id));
+  const { hasModeratorRole } = useHasModeratorRole();
+  const { hasSubscribed } = useHasSubscribed(Number(params.id));
 
-  const {proofBase64} = useSubmittedProof(report);
+  const { proofBase64 } = useSubmittedProof(report);
 
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
   const {
     onOpen: onOpenDonationModal,
     onClose: onCloseDonationModal,
-    isOpen: isOpenDonationModal
+    isOpen: isOpenDonationModal,
   } = useDisclosure();
   const {
     onOpen: onOpenIWantToCleanModal,
     onClose: onCloseIWantToCleanModal,
-    isOpen: isOpenIWantToCleanModal
+    isOpen: isOpenIWantToCleanModal,
   } = useDisclosure();
   const {
     onOpen: onOpenCleanProodModal,
     onClose: onCloseCleanProodModal,
-    isOpen: isOpenCleanProodModal
+    isOpen: isOpenCleanProodModal,
   } = useDisclosure();
 
-  const {isAuthenticated} = useAccountAbstraction();
+  const { isAuthenticated } = useAccountAbstraction();
 
   const verifyReport = useCallback(async () => {
     if (!report || !contract) return;
@@ -54,8 +64,15 @@ export const Report = () => {
 
     try {
       const tx = await contractAsModerator.approveReport(report.id);
-
-      await tx.wait();
+      try {
+        await tx.wait();
+        success({
+          title: "Successfully requested",
+        });
+      } catch (e) {
+        console.log("e", e);
+        error();
+      }
 
       refreshReport();
     } finally {
@@ -63,14 +80,14 @@ export const Report = () => {
     }
   }, [contract, report]);
 
-  const {blobImage} = useBase64Image(report?.metadata.images[0] ?? "");
+  const { blobImage } = useBase64Image(report?.metadata.images[0] ?? "");
 
   const canVerify = hasModeratorRole && report?.state === 0;
 
   if (!report)
     return (
       <VStack align={"center"} justify={"center"} w={"full"} h={"full"}>
-        <Spinner/>
+        <Spinner />
       </VStack>
     );
 
@@ -93,7 +110,7 @@ export const Report = () => {
     <>
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
         <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
-          <Image src={blobImage} w={"full"}/>
+          <Image src={blobImage} w={"full"} />
 
           {isAuthenticated && (
             <HStack pb={4} pt={4} justifyContent={"center"}>
@@ -164,7 +181,11 @@ export const Report = () => {
               </Text>
             </Box>
 
-            <ProofComponent report={report} imageBase64={proofBase64} refreshReport={refreshReport}/>
+            <ProofComponent
+              report={report}
+              imageBase64={proofBase64}
+              refreshReport={refreshReport}
+            />
           </Box>
         </Box>
         <Box h={"full"} w={["full", "50%"]}>

@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getExchangeRate } from "@/api/getExchangeRate";
 import { parseEther } from "viem";
 import { useCleanifyContract } from "@/hooks";
+import { useOperationToast } from "@/hooks/useOperationToast";
 
 type Props = {
   isOpen: boolean;
@@ -37,12 +38,23 @@ export const DonationModal = ({ isOpen, onClose, reportId }: Props) => {
   });
 
   const { contract } = useCleanifyContract();
+  const { success, error } = useOperationToast();
 
   const handleDonate = async () => {
     const options = {
       value: String(parseEther(donationAmount)),
     };
-    await contract.addRewards(reportId, options);
+    const tx = await contract.addRewards(reportId, options);
+    try {
+      await tx.wait();
+      success({
+        title: "Successfully donated",
+      });
+    } catch (e) {
+      console.log("e", e);
+      error();
+    }
+
     onClose();
   };
 
