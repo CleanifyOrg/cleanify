@@ -174,7 +174,7 @@ export const Report = () => {
             maxH={"70%"}
             objectFit={"cover"}
           />
-          {isAuthenticated && (
+          {isAuthenticated && report.state !== ReportState.Cleaned && (
             <HStack pt={4} justifyContent={"center"}>
               <Button
                 colorScheme="blue"
