@@ -1,7 +1,7 @@
 import { humanAddress } from "@/utils";
 import { HStack, IconButton, Tooltip } from "@chakra-ui/react";
-import { useAccountAbstraction } from "src/store/accountAbstractionContext";
 import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
+import { useCurrentChain } from "@/store";
 
 type AddressLabelProps = {
   address: string;
@@ -16,7 +16,7 @@ export const AddressLabel = ({
   showBlockExplorerLink,
   showCopyIntoClipboardButton = true,
 }: AddressLabelProps) => {
-  const { chain } = useAccountAbstraction();
+  const chain = useCurrentChain();
 
   const blockExplorerLink = `${chain?.blockExplorers?.default.url}/${
     isTransactionAddress ? "tx" : "address"

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { FaDoorOpen } from "react-icons/fa";
 import { AddressLabel } from "./AddressLabel";
-import { useAccountAbstraction } from "@/store";
+import { useAccountAbstraction, useCurrentChain } from "@/store";
 import authLogo from "src/assets/web3Auth_logo.png";
 import { SafeInfo } from ".";
 
@@ -22,9 +22,11 @@ export const ConnectedWalletOwner = ({ onClose }: { onClose: () => void }) => {
     ownerAddress,
     safeSelected,
     safeSelectedLoading,
-    chainId,
     logoutWeb3Auth,
   } = useAccountAbstraction();
+
+  const chain = useCurrentChain();
+  const { id: chainId } = chain;
 
   if (!isAuthenticated) return <Heading size="md">Not connected</Heading>;
 

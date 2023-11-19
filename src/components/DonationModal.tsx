@@ -13,12 +13,13 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import { useAccountAbstraction } from "@/store";
+
 import { useQuery } from "@tanstack/react-query";
 import { getExchangeRate } from "@/api/getExchangeRate";
 import { parseEther } from "viem";
 import { useCleanifyContract } from "@/hooks";
 import { useOperationToast } from "@/hooks/useOperationToast";
+import { useCurrentChain } from "@/store";
 
 type Props = {
   isOpen: boolean;
@@ -35,7 +36,8 @@ export const DonationModal = ({
 }: Props) => {
   const [donationAmount, setDonationAmount] = useState("");
 
-  const { chain } = useAccountAbstraction();
+  const chain = useCurrentChain();
+
   const coinSymbol = chain.nativeCurrency.symbol;
 
   const { data: exchangeRate } = useQuery({

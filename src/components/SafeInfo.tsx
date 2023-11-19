@@ -13,7 +13,7 @@ import {
 import { AddressLabel, AmountLabel } from "@/components";
 import safeLogoLight from "src/assets/safe-info-logo-light.svg";
 import safeLogoDark from "src/assets/safe-info-logo-dark.svg";
-import { useAccountAbstraction } from "@store";
+import { useAccountAbstraction, useCurrentChain } from "@store";
 
 import { useIsSafeDeployed, useSafeInfo } from "@/api/hooks";
 
@@ -27,7 +27,8 @@ type SafeInfoProps = {
 
 export function SafeInfo({ safeAddress, chainId }: SafeInfoProps) {
   const safeLogoSrc = useColorModeValue(safeLogoLight, safeLogoDark);
-  const { web3Provider, chain, safeBalance } = useAccountAbstraction();
+  const { web3Provider, safeBalance } = useAccountAbstraction();
+  const chain = useCurrentChain();
 
   //TODO: enough or we need long polling ? (we need to check if the safe is deployed)
   const { data: isDeployed, isLoading: isDeployedLoading } = useIsSafeDeployed(

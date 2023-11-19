@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { ethers, utils } from "ethers";
+import { ethers } from "ethers";
 import { CHAIN_NAMESPACES, WALLET_ADAPTERS } from "@web3auth/base";
 import { Web3AuthOptions } from "@web3auth/modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
@@ -16,22 +16,19 @@ import { Web3AuthModalPack } from "@safe-global/auth-kit";
 //gasless transactions https://docs.safe.global/safe-core-aa-sdk/relay-kit/guides/gelato
 import { GelatoRelayPack } from "@safe-global/relay-kit";
 
-import { defaultTestnetChain, getChain } from "@/chains";
+import { defaultTestnetChain } from "@/chains";
 import { usePolling } from "@hooks";
-import { ChainWithSafeConfig } from "@models";
 import { TransactionStatusResponse } from "@gelatonetwork/relay-sdk";
+import { useChainStore } from "./Chain";
 
 type accountAbstractionContextValue = {
   ownerAddress?: string;
   ownerLoading: boolean;
-  chainId: string;
   safes: string[];
-  chain: ChainWithSafeConfig;
   isAuthenticated: boolean;
   web3Provider?: ethers.providers.Web3Provider;
   loginWeb3Auth: () => void;
   logoutWeb3Auth: () => void;
-  setChainId: (chainId: string) => void;
   safeSelected?: string;
   safeSelectedLoading?: boolean;
   safeBalance?: string;
@@ -49,17 +46,14 @@ type accountAbstractionContextValue = {
 const initialState = {
   isAuthenticated: false,
   ownerLoading: false,
-  loginWeb3Auth: () => { },
-  logoutWeb3Auth: () => { },
+  loginWeb3Auth: () => {},
+  logoutWeb3Auth: () => {},
   relayTransaction: async () => {
     throw new Error("Not ready");
   },
-  setChainId: () => { },
-  setSafeSelected: () => { },
-  onRampWithStripe: async () => { },
+  setSafeSelected: () => {},
+  onRampWithStripe: async () => {},
   safes: [],
-  chain: defaultTestnetChain,
-  chainId: defaultTestnetChain.id,
   isRelayerLoading: true,
   getSafeAccount: async () => {
     throw new Error("Not ready");
@@ -94,7 +88,7 @@ const AccountAbstractionProvider = ({
   const [safes, setSafes] = useState<string[]>([]);
 
   // chain selected
-  const [chainId, setChainId] = useState<string>(defaultTestnetChain.id);
+  const { chainId, getChain } = useChainStore();
   const isAuthenticated = !!ownerAddress && !!chainId;
   const chain = useMemo(
     () => getChain(chainId) ?? defaultTestnetChain,
@@ -109,7 +103,6 @@ const AccountAbstractionProvider = ({
   useEffect(() => {
     setOwnerAddress("");
     setSafes([]);
-    setChainId(chain.id);
     setWeb3Provider(undefined);
     setSafeSelected("");
   }, [chain]);
@@ -343,8 +336,6 @@ const AccountAbstractionProvider = ({
   const state = {
     ownerAddress,
     ownerLoading,
-    chainId,
-    chain,
     safes,
 
     isAuthenticated,
@@ -353,8 +344,6 @@ const AccountAbstractionProvider = ({
 
     loginWeb3Auth,
     logoutWeb3Auth,
-
-    setChainId,
 
     safeSelected,
     safeBalance,

@@ -2,10 +2,10 @@ import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 import { useEffect, useState } from "react";
 import { Cleanify } from "@/typechain";
 import { BaseReport } from "@models/report.ts";
-import { useAccountAbstraction } from "@store"
+import { useAccountAbstraction, useCurrentChain } from "@store"
 
 export const useTrashifyReports = () => {
-    const { chain } = useAccountAbstraction();
+    const chain = useCurrentChain();
     const { contract } = useCleanifyContract();
     const [baseReports, setBaseReports] = useState<BaseReport[]>([]);
 

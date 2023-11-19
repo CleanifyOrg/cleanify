@@ -1,10 +1,10 @@
-import { useAccountAbstraction } from "@store";
+import { useCurrentChain } from "@store";
 import { useMemo } from "react";
 import { Cleanify__factory as CleanifyFactory } from "@/typechain";
 import { useWeb3Provider } from "@hooks/useWeb3Provider.ts";
 
 export const useCleanifyContract = () => {
-    const { chain } = useAccountAbstraction();
+    const chain = useCurrentChain();
     const { providerOrSigner } = useWeb3Provider();
 
     const contract = useMemo(() => {

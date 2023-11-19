@@ -1,4 +1,4 @@
-import { useAccountAbstraction } from "@/store";
+import { useAccountAbstraction, useChainStore } from "@/store";
 import {
   Box,
   Button,
@@ -27,14 +27,10 @@ import { FaBars } from "react-icons/fa";
 import { MobileDrawerMenu } from "./MobileDrawerMenu";
 
 export const Navbar = () => {
-  const {
-    chainId,
-    setChainId,
-    isAuthenticated,
-    loginWeb3Auth,
-    ownerAddress,
-    ownerLoading,
-  } = useAccountAbstraction();
+  const { isAuthenticated, loginWeb3Auth, ownerAddress, ownerLoading } =
+    useAccountAbstraction();
+
+  const { chainId, setChainId } = useChainStore();
 
   const {
     isOpen: isMobileMenuOpen,

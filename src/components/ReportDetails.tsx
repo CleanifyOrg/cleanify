@@ -1,6 +1,6 @@
 import { Report, ReportState } from "@/models";
-import { useAccountAbstraction } from "@/store";
-import { HStack, Tag, Tooltip, VStack, useQuery } from "@chakra-ui/react";
+import { useCurrentChain } from "@/store";
+import { HStack, Tag, Tooltip, VStack } from "@chakra-ui/react";
 import { formatEther } from "viem";
 
 type Props = {
@@ -9,7 +9,8 @@ type Props = {
 
 export const ReportDetails = ({ report }: Props) => {
   const totalDonationsAmount = formatEther(BigInt(report.totalRewards), "wei");
-  const { chain } = useAccountAbstraction();
+
+  const chain = useCurrentChain();
   const coinSymbol = chain.nativeCurrency.symbol;
 
   const renderStateTag = () => {
