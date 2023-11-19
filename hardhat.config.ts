@@ -24,6 +24,27 @@ const config: HardhatUserConfig = {
       accounts: accounts,
       gasPrice: 1000000000,
     },
+    zkEVM: {
+      url: `https://rpc.public.zkevm-test.net`,
+      accounts: accounts,
+    },
+    celo: {
+      url: "https://forno.celo.org",
+      accounts: {
+        mnemonic: mnemonic,
+        path: "m/44'/52752'/0'/0"
+      },
+      chainId: 42220
+    },
+    gnosis: {
+      url: "https://rpc.gnosischain.com",
+      accounts: accounts,
+    },
+    arbitrumOne: {
+      url: 'https://arb1.arbitrum.io/rpc',
+      accounts: accounts,
+    },
+
     // for testnet
     "base-goerli": {
       url: "https://goerli.base.org",
@@ -37,6 +58,22 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: fs.existsSync(".etherscan") ? fs.readFileSync(".etherscan").toString().trim() : "",
+    // apiKey: {
+    //   gnosis: fs.existsSync(".etherscan") ? fs.readFileSync(".etherscan").toString().trim() : "",
+    // },
+    customChains: [
+      {
+        network: "gnosis",
+        chainId: 100,
+        urls: {
+          apiURL: "https://api.gnosisscan.io/api",
+          browserURL: "https://gnosisscan.io/",
+          // Blockscout
+          //apiURL: "https://blockscout.com/xdai/mainnet/api",
+          //browserURL: "https://blockscout.com/xdai/mainnet",
+        },
+      },
+    ],
   },
   sourcify: {
     // Disabled by default

@@ -83,7 +83,7 @@ const mainnetWithSafeConfig: ChainWithSafeConfig = {
 
 export const mainnets: ChainWithSafeConfig[] = [
   celoWithSafeConfig,
-  mainnetWithSafeConfig,
+  // mainnetWithSafeConfig,
   polygonZkEvmWithSafeConfig,
   // zkSyncWithSafeConfig,
   baseWithSafeConfig,
