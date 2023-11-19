@@ -3,6 +3,7 @@ import { reportsKey } from "@/api/hooks";
 import { MapWithMarkerComponent } from "@/components/MapComponent/MapComponentWithMarker";
 import { useSubmitReport } from "@/hooks";
 import { ReportMetadata } from "@/models/report";
+import { useCurrentChain } from "@/store";
 import { blobToBase64 } from "@/utils";
 import {
   Box,
@@ -35,6 +36,7 @@ export const ConfirmPosition: React.FC<Props> = ({
   const queryClient = useQueryClient();
   const { createReport } = useSubmitReport();
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const chain = useCurrentChain();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((location) => {
@@ -74,7 +76,7 @@ export const ConfirmPosition: React.FC<Props> = ({
   const { mutate, isPending } = useMutation({
     mutationFn: processReport,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: reportsKey() });
+      queryClient.invalidateQueries({ queryKey: reportsKey(chain) });
       closeModal();
       toast({
         title: "Report created.",
