@@ -17,7 +17,7 @@ export const queryReports = async (contract: Cleanify) => {
                 id: report.id.toNumber(),
                 creator: report.creator,
                 metadata: report.metadata,
-                totalRewards: report.totalRewards.toNumber(),
+                totalRewards: report.totalRewards.toString(),
                 state: report.state,
             };
 

@@ -4,15 +4,16 @@ import { Cleanify__factory as CleanifyFactory } from "@/typechain";
 import { useWeb3Provider } from "@hooks/useWeb3Provider.ts";
 
 export const useCleanifyContract = () => {
-  const { chain } = useAccountAbstraction();
-  const { providerOrSigner } = useWeb3Provider();
+    const { chain } = useAccountAbstraction();
+    const { providerOrSigner } = useWeb3Provider();
 
-  const contract = useMemo(() => {
-    return CleanifyFactory.connect(chain.contractAddress, providerOrSigner);
-  }, [chain, providerOrSigner]);
+    const contract = useMemo(() => {
+        return CleanifyFactory.connect(chain.contractAddress, providerOrSigner);
+    }, [chain, providerOrSigner]);
 
-  return {
-    contract,
-    providerOrSigner,
-  };
+    return {
+        contract,
+        providerOrSigner,
+        chain,
+    };
 };
