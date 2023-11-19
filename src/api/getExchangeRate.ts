@@ -22,13 +22,17 @@ export const getExchangeRate = async (
     // );
     // console.log(response.data);
     // return response.data;
-    return hardcodedRates[
-      currencySymbol as keyof typeof hardcodedRates
-    ] as number;
+    return (
+      (hardcodedRates[
+        currencySymbol as keyof typeof hardcodedRates
+      ] as number) || 1
+    );
   } catch (ex) {
     console.error(ex);
-    return hardcodedRates[
-      currencySymbol as keyof typeof hardcodedRates
-    ] as number;
+    return (
+      (hardcodedRates[
+        currencySymbol as keyof typeof hardcodedRates
+      ] as number) || 1
+    );
   }
 };
