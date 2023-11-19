@@ -191,6 +191,8 @@ const AccountAbstractionProvider = ({
       setOwnerLoading(false);
     } catch (error) {
       console.log("error: ", error);
+    } finally {
+      setOwnerLoading(false);
     }
   }, [web3AuthModalPack]);
 
