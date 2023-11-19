@@ -34,6 +34,7 @@ export const DonationModal = ({
   reportId,
   refreshReport,
 }: Props) => {
+  const [loading, setLoading] = useState(false);
   const [donationAmount, setDonationAmount] = useState("");
 
   const chain = useCurrentChain();
@@ -49,11 +50,12 @@ export const DonationModal = ({
   const { success, error } = useOperationToast();
 
   const handleDonate = async () => {
-    const options = {
-      value: String(parseEther(donationAmount)),
-    };
-    const tx = await contract.addRewards(reportId, options);
+    setLoading(true);
     try {
+      const options = {
+        value: String(parseEther(donationAmount)),
+      };
+      const tx = await contract.addRewards(reportId, options);
       await tx.wait();
       success({
         title: "Successfully donated",
@@ -61,7 +63,10 @@ export const DonationModal = ({
     } catch (e) {
       console.log("e", e);
       error();
+    } finally {
+      setLoading(false);
     }
+
     refreshReport();
 
     onClose();
@@ -88,7 +93,13 @@ export const DonationModal = ({
           </FormControl>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleDonate}>
+          <Button
+            isLoading={loading}
+            loadingText="Donating"
+            colorScheme="blue"
+            mr={3}
+            onClick={handleDonate}
+          >
             Donate
           </Button>
           <Button variant="ghost" onClick={onClose}>

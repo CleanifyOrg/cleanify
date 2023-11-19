@@ -33,6 +33,8 @@ export const AddCleaningProofModal = ({
   onClose,
   refreshReport,
 }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   const [uploadedImages, setUploadedImages] = useState<
     { file: File; image: string }[]
   >([]);
@@ -40,6 +42,7 @@ export const AddCleaningProofModal = ({
   const { contract } = useCleanifyContract();
 
   const onSubmit = async () => {
+    setLoading(true);
     if (uploadedImages.length === 0) return;
 
     const base64Image = await blobToBase64(uploadedImages[0].file);
@@ -51,6 +54,7 @@ export const AddCleaningProofModal = ({
     await tx.wait();
 
     refreshReport();
+    setLoading(false);
 
     onClose();
   };
@@ -92,6 +96,8 @@ export const AddCleaningProofModal = ({
             mt={4}
           >
             <Button
+              isLoading={loading}
+              loadingText="Submitting"
               isDisabled={uploadedImages.length === 0}
               colorScheme="green"
               onClick={onSubmit}

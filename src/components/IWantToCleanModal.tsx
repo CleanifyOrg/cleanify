@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useCleanifyContract } from "@/hooks";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useOperationToast } from "@/hooks/useOperationToast";
 
 type Props = {
@@ -26,12 +26,14 @@ export const IWantToCleanModal = ({
   reportId,
   refreshReport,
 }: Props) => {
+  const [loading, setLoading] = useState(false);
   const { contract } = useCleanifyContract();
   const { success, error } = useOperationToast();
 
   const handleCreateCleaningRequest = useCallback(async () => {
-    const tx = await contract.subscribeToClean(reportId);
+    setLoading(true);
     try {
+      const tx = await contract.subscribeToClean(reportId);
       await tx.wait();
       success({
         title: "Successfully requested",
@@ -41,6 +43,8 @@ export const IWantToCleanModal = ({
     } catch (e) {
       console.log("e", e);
       error();
+    } finally {
+      setLoading(false);
     }
 
     refreshReport();
@@ -61,6 +65,8 @@ export const IWantToCleanModal = ({
         </ModalBody>
         <ModalFooter>
           <Button
+            isLoading={loading}
+            loadingText="Submitting"
             colorScheme="blue"
             mr={3}
             onClick={handleCreateCleaningRequest}
