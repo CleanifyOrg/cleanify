@@ -1,6 +1,8 @@
 import { DonationModal, MapComponent } from "@/components";
 import { Routes } from "@/router";
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   HStack,
@@ -16,7 +18,7 @@ import { useReportById } from "@hooks/useReportById.ts";
 import { ReportState } from "@/models/report";
 import IWantToCleanModal from "@/components/IWantToCleanModal";
 import { useCallback, useState } from "react";
-import { useBase64Image, useCleanifyContract } from "@/hooks";
+import { useBase64Image, useCleanifyContract, useTxToast } from "@/hooks";
 import { useAccountAbstraction } from "@/store";
 import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts";
 import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts";
@@ -38,6 +40,14 @@ export const Report = () => {
   const { proofBase64 } = useSubmittedProof(report);
 
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
+
+  const [isTxLoading, setIsTxLoading] = useState(false);
+
+  useTxToast({
+    isLoading: isTxLoading,
+    title: "Transaction in progress",
+    description: "Please wait while we process your request",
+  });
 
   const {
     onOpen: onOpenDonationModal,
@@ -61,28 +71,21 @@ export const Report = () => {
     if (!report || !contract) return;
 
     setButtonsDisabled(true);
+    setIsTxLoading(true);
 
     try {
       const tx = await contractAsModerator.approveReport(report.id);
-      try {
-        await tx.wait();
-        success({
-          title: "Successfully requested",
-        });
-      } catch (e) {
-        console.log("e", e);
-        error();
-      }
+
+      await tx.wait();
 
       refreshReport();
     } finally {
       setButtonsDisabled(false);
+      setIsTxLoading(false);
     }
   }, [contract, report]);
 
   const { blobImage } = useBase64Image(report?.metadata.images[0] ?? "");
-
-  const canVerify = hasModeratorRole && report?.state === 0;
 
   if (!report)
     return (
@@ -94,15 +97,50 @@ export const Report = () => {
   const getStateMessage = () => {
     switch (report.state) {
       case ReportState.PendingVerification:
-        return "Proof of cleaning has been submitted, but it has not been verified yet";
+        return (
+          <Alert status="warning" variant="solid">
+            <AlertIcon />
+            Proof of cleaning has been submitted, but it has not been verified
+            yet
+          </Alert>
+        );
+
       case ReportState.Available:
-        if (hasSubscribed) {
-          return "You are subscribed to clean this report";
-        } else return "This report is available to be cleaned";
+        return (
+          <Alert status="info" variant="solid">
+            <AlertIcon />
+            {hasSubscribed
+              ? "You are subscribed to clean this report"
+              : "This report is available to be cleaned"}
+          </Alert>
+        );
+
       case ReportState.Cleaned:
-        return "This report has already been cleaned";
+        return (
+          <Alert status="info" variant="solid">
+            <AlertIcon />
+            This report has already been cleaned
+          </Alert>
+        );
       case ReportState.InReview:
-        return "The report has been made, but it has not been verified yet";
+        return (
+          <VStack align="flex-start">
+            <Alert status="warning" variant="solid">
+              <AlertIcon />
+              The report has been made, but it has not been verified yet
+            </Alert>
+            {hasModeratorRole && (
+              <Button
+                variant={"link"}
+                isDisabled={buttonsDisabled}
+                colorScheme="orange"
+                onClick={verifyReport}
+              >
+                Verify the report as a moderator
+              </Button>
+            )}
+          </VStack>
+        );
     }
   };
 
@@ -150,16 +188,6 @@ export const Report = () => {
                   Subscribe
                 </Button>
               )}
-
-              {canVerify && (
-                <Button
-                  isDisabled={buttonsDisabled}
-                  colorScheme="yellow"
-                  onClick={verifyReport}
-                >
-                  Verify
-                </Button>
-              )}
             </HStack>
           )}
 
@@ -175,11 +203,7 @@ export const Report = () => {
               </Text>
             </Box>
 
-            <Box pb={6}>
-              <Text fontSize="md" textAlign={"justify"}>
-                {getStateMessage()}
-              </Text>
-            </Box>
+            <Box pb={6}>{getStateMessage()}</Box>
 
             <ProofComponent
               report={report}
