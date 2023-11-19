@@ -40,6 +40,7 @@ src/typechain
 /coverage.json
 
 .mnemonic
+.privateKey
 .etherscan
 .infura
 test

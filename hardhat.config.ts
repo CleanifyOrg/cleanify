@@ -25,15 +25,12 @@ const config: HardhatUserConfig = {
       gasPrice: 1000000000,
     },
     zkEVM: {
-      url: `https://rpc.public.zkevm-test.net`,
+      url: `https://zkevm-rpc.com`,
       accounts: accounts,
     },
     celo: {
       url: "https://forno.celo.org",
-      accounts: {
-        mnemonic: mnemonic,
-        path: "m/44'/52752'/0'/0"
-      },
+      accounts: [fs.existsSync(".privateKey") ? fs.readFileSync(".privateKey").toString().trim() : ""],
       chainId: 42220
     },
     gnosis: {
