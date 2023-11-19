@@ -49,14 +49,14 @@ type accountAbstractionContextValue = {
 const initialState = {
   isAuthenticated: false,
   ownerLoading: false,
-  loginWeb3Auth: () => {},
-  logoutWeb3Auth: () => {},
+  loginWeb3Auth: () => { },
+  logoutWeb3Auth: () => { },
   relayTransaction: async () => {
     throw new Error("Not ready");
   },
-  setChainId: () => {},
-  setSafeSelected: () => {},
-  onRampWithStripe: async () => {},
+  setChainId: () => { },
+  setSafeSelected: () => { },
+  onRampWithStripe: async () => { },
   safes: [],
   chain: defaultTestnetChain,
   chainId: defaultTestnetChain.id,
@@ -122,7 +122,7 @@ const AccountAbstractionProvider = ({
     (async () => {
       const options: Web3AuthOptions = {
         clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID ?? "",
-        web3AuthNetwork: import.meta.env.PROD ? "mainnet" : "testnet",
+        web3AuthNetwork: import.meta.env.PROD ? "sapphire_mainnet" : "testnet",
         chainConfig: {
           chainNamespace: CHAIN_NAMESPACES.EIP155,
           chainId: chain.id,
@@ -330,7 +330,7 @@ const AccountAbstractionProvider = ({
 
     await safeAccountAbstraction.init({ relayPack });
 
-    const safeAddress =  await safeAccountAbstraction.getSafeAddress()
+    const safeAddress = await safeAccountAbstraction.getSafeAddress()
 
     console.log("safeAddress", safeAddress, ownerAddress)
 
