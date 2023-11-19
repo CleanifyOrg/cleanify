@@ -19,10 +19,10 @@ export const ProofComponent = ({
 
   if (!imageBase64) return <></>;
 
-  const approveSubmission = async () => {
+  const answerSubmission = async (cleaned: boolean) => {
     const tx = await contractAsModerator.handleVerificationRequest(
       report.id,
-      true
+      cleaned
     );
 
     await tx.wait();
@@ -34,9 +34,22 @@ export const ProofComponent = ({
     <>
       <Image src={imageBase64} w={"full"} borderRadius={"xl"} />
       {hasModeratorRole && report.state === ReportState.PendingVerification && (
-        <Button colorScheme="red" onClick={approveSubmission} mr={3}>
-          Reject
-        </Button>
+        <>
+          <Button
+            colorScheme="green"
+            onClick={() => answerSubmission(true)}
+            mr={3}
+          >
+            Accept
+          </Button>
+          <Button
+            colorScheme="red"
+            onClick={() => answerSubmission(false)}
+            mr={3}
+          >
+            Reject
+          </Button>
+        </>
       )}
     </>
   );

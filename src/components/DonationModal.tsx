@@ -24,9 +24,15 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   reportId: number;
+  refreshReport: () => void;
 };
 
-export const DonationModal = ({ isOpen, onClose, reportId }: Props) => {
+export const DonationModal = ({
+  isOpen,
+  onClose,
+  reportId,
+  refreshReport,
+}: Props) => {
   const [donationAmount, setDonationAmount] = useState("");
 
   const { chain } = useAccountAbstraction();
@@ -54,6 +60,7 @@ export const DonationModal = ({ isOpen, onClose, reportId }: Props) => {
       console.log("e", e);
       error();
     }
+    refreshReport();
 
     onClose();
   };

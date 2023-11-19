@@ -239,6 +239,7 @@ export const Report = () => {
         isOpen={isOpenDonationModal}
         onClose={onCloseDonationModal}
         reportId={report.id}
+        refreshReport={refreshReport}
       />
       <IWantToCleanModal
         isOpen={isOpenIWantToCleanModal}
