@@ -1,35 +1,33 @@
-# React + TypeScript + Vite
+# Cleanify
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Cleanify is a dapp and protocol that incentivizes users to clean up the world from waste and being rewarded by doing so.
 
-Currently, two official plugins are available:
+## Why Cleanify
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Imagine a world where waste isn't just an eyesore but a ticking time bomb. Illegal landfills and abandoned waste areas not only scar the landscape but poison our air, water, and soil, threatening the very fabric of our communities. 
 
-## Expanding the ESLint configuration
+If we take a closer look at the most polluted countries in the world, we can easily notice that mostly all of them are third-world countries, In regions like Brazil, Nigeria, India, Bangladesh, and Pakistan, communities grapple not only with the environmental devastation caused by waste but also with socio-economic complexities. These areas are often home to a significant population of unbanked individuals which limits their access to financial services and their ability to get paid
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Considering all of this, we strongly believe that blockchain, thanks to its native capability of creating financial applications and incentives  is  the best solution to tackle a complex problem of this kind 
 
-- Configure the top-level `parserOptions` property like this:
+Cleanify, is a platform that targets developing countries allowing people to receive fair compersation for their efforts in cleaning up their communities. We're bringing web3 closer to the reality, by creating an incentive to build a better world
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
-    tsconfigRootDir: __dirname,
-  },
-};
-```
+### How it works 
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+We've designed a unique incentive mechanism to drive community participation. Companies, governments, and local shops can contribute to a reward pool for those who take action in cleaning up reported areas. 
 
-## Deploy contracts
+Our solution allows every individual on earth to report dirty areas through a user-friendly interface. The information is then timestamped and added to the blockchain
+
+If one ore more user are then able to prove they cleaned a specific area, the smart contract automatically rewards them accordingly 
+
+
+## Tech
+### Contracts 
+
+Our contracts are currently deployed on mainnet on Celo, Arbitrum, Polygon ZkEvm, Base and Gnosis
+
+#### Deploy contracts
+
 
 Create a .mnemonic and a .infura file in the root directory of the project. The .mnemonic file should contain the mnemonic of the wallet that will deploy the contracts. The .infura file should contain the infura key.
 
@@ -39,7 +37,7 @@ Run the following command to deploy the contracts:
 npx hardhat run scripts/deploy.ts --network goerli
 ```
 
-## Verify contracts
+#### Verify contracts
 
 Run the following command to verify the contracts:
 
