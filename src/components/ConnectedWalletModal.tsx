@@ -32,7 +32,7 @@ export const ConnectedWalletModal: React.FC<Props> = ({ isOpen, onClose }) => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <ConnectedWalletOwner />
+          <ConnectedWalletOwner onClose={onClose} />
         </ModalBody>
       </ModalContent>
     </Modal>
