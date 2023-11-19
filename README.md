@@ -36,7 +36,7 @@ Create a .mnemonic and a .infura file in the root directory of the project. The 
 Run the following command to deploy the contracts:
 
 ```bash
-npx hardhat run --network goerli scripts/deploy.ts
+npx hardhat run scripts/deploy.ts --network goerli
 ```
 
 ## Verify contracts
@@ -47,8 +47,3 @@ Run the following command to verify the contracts:
 npx hardhat verify --constructor-args scripts/arguments.ts --network goerli DEPLOYED_CONTRACT_ADDRESS
 
 ```
-
-## Latest deploy
-
-Goerli: [0x45a89a58b17177663976a1877818e16284826df5](https://goerli.etherscan.io/address/0x45a89a58b17177663976a1877818e16284826df5)
-Base Goerli: [0xd4e71f1409a81e3a7af9c8cde7a400cb83d6f2fe](https://goerli.basescan.org/address/0xd4e71f1409a81e3a7af9c8cde7a400cb83d6f2fe)
