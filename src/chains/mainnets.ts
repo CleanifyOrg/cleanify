@@ -29,8 +29,7 @@ const celoWithSafeConfig: ChainWithSafeConfig = {
   isMoneriumPaymentsEnabled: false,
   transactionServiceUrl: "https://safe-transaction-celo.safe.global",
   icon: "/icons/celo-logo.png",
-  //TODO
-  contractAddress: ethers.constants.AddressZero,
+  contractAddress: "0x151892c5dcf44afe384d09c4ff9b54012ac441c2",
 };
 
 const gnosisWithSafeConfig: ChainWithSafeConfig = {
@@ -41,8 +40,7 @@ const gnosisWithSafeConfig: ChainWithSafeConfig = {
   color: "#3e6957",
   transactionServiceUrl: "https://safe-transaction-gnosis-chain.safe.global",
   icon: "/icons/gnosis.png",
-  //TODO
-  contractAddress: ethers.constants.AddressZero,
+  contractAddress: "0x151892c5dcf44afe384d09c4ff9b54012ac441c2",
 };
 
 const polygonZkEvmWithSafeConfig: ChainWithSafeConfig = {
@@ -65,8 +63,7 @@ const arbitrumWithSafeConfig: ChainWithSafeConfig = {
   color: "#3e6957",
   transactionServiceUrl: "https://safe-transaction-arbitrum.safe.global",
   icon: "/icons/arbitrum.png",
-  //TODO
-  contractAddress: ethers.constants.AddressZero,
+  contractAddress: "0x8fc968b4ef4d50798b45e7c734a452d83e04b014",
 };
 
 const mainnetWithSafeConfig: ChainWithSafeConfig = {
