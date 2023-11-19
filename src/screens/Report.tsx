@@ -153,7 +153,6 @@ export const Report = () => {
         );
     }
   };
-
   return (
     <>
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
@@ -203,8 +202,7 @@ export const Report = () => {
                   isDisabled={
                     hasSubscribed ||
                     buttonsDisabled ||
-                    report.state === ReportState.PendingVerification ||
-                    report.state === ReportState.Cleaned
+                    report.state !== ReportState.Available
                   }
                   colorScheme="green"
                   onClick={onOpenIWantToCleanModal}
