@@ -9,7 +9,7 @@ export const useCleanifyContract = () => {
 
   const contract = useMemo(() => {
     return CleanifyFactory.connect(chain.contractAddress, providerOrSigner);
-  }, [chain.contractAddress, providerOrSigner]);
+  }, [chain, providerOrSigner]);
 
   return {
     contract,
