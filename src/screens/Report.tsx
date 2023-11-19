@@ -156,9 +156,22 @@ export const Report = () => {
   return (
     <>
       <Stack direction={["column", "row"]} w={"full"} h={"full"}>
+        <Box h={"full"} w={["full", "50%"]}>
+          <MapComponent
+            defaultActiveReport={report.id}
+            defaultMapCenter={report.metadata.location}
+            route={Routes.Report}
+          />
+        </Box>
         <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
-          <Image src={blobImage} w={"full"} />
-
+          <Image
+            pt={4}
+            src={blobImage}
+            w={"full"}
+            borderRadius={"xl"}
+            maxH={"70%"}
+            objectFit={"cover"}
+          />
           {isAuthenticated && (
             <HStack pb={4} pt={4} justifyContent={"center"}>
               <Button
@@ -199,7 +212,6 @@ export const Report = () => {
               )}
             </HStack>
           )}
-
           <Box py={4}>
             <Box pb={2}>
               <Text fontSize="lg" fontWeight={"bold"}>
@@ -220,13 +232,6 @@ export const Report = () => {
               refreshReport={refreshReport}
             />
           </Box>
-        </Box>
-        <Box h={"full"} w={["full", "50%"]}>
-          <MapComponent
-            defaultActiveReport={report.id}
-            defaultMapCenter={report.metadata.location}
-            route={Routes.Report}
-          />
         </Box>
       </Stack>
       <DonationModal
