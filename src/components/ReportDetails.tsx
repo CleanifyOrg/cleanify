@@ -1,4 +1,3 @@
-import { getExchangeRate } from "@/api/getExchangeRate";
 import { Report, ReportState } from "@/models";
 import { useAccountAbstraction } from "@/store";
 import { HStack, Tag, Tooltip, VStack, useQuery } from "@chakra-ui/react";
@@ -42,7 +41,7 @@ export const ReportDetails = ({ report }: Props) => {
             label={`Area cleaned and under review by moderators`}
             placement="top"
           >
-            <Tag colorScheme="yellow">Completness under review</Tag>
+            <Tag colorScheme="yellow">Completeness under review</Tag>
           </Tooltip>
         );
       default:

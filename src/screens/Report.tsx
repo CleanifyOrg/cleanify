@@ -27,6 +27,7 @@ import { useHasSubscribed } from "@hooks/useHasSubscribed.ts";
 import { useSubmittedProof } from "@hooks/useSubmittedProof.ts";
 import { ProofComponent } from "@components/ProofComponent.tsx";
 import { useOperationToast } from "@/hooks/useOperationToast";
+import { ReportDetails } from "@/components/ReportDetails";
 
 export const Report = () => {
   const params = useParams();
@@ -164,8 +165,10 @@ export const Report = () => {
           />
         </Box>
         <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
+          <Box pb={4} />
+          <ReportDetails report={report} />
           <Image
-            pt={4}
+            mt={4}
             src={blobImage}
             w={"full"}
             borderRadius={"xl"}
@@ -173,7 +176,7 @@ export const Report = () => {
             objectFit={"cover"}
           />
           {isAuthenticated && (
-            <HStack pb={4} pt={4} justifyContent={"center"}>
+            <HStack pt={4} justifyContent={"center"}>
               <Button
                 colorScheme="blue"
                 mr={3}
