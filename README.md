@@ -44,4 +44,20 @@ Run the following command to verify the contracts:
 ```bash
 npx hardhat verify --constructor-args scripts/arguments.ts --network goerli DEPLOYED_CONTRACT_ADDRESS
 
+
+```
+
+### Dapp
+
+The app is running react using vite. In order to start, you need to set up different env variables according to `.env.example`
+To do so, generate the required env keys and insert them in a .env by doing 
+
+```
+cp .env.example .env
+```
+
+#### Running the dapp
+
+```
+yarn dev
 ```
