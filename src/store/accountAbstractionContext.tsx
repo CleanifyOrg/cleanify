@@ -122,7 +122,7 @@ const AccountAbstractionProvider = ({
     (async () => {
       const options: Web3AuthOptions = {
         clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID ?? "",
-        web3AuthNetwork: import.meta.env.PROD ? "sapphire_mainnet" : "testnet",
+        web3AuthNetwork: import.meta.env.PROD ? "mainnet" : "testnet",
         chainConfig: {
           chainNamespace: CHAIN_NAMESPACES.EIP155,
           chainId: chain.id,
