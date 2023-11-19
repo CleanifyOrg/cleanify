@@ -19,7 +19,7 @@ const baseWithSafeConfig: ChainWithSafeConfig = {
   transactionServiceUrl: "https://safe-transaction-base.safe.global",
   icon: "/icons/base.png",
   //TODO
-  contractAddress: ethers.constants.AddressZero,
+  contractAddress: "0x8fc968b4ef4d50798b45e7c734a452d83e04b014",
 };
 
 const celoWithSafeConfig: ChainWithSafeConfig = {

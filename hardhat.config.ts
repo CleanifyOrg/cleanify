@@ -23,7 +23,6 @@ const config: HardhatUserConfig = {
     "base-mainnet": {
       url: "https://mainnet.base.org",
       accounts: accounts,
-      gasPrice: 1000000000,
     },
     zkEVM: {
       url: `https://zkevm-rpc.com`,
@@ -58,7 +57,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       goerli: process.env.GOERLI_ETHERSCAN_API_KEY || "",
       mainnet: process.env.ETHERSCAN_API_KEY || "",
-      "base-mainnet": process.env.BASE_ETHERSCAN_API_KEY || "",
+      "base": process.env.BASE_ETHERSCAN_API_KEY || "",
       zkEVM: process.env.ZKEVM_ETHERSCAN_API_KEY || "",
       celo: process.env.CELO_ETHERSCAN_API_KEY || "",
       gnosis: process.env.GNOSIS_ETHERSCAN_API_KEY || "",
