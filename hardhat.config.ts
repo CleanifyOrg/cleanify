@@ -28,11 +28,11 @@ const config: HardhatUserConfig = {
       url: `https://zkevm-rpc.com`,
       accounts: accounts,
     },
-    celo: {
-      url: "https://forno.celo.org",
-      accounts: [fs.existsSync(".privateKey") ? fs.readFileSync(".privateKey").toString().trim() : ""],
-      chainId: 42220
-    },
+    // celo: {
+    //   url: "https://forno.celo.org",
+    //   accounts: [fs.existsSync(".privateKey") ? fs.readFileSync(".privateKey").toString().trim() : ""],
+    //   chainId: 42220
+    // },
     gnosis: {
       url: "https://rpc.gnosischain.com",
       accounts: accounts,
