@@ -12,8 +12,8 @@ type AddressLabelProps = {
 
 export function AddressLabel({
   address,
-  isTransactionAddress,
-  showBlockExplorerLink,
+  isTransactionAddress = false,
+  showBlockExplorerLink = false,
   showCopyIntoClipboardButton = true,
 }: AddressLabelProps) {
   const chain = useCurrentChain();

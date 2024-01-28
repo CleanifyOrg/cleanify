@@ -6,7 +6,6 @@ import { getSafeInfo, isContractAddress } from "./safe";
 import { useCleanifyContract } from "@/hooks";
 import { getReportMetadata, queryReports } from "./contract";
 import { BaseReport, ChainWithSafeConfig } from "@/models";
-import { Cleanify } from "@/typechain";
 
 const getIsSafeDeployedQueryKey = (
     safeAddress: string,
@@ -21,7 +20,8 @@ const getIsSafeDeployedQueryKey = (
 export const useIsSafeDeployed = (
     safeAddress: string,
     provider?: providers.Web3Provider
-) => useQuery({
+) =>
+    useQuery({
         queryKey: getIsSafeDeployedQueryKey(safeAddress, provider),
         queryFn: () => isContractAddress(safeAddress, provider),
     });
@@ -37,7 +37,8 @@ const getSafeInfoQueryKey = (safeAddress: string, connectedChainId: string) => [
  * @param vs_currencies  the currencies to compare
  * @returns  the exchange rate
  */
-export const useSafeInfo = (safeAddress: string, connectedChainId: string) => useQuery({
+export const useSafeInfo = (safeAddress: string, connectedChainId: string) =>
+    useQuery({
         queryKey: getSafeInfoQueryKey(safeAddress, connectedChainId),
         queryFn: () => getSafeInfo(safeAddress, connectedChainId),
     });
@@ -59,7 +60,8 @@ export const reportMetadataKey = (baseReport: BaseReport) => [
     baseReport.id,
 ];
 
-export const useGetReportMetadata = (baseReport: BaseReport) => useQuery({
+export const useGetReportMetadata = (baseReport: BaseReport) =>
+    useQuery({
         queryKey: reportMetadataKey(baseReport),
         queryFn: () => getReportMetadata(baseReport),
     });
