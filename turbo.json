@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDotEnv": [".env", ".env.config"],
+  "globalDependencies": ["**/.env.*local"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "compile": {
+      "cache": false
+    },
+    "deploy": {
+      "dependsOn": ["^deploy"]
+    },
+    "test": {
+      "cache": false,
+      "dependsOn": ["@repo/contracts#check-contracts-deployment"]
+    }
+  }
+}
