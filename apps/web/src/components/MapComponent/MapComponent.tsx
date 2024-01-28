@@ -3,31 +3,32 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { BaseReport, Report } from "@models/report.ts";
 import { useNavigate } from "react-router-dom";
 import { MapMarker } from "@components/MapMarker.tsx";
+import { envConfig } from "@repo/config";
 import { useMapConfig } from "./useMapConfig";
 import { Routes } from "@/router";
 import { useReports } from "@/api/contract";
 
 const containerStyle = {
-  height: "100%",
-  width: "100%",
+    height: "100%",
+    width: "100%",
 };
 
 // TODO: refactor to be more generic and with less conditionals
 function MapComponentContent({
-  defaultMapCenter,
-  defaultActiveReport,
-  route,
-  onMapClick,
-  defaultCenterCurrentLocation = true,
+    defaultMapCenter,
+    defaultActiveReport,
+    route,
+    onMapClick,
+    defaultCenterCurrentLocation = true,
 }: {
-  route: Routes;
-  defaultActiveReport?: number;
-  defaultMapCenter?: {
-    lat: number;
-    lng: number;
-  };
-  defaultCenterCurrentLocation?: boolean;
-  onMapClick?: (le: google.maps.MapMouseEvent) => void;
+    route: Routes;
+    defaultActiveReport?: number;
+    defaultMapCenter?: {
+        lat: number;
+        lng: number;
+    };
+    defaultCenterCurrentLocation?: boolean;
+    onMapClick?: (le: google.maps.MapMouseEvent) => void;
 }) {
     const { data: reports } = useReports();
     const [center, setCenter] = useState(
@@ -38,12 +39,12 @@ function MapComponentContent({
     );
     const navigate = useNavigate();
 
-  const { colorConfig } = useMapConfig();
+    const { colorConfig } = useMapConfig();
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
-  });
+    const { isLoaded } = useJsApiLoader({
+        id: "google-map-script",
+        googleMapsApiKey: envConfig.googleMapsApiKey,
+    });
 
     const [map, setMap] = React.useState<google.maps.Map>();
 
@@ -63,17 +64,17 @@ function MapComponentContent({
         setMap(undefined);
     }, []);
 
-  // default center to current location
-  useEffect(() => {
-    if (defaultCenterCurrentLocation) {
-      navigator.geolocation.getCurrentPosition((location) => {
-        setCenter({
-          lat: location.coords.latitude,
-          lng: location.coords.longitude,
-        });
-      });
-    }
-  }, [defaultCenterCurrentLocation]);
+    // default center to current location
+    useEffect(() => {
+        if (defaultCenterCurrentLocation) {
+            navigator.geolocation.getCurrentPosition((location) => {
+                setCenter({
+                    lat: location.coords.latitude,
+                    lng: location.coords.longitude,
+                });
+            });
+        }
+    }, [defaultCenterCurrentLocation]);
 
     const handleActiveMarker = (report: Report) => {
         setActiveReportId(report.id);
