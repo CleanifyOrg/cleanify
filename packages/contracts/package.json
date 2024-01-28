@@ -16,7 +16,6 @@
     "typechain": "^8.3.2"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox-viem": "^2.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
@@ -27,11 +26,16 @@
     "@types/chai-as-promised": "^7.1.6",
     "@types/mocha": ">=9.1.0",
     "@types/node": ">=16.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
     "chai": "^4.2.0",
-    "eslint": "^8.53.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
     "hardhat-gas-reporter": "^1.0.8",
     "solidity-coverage": "^0.8.0",
     "ts-node": ">=8.0.0",
-    "typescript": "^5.2.2"
+    "typescript": "*"
   }
 }
