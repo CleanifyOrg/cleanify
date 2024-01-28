@@ -1,7 +1,7 @@
-import { chains, defaultTestnetChain } from '@/chains';
-import { ChainWithSafeConfig } from '@/models';
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
+import { chains, defaultTestnetChain } from '@/chains';
+import { ChainWithSafeConfig } from '@/models';
 
 
 type Props = {

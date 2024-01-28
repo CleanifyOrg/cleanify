@@ -1,5 +1,3 @@
-import { DonationModal, MapComponent } from "@/components";
-import { Routes } from "@/router";
 import {
   Alert,
   AlertIcon,
@@ -15,21 +13,23 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useReportById } from "@hooks/useReportById.ts";
-import { ReportState } from "@/models/report";
-import IWantToCleanModal from "@/components/IWantToCleanModal";
 import { useCallback, useState } from "react";
-import { useBase64Image, useCleanifyContract, useTxToast } from "@/hooks";
-import { useAccountAbstraction } from "@/store";
 import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts";
 import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts";
 import { AddCleaningProofModal } from "@components/AddCleaningProofModal/AddCleaningProofModal.tsx";
 import { useHasSubscribed } from "@hooks/useHasSubscribed.ts";
 import { useSubmittedProof } from "@hooks/useSubmittedProof.ts";
 import { ProofComponent } from "@components/ProofComponent.tsx";
+import { useAccountAbstraction } from "@/store";
+import { useBase64Image, useCleanifyContract, useTxToast } from "@/hooks";
+import IWantToCleanModal from "@/components/IWantToCleanModal";
+import { ReportState } from "@/models/report";
+import { Routes } from "@/router";
+import { DonationModal, MapComponent } from "@/components";
 import { useOperationToast } from "@/hooks/useOperationToast";
 import { ReportDetails } from "@/components/ReportDetails";
 
-export const Report = () => {
+export function Report() {
   const params = useParams();
   const { contract } = useCleanifyContract();
   const { contractAsModerator } = useCleanifyAsModerator();
@@ -99,7 +99,7 @@ export const Report = () => {
 
   if (!report)
     return (
-      <VStack align={"center"} justify={"center"} w={"full"} h={"full"}>
+      <VStack align="center" justify="center" w="full" h="full">
         <Spinner />
       </VStack>
     );
@@ -141,7 +141,7 @@ export const Report = () => {
             </Alert>
             {hasModeratorRole && (
               <Button
-                variant={"link"}
+                variant="link"
                 isDisabled={buttonsDisabled}
                 colorScheme="orange"
                 onClick={verifyReport}
@@ -155,27 +155,27 @@ export const Report = () => {
   };
   return (
     <>
-      <Stack direction={["column", "row"]} w={"full"} h={"full"}>
-        <Box h={"full"} w={["full", "50%"]}>
+      <Stack direction={["column", "row"]} w="full" h="full">
+        <Box h="full" w={["full", "50%"]}>
           <MapComponent
             defaultActiveReport={report.id}
             defaultMapCenter={report.metadata.location}
             route={Routes.Report}
           />
         </Box>
-        <Box h={"full"} w={["full", "50%"]} overflow={"auto"} pr={4}>
+        <Box h="full" w={["full", "50%"]} overflow="auto" pr={4}>
           <Box pb={4} />
           <ReportDetails report={report} />
           <Image
             mt={4}
             src={blobImage}
-            w={"full"}
-            borderRadius={"xl"}
-            maxH={"70%"}
-            objectFit={"cover"}
+            w="full"
+            borderRadius="xl"
+            maxH="70%"
+            objectFit="cover"
           />
           {isAuthenticated && report.state !== ReportState.Cleaned && (
-            <HStack pt={4} justifyContent={"center"}>
+            <HStack pt={4} justifyContent="center">
               <Button
                 colorScheme="blue"
                 mr={3}
@@ -215,12 +215,12 @@ export const Report = () => {
           )}
           <Box py={4}>
             <Box pb={2}>
-              <Text fontSize="lg" fontWeight={"bold"}>
+              <Text fontSize="lg" fontWeight="bold">
                 {report.metadata.name}
               </Text>
             </Box>
             <Box pb={6}>
-              <Text fontSize="md" textAlign={"justify"}>
+              <Text fontSize="md" textAlign="justify">
                 {report.metadata.analysis.wasteDescription}
               </Text>
             </Box>
@@ -255,4 +255,4 @@ export const Report = () => {
       />
     </>
   );
-};
+}

@@ -1,11 +1,11 @@
 import { BaseReport, Report } from "@models/report.ts";
 import { useReportMetadata } from "@hooks";
+import { ReportModal } from "@components/MapComponent/ReportModal.tsx";
+import { MarkerF as Marker } from "@react-google-maps/api";
 import ColoredTrashIcon from "@/assets/colored-trash.png";
 import Pointer from "@/assets/pointer.png";
 import GreyTrashIcon from "@/assets/grey-trash.png";
 import { Routes } from "@/router.tsx";
-import { ReportModal } from "@components/MapComponent/ReportModal.tsx";
-import { MarkerF as Marker } from "@react-google-maps/api";
 import { useGetReportMetadata } from "@/api/hooks";
 
 type Props = {
@@ -16,13 +16,13 @@ type Props = {
   setActiveReportId: (id: number | undefined) => void;
 };
 
-export const MapMarker = ({
+export function MapMarker({
   baseReport,
   activeReportID,
   route,
   handleActiveMarker,
   setActiveReportId,
-}: Props) => {
+}: Props) {
   const { data: report } = useGetReportMetadata(baseReport);
   if (!report) return null;
 
@@ -51,4 +51,4 @@ export const MapMarker = ({
       )}
     </Marker>
   );
-};
+}

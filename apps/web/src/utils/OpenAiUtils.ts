@@ -12,12 +12,10 @@ export class OpenAIHelper {
     }
   }
 
-  private createOpenAIInstance = () => {
-    return new OpenAI({
+  private createOpenAIInstance = () => new OpenAI({
       apiKey: import.meta.env.VITE_OPEN_AI_KEY,
       dangerouslyAllowBrowser: true,
     });
-  };
 
   public askChatGPTAboutImage = async ({
     base64Image,
@@ -27,8 +25,7 @@ export class OpenAIHelper {
     base64Image: string;
     prompt: string;
     maxTokens?: number;
-  }) => {
-    return await this.openai.chat.completions.create({
+  }) => this.openai.chat.completions.create({
       model: "gpt-4-vision-preview",
       max_tokens: maxTokens,
       messages: [
@@ -49,15 +46,10 @@ export class OpenAIHelper {
         },
       ],
     });
-  };
 
-  public getResponseJSONString = (response: ChatCompletion) => {
-    return response.choices[0].message.content;
-  };
+  public getResponseJSONString = (response: ChatCompletion) => response.choices[0].message.content;
 
-  private cleanChatGPTJSONString = (jsonString: string) => {
-    return jsonString.replace("```json", "").replace("```", "");
-  };
+  private cleanChatGPTJSONString = (jsonString: string) => jsonString.replace("```json", "").replace("```", "");
 
   public parseChatGPTJSONString = <Response>(
     jsonString?: string | null
@@ -74,6 +66,6 @@ export class OpenAIHelper {
         console.error("Failing parsing Chat GPT response:", e);
       }
     }
-    return;
+    
   };
 }

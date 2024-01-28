@@ -1,4 +1,3 @@
-import { base64ToBlob } from "@/utils";
 import {
   Modal,
   ModalOverlay,
@@ -13,23 +12,24 @@ import {
 import { Report } from "@models/report.ts";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { base64ToBlob } from "@/utils";
 import { ReportDetails } from "../ReportDetails";
 
 const formatDescription = (description: string) => {
   if (description.length > 100) {
-    return description.slice(0, 110) + "…";
-  } else {
+    return `${description.slice(0, 110)  }…`;
+  } 
     return description;
-  }
+  
 };
 
-export const ReportModal = ({
+export function ReportModal({
   report,
   onClose,
 }: {
   report: Report;
   onClose: () => void;
-}) => {
+}) {
   const [imageUrl, setImageUrl] = useState<string>();
 
   useEffect(() => {
@@ -42,31 +42,31 @@ export const ReportModal = ({
   }, [report]);
 
   return (
-    <Modal isOpen={true} onClose={onClose}>
+    <Modal isOpen onClose={onClose}>
       <ModalOverlay />
-      <ModalContent borderRadius={"2xl"}>
+      <ModalContent borderRadius="2xl">
         <ModalCloseButton />
         <Link to={`/report/${report.id}`} state={{ report }}>
           <ModalBody p={0}>
             <Flex direction="column" justify="center">
               <Image
                 src={imageUrl}
-                borderTopRadius={"2xl"}
+                borderTopRadius="2xl"
                 maxH="400px"
-                objectFit={"cover"}
+                objectFit="cover"
               />
               <Box px={4} py={2}>
-                <Text fontSize="lg" fontWeight={"bold"}>
+                <Text fontSize="lg" fontWeight="bold">
                   {report.metadata.name}
                 </Text>
               </Box>
               <Box px={4} pb={4}>
                 <Text
                   fontSize="md"
-                  maxH={"3em"}
-                  overflow={"hidden"}
-                  textOverflow={"ellipses"}
-                  whiteSpace={"normal"}
+                  maxH="3em"
+                  overflow="hidden"
+                  textOverflow="ellipses"
+                  whiteSpace="normal"
                 >
                   {formatDescription(
                     report.metadata.analysis.wasteDescription ?? ""
@@ -85,4 +85,4 @@ export const ReportModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}

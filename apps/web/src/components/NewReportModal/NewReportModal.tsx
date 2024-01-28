@@ -180,8 +180,8 @@ export const NewReportModal: React.FC<Props> = ({ isOpen, onClose }) => {
           <HStack
             w="full"
             spacing={8}
-            alignSelf={"center"}
-            justifyContent={"center"}
+            alignSelf="center"
+            justifyContent="center"
             mt={4}
           >
             <IconButton

@@ -4,7 +4,7 @@ export const IPFS_API_KEY: string = import.meta.env.VITE_IPFS_API_KEY;
 export const IPFS_SECRET_KEY: string = import.meta.env.VITE_IPFS_SECRET_KEY;
 export const IPFS_GATEWAY: string = import.meta.env.VITE_IPFS_GATEWAY;
 
-const authorization = "Basic " + btoa(IPFS_API_KEY + ":" + IPFS_SECRET_KEY);
+const authorization = `Basic ${  btoa(`${IPFS_API_KEY  }:${  IPFS_SECRET_KEY}`)}`;
 
 const ipfs = ipfsHttpClient({
   url: IPFS_GATEWAY,
@@ -38,7 +38,7 @@ const getFromIPFS = async (cid: string) => {
 };
 
 const isIpfsCid = (cid: string) => {
-  //Qm[1-9A-Za-z]{44}
+  // Qm[1-9A-Za-z]{44}
 
   const regex = new RegExp("Qm[1-9A-Za-z]{44}");
 

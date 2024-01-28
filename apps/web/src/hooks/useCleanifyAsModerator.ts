@@ -10,16 +10,14 @@ export const useCleanifyAsModerator = () => {
     const provider = useMemo(() => {
         if (web3Provider) {
             return web3Provider.getSigner();
-        } else {
+        } 
             return new ethers.providers.JsonRpcProvider(
                 chain.rpcUrls.default.http[0]
             );
-        }
+        
     }, [web3Provider, chain]);
 
-    const contract = useMemo(() => {
-        return CleanifyFactory.connect(chain.contractAddress, provider);
-    }, [chain.contractAddress, provider]);
+    const contract = useMemo(() => CleanifyFactory.connect(chain.contractAddress, provider), [chain.contractAddress, provider]);
 
     return {
         contractAsModerator: contract,

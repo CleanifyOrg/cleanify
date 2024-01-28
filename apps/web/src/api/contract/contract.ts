@@ -11,8 +11,7 @@ export const queryReports = async (contract: Cleanify) => {
         Array.from(Array(totalReports.toNumber()).keys()).map((i) =>
             contract.reports(i)
         )
-    ).then((reports) => {
-        return reports.map((report) => {
+    ).then((reports) => reports.map((report) => {
             const baseReport: BaseReport = {
                 id: report.id.toNumber(),
                 creator: report.creator,
@@ -22,8 +21,7 @@ export const queryReports = async (contract: Cleanify) => {
             };
 
             return baseReport;
-        });
-    });
+        }));
 
     return allReports;
 };

@@ -21,12 +21,10 @@ const getIsSafeDeployedQueryKey = (
 export const useIsSafeDeployed = (
     safeAddress: string,
     provider?: providers.Web3Provider
-) => {
-    return useQuery({
+) => useQuery({
         queryKey: getIsSafeDeployedQueryKey(safeAddress, provider),
         queryFn: () => isContractAddress(safeAddress, provider),
     });
-};
 
 const getSafeInfoQueryKey = (safeAddress: string, connectedChainId: string) => [
     "SAFE_INFO",
@@ -39,14 +37,12 @@ const getSafeInfoQueryKey = (safeAddress: string, connectedChainId: string) => [
  * @param vs_currencies  the currencies to compare
  * @returns  the exchange rate
  */
-export const useSafeInfo = (safeAddress: string, connectedChainId: string) => {
-    return useQuery({
+export const useSafeInfo = (safeAddress: string, connectedChainId: string) => useQuery({
         queryKey: getSafeInfoQueryKey(safeAddress, connectedChainId),
         queryFn: () => getSafeInfo(safeAddress, connectedChainId),
     });
-};
 
-//TODO: are these contracts related to a specific chain ? if so, we should add the chainId to the queryKey
+// TODO: are these contracts related to a specific chain ? if so, we should add the chainId to the queryKey
 export const reportsKey = (chain: ChainWithSafeConfig) => ["REPORTS", chain.id];
 
 export const useReports = () => {
@@ -63,9 +59,7 @@ export const reportMetadataKey = (baseReport: BaseReport) => [
     baseReport.id,
 ];
 
-export const useGetReportMetadata = (baseReport: BaseReport) => {
-    return useQuery({
+export const useGetReportMetadata = (baseReport: BaseReport) => useQuery({
         queryKey: reportMetadataKey(baseReport),
         queryFn: () => getReportMetadata(baseReport),
     });
-};

@@ -1,6 +1,6 @@
-import { humanAmountNumber } from "@/utils";
 import { Text, Tooltip } from "@chakra-ui/react";
 import { useMemo } from "react";
+import { humanAmountNumber } from "@/utils";
 
 type Props = {
   amount: string;
@@ -9,12 +9,12 @@ type Props = {
   decimalsDisplayed?: number;
 };
 
-export const AmountLabel = ({
+export function AmountLabel({
   amount,
   showSymbol = true,
   tokenSymbol,
   decimalsDisplayed,
-}: Props) => {
+}: Props) {
   const formattedAmount = useMemo(() => {
     if (!amount) return "";
     return humanAmountNumber(
@@ -29,4 +29,4 @@ export const AmountLabel = ({
       <Text>{formattedAmount}</Text>
     </Tooltip>
   );
-};
+}

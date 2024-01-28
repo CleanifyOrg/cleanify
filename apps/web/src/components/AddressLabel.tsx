@@ -1,6 +1,6 @@
-import { humanAddress } from "@/utils";
 import { HStack, IconButton, Tooltip } from "@chakra-ui/react";
 import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
+import { humanAddress } from "@/utils";
 import { useCurrentChain } from "@/store";
 
 type AddressLabelProps = {
@@ -10,12 +10,12 @@ type AddressLabelProps = {
   showCopyIntoClipboardButton?: boolean;
 };
 
-export const AddressLabel = ({
+export function AddressLabel({
   address,
   isTransactionAddress,
   showBlockExplorerLink,
   showCopyIntoClipboardButton = true,
-}: AddressLabelProps) => {
+}: AddressLabelProps) {
   const chain = useCurrentChain();
 
   const blockExplorerLink = `${chain?.blockExplorers?.default.url}/${
@@ -41,7 +41,7 @@ export const AddressLabel = ({
               isTransactionAddress ? "transaction hash" : "address"
             } into your clipboard`}
             onClick={() => navigator?.clipboard?.writeText?.(address)}
-            size={"small"}
+            size="small"
             color="inherit"
           />
         </Tooltip>
@@ -49,7 +49,7 @@ export const AddressLabel = ({
 
       {/* Button to etherscan */}
       {showBlockExplorerLink && blockExplorerLink && (
-        <Tooltip label={"View details on block explorer"}>
+        <Tooltip label="View details on block explorer">
           <IconButton
             icon={<FaExternalLinkAlt />}
             aria-label="View details on block explorer"
@@ -57,11 +57,11 @@ export const AddressLabel = ({
             href={blockExplorerLink}
             target="_blank"
             rel="noopener"
-            size={"small"}
+            size="small"
             color="inherit"
           />
         </Tooltip>
       )}
     </HStack>
   );
-};
+}

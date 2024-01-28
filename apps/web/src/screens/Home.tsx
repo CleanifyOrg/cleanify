@@ -8,26 +8,26 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
+import { FaPlus } from "react-icons/fa";
 import { MapComponent, NewReportModal } from "../components";
 import { Routes } from "@/router";
 import { useAccountAbstraction } from "@/store";
-import { FaPlus } from "react-icons/fa";
 
-export const Home = () => {
+export function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isAuthenticated, loginWeb3Auth } = useAccountAbstraction();
   return (
-    <Box h={"full"} w={"full"}>
-      <VStack w={"full"} h={"full"}>
+    <Box h="full" w="full">
+      <VStack w="full" h="full">
         <HStack
-          justifyContent={"space-between"}
-          alignItems={"center"}
+          justifyContent="space-between"
+          alignItems="center"
           w="100%"
           pb={4}
           pt={4}
         >
-          <VStack alignItems={"left"}>
-            <HStack justify={"space-between"} w="full">
+          <VStack alignItems="left">
+            <HStack justify="space-between" w="full">
               <Heading size={["md", "lg"]}>Welcome to Cleanify</Heading>
               <Hide above="sm">
                 <Button
@@ -59,4 +59,4 @@ export const Home = () => {
       <NewReportModal isOpen={isOpen} onClose={onClose} />
     </Box>
   );
-};
+}

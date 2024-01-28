@@ -1,4 +1,3 @@
-import { AnalyzeImageResponse } from "@/api/chatgpt";
 import {
   Alert,
   AlertDescription,
@@ -10,6 +9,7 @@ import {
   Spinner,
   VStack,
 } from "@chakra-ui/react";
+import { AnalyzeImageResponse } from "@/api/chatgpt";
 
 type Props = {
   isPending: boolean;
@@ -32,17 +32,17 @@ export const ValidatePictureStep: React.FC<Props> = ({
     return (
       <ScaleFade
         initialScale={0.9}
-        in={true}
+        in
         style={{ height: 400, width: "100%" }}
       >
         <VStack
           align="center"
-          justify={"center"}
-          alignSelf={"center"}
+          justify="center"
+          alignSelf="center"
           spacing={4}
-          h={"full"}
+          h="full"
         >
-          <Spinner size={"xl"} />
+          <Spinner size="xl" />
           <Heading size="sm">We are validating your image...</Heading>
         </VStack>
       </ScaleFade>
@@ -51,15 +51,15 @@ export const ValidatePictureStep: React.FC<Props> = ({
     return (
       <ScaleFade
         initialScale={0.9}
-        in={true}
+        in
         style={{ height: 400, width: "100%" }}
       >
         <VStack
           align="center"
-          justify={"center"}
-          alignSelf={"center"}
+          justify="center"
+          alignSelf="center"
           spacing={2}
-          h={"full"}
+          h="full"
         >
           <Alert
             status="success"
@@ -69,7 +69,7 @@ export const ValidatePictureStep: React.FC<Props> = ({
             justifyContent="center"
             textAlign="center"
             height="200px"
-            borderRadius={"xl"}
+            borderRadius="xl"
           >
             <AlertIcon boxSize="40px" mr={0} />
             <AlertTitle mt={4} mb={1} fontSize="lg">
@@ -87,15 +87,15 @@ export const ValidatePictureStep: React.FC<Props> = ({
   return (
     <ScaleFade
       initialScale={0.9}
-      in={true}
+      in
       style={{ height: 400, width: "100%" }}
     >
       <VStack
         align="center"
-        justify={"center"}
-        alignSelf={"center"}
+        justify="center"
+        alignSelf="center"
         spacing={2}
-        h={"full"}
+        h="full"
       >
         <Alert
           status="error"
@@ -105,7 +105,7 @@ export const ValidatePictureStep: React.FC<Props> = ({
           justifyContent="center"
           textAlign="center"
           height="200px"
-          borderRadius={"xl"}
+          borderRadius="xl"
         >
           <AlertIcon boxSize="40px" mr={0} />
           <AlertTitle mt={4} mb={1} fontSize="lg">

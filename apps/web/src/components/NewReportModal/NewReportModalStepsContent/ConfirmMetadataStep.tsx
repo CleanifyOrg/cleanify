@@ -1,4 +1,3 @@
-import { AnalyzeImageResponse } from "@/api/chatgpt";
 import {
   Card,
   Heading,
@@ -13,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaCheck, FaEdit } from "react-icons/fa";
+import { AnalyzeImageResponse } from "@/api/chatgpt";
 
 const loremIpsum = "Lorem ipsum loret isset ipster";
 
@@ -36,20 +36,20 @@ export const ConfirmMetadataStep: React.FC<Props> = ({
   return (
     <ScaleFade
       initialScale={0.9}
-      in={true}
+      in
       style={{ height: 400, width: "100%" }}
     >
       <VStack
-        justify={"flex-start"}
-        align={"flex-start"}
+        justify="flex-start"
+        align="flex-start"
         w="full"
         spacing={4}
-        h={"full"}
+        h="full"
       >
         <Heading size="sm">Confirm our analysis</Heading>
         <Card
-          borderRadius={"xl"}
-          boxShadow={"0px 0px 1px 1px #000000"}
+          borderRadius="xl"
+          boxShadow="0px 0px 1px 1px #000000"
           h="full"
         >
           <HStack spacing={2} w="full" h="full">
@@ -58,9 +58,9 @@ export const ConfirmMetadataStep: React.FC<Props> = ({
                 <Skeleton key={index} isLoaded={!isPending} h="full">
                   <Image
                     src={image.image}
-                    borderLeftRadius={"xl"}
+                    borderLeftRadius="xl"
                     h="full"
-                    objectFit={"cover"}
+                    objectFit="cover"
                   />
                 </Skeleton>
               ))}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { getFromIPFS, isIpfsCid } from "@/utils";
 import { BaseReport, ReportMetadata, Report } from "@models/report.ts";
+import { getFromIPFS, isIpfsCid } from "@/utils";
 
 export const useReportMetadata = (baseReport?: BaseReport) => {
   const [report, setReport] = useState<Report>();

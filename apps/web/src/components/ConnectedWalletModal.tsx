@@ -19,8 +19,7 @@ type Props = {
   onClose: () => void;
 };
 
-export const ConnectedWalletModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  return (
+export const ConnectedWalletModal: React.FC<Props> = ({ isOpen, onClose }) => (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
       <ModalContent>
@@ -37,4 +36,3 @@ export const ConnectedWalletModal: React.FC<Props> = ({ isOpen, onClose }) => {
       </ModalContent>
     </Modal>
   );
-};

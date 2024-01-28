@@ -9,11 +9,11 @@ type Props = {
   refreshReport: () => void;
 };
 
-export const ProofComponent = ({
+export function ProofComponent({
   imageBase64,
   report,
   refreshReport,
-}: Props) => {
+}: Props) {
   const { contractAsModerator } = useCleanifyAsModerator();
   const { hasModeratorRole } = useHasModeratorRole();
 
@@ -32,7 +32,7 @@ export const ProofComponent = ({
 
   return (
     <>
-      <Image src={imageBase64} w={"full"} borderRadius={"xl"} />
+      <Image src={imageBase64} w="full" borderRadius="xl" />
       {hasModeratorRole && report.state === ReportState.PendingVerification && (
         <>
           <Button
@@ -53,4 +53,4 @@ export const ProofComponent = ({
       )}
     </>
   );
-};
+}

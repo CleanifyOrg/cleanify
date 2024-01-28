@@ -2,9 +2,7 @@ export const humanAddress = (
   address: string,
   charAtStart = 6,
   charAtEnd = 4
-): string => {
-  return address.slice(0, charAtStart) + "..." + address.slice(-charAtEnd);
-};
+): string => `${address.slice(0, charAtStart)  }...${  address.slice(-charAtEnd)}`;
 
 export const humanAmountNumber = (
   amount: string,
@@ -21,6 +19,4 @@ export const humanAmountNumber = (
   return `${integerPart}${decimalLabel}`;
 };
 
-export const capitalizeFirstLetter = (text: string) => {
-  return text[0].toUpperCase() + text.slice(1);
-};
+export const capitalizeFirstLetter = (text: string) => text[0].toUpperCase() + text.slice(1);

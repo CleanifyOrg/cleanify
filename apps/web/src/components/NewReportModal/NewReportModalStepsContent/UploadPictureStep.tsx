@@ -1,5 +1,5 @@
-import { BaseDropzone } from "@/components";
 import { Heading, ScaleFade, VStack } from "@chakra-ui/react";
+import { BaseDropzone } from "@/components";
 
 type Props = {
   onDrop: (acceptedFiles: File[]) => void;
@@ -8,14 +8,13 @@ type Props = {
 export const UploadPictureStep: React.FC<Props> = ({
   onDrop,
   uploadedFiles,
-}) => {
-  return (
+}) => (
     <ScaleFade
       initialScale={0.9}
-      in={true}
+      in
       style={{ height: 400, width: "100%" }}
     >
-      <VStack spacing={4} w="full" align={"flex-start"} h="full">
+      <VStack spacing={4} w="full" align="flex-start" h="full">
         <Heading size="sm">Upload a picture of the area to report</Heading>
         <BaseDropzone
           onDrop={onDrop}
@@ -27,4 +26,3 @@ export const UploadPictureStep: React.FC<Props> = ({
       </VStack>
     </ScaleFade>
   );
-};

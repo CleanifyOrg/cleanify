@@ -1,4 +1,3 @@
-import { toHexString } from "@/utils";
 import { ChainWithSafeConfig } from "@models";
 import {
   polygonZkEvm,
@@ -9,6 +8,7 @@ import {
   celo,
 } from "viem/chains";
 import { ethers } from "ethers";
+import { toHexString } from "@/utils";
 
 const baseWithSafeConfig: ChainWithSafeConfig = {
   ...base,
@@ -72,7 +72,7 @@ const mainnetWithSafeConfig: ChainWithSafeConfig = {
   color: "#DDDDDD",
   transactionServiceUrl: "https://safe-transaction-mainnet.safe.global",
   icon: "/icons/ethereum.png",
-  //TODO
+  // TODO
   contractAddress: ethers.constants.AddressZero,
 };
 

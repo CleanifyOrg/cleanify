@@ -1,4 +1,3 @@
-import { useAccountAbstraction, useChainStore } from "@/store";
 import {
   Box,
   Button,
@@ -14,19 +13,20 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { BsSun, BsMoon } from "react-icons/bs";
-import { AddressLabel } from ".";
-
 import safeLogoDark from "src/assets/safe-info-logo-dark.svg";
 import safeLogo from "src/assets/safe-info-logo-light.svg";
+import { useNavigate } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
+import { AddressLabel } from ".";
+
 import { NetworkSelector } from "./NetworkSelector";
 import { Routes } from "@/router";
 import { ConnectedWalletModal } from "./ConnectedWalletModal";
 
-import { useNavigate } from "react-router-dom";
-import { FaBars } from "react-icons/fa";
+import { useAccountAbstraction, useChainStore } from "@/store";
 import { MobileDrawerMenu } from "./MobileDrawerMenu";
 
-export const Navbar = () => {
+export function Navbar() {
   const { isAuthenticated, loginWeb3Auth, ownerAddress, ownerLoading } =
     useAccountAbstraction();
 
@@ -60,12 +60,12 @@ export const Navbar = () => {
   return (
     <HStack
       spacing={4}
-      justify={"space-between"}
-      position={"static"}
+      justify="space-between"
+      position="static"
       top={0}
       right={0}
       w="100%"
-      boxShadow={"md"}
+      boxShadow="md"
       px={[2, 8]}
       py={[1, 2]}
     >
@@ -84,9 +84,9 @@ export const Navbar = () => {
           alt="Cleanify logo"
           boxSize={10}
           //   w="full"
-          objectFit={"cover"}
+          objectFit="cover"
         />
-        <Heading size="md" flex={2} cursor={"pointer"} onClick={onLogoClick}>
+        <Heading size="md" flex={2} cursor="pointer" onClick={onLogoClick}>
           Cleanify
         </Heading>
       </HStack>
@@ -100,7 +100,7 @@ export const Navbar = () => {
         />
       </Hide>
       <Hide below="sm">
-        <HStack spacing={4} flex={1.5} justify={"flex-end"}>
+        <HStack spacing={4} flex={1.5} justify="flex-end">
           <NetworkSelector
             selectedChainId={chainId}
             setSelectedChainId={setChainId}
@@ -113,7 +113,7 @@ export const Navbar = () => {
                 onClick={loginWeb3Auth}
                 isLoading={ownerLoading}
               >
-                <HStack spacing={1} alignItems={"center"}>
+                <HStack spacing={1} alignItems="center">
                   <Image src={safeLogSrc} alt="Safe logo" boxSize={5} />
                   <Text>Login</Text>
                 </HStack>
@@ -143,4 +143,4 @@ export const Navbar = () => {
       </Hide>
     </HStack>
   );
-};
+}

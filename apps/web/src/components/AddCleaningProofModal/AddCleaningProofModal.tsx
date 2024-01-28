@@ -16,9 +16,9 @@ import {
 } from "@chakra-ui/react";
 import { UploadPictureStep } from "@components/NewReportModal/NewReportModalStepsContent/UploadPictureStep";
 import { FaInfoCircle } from "react-icons/fa";
-import { Report } from "@/models/report";
 import { blobToBase64, uploadToIpfs } from "@utils";
 import { useCleanifyContract } from "@hooks";
+import { Report } from "@/models/report";
 
 type Props = {
   report: Report;
@@ -27,12 +27,12 @@ type Props = {
   refreshReport: () => void;
 };
 
-export const AddCleaningProofModal = ({
+export function AddCleaningProofModal({
   report,
   isOpen,
   onClose,
   refreshReport,
-}: Props) => {
+}: Props) {
   const [loading, setLoading] = useState(false);
 
   const [uploadedImages, setUploadedImages] = useState<
@@ -91,8 +91,8 @@ export const AddCleaningProofModal = ({
           <HStack
             w="full"
             spacing={8}
-            alignSelf={"center"}
-            justifyContent={"center"}
+            alignSelf="center"
+            justifyContent="center"
             mt={4}
           >
             <Button
@@ -114,4 +114,4 @@ export const AddCleaningProofModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}

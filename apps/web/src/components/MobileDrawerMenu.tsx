@@ -15,13 +15,14 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { BsMoon, BsSun } from "react-icons/bs";
+import safeLogoDark from "src/assets/safe-info-logo-dark.svg";
+import safeLogo from "src/assets/safe-info-logo-light.svg";
 import { NetworkSelector } from "./NetworkSelector";
 import { useAccountAbstraction } from "@/store";
 import { AddressLabel } from "./AddressLabel";
-import { BsMoon, BsSun } from "react-icons/bs";
 
-import safeLogoDark from "src/assets/safe-info-logo-dark.svg";
-import safeLogo from "src/assets/safe-info-logo-light.svg";
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -65,7 +66,7 @@ export const MobileDrawerMenu: React.FC<Props> = ({
         </DrawerHeader>
 
         <DrawerBody>
-          <VStack spacing={4} justify={"stretch"} align="stretch" w="full">
+          <VStack spacing={4} justify="stretch" align="stretch" w="full">
             <Box>
               {!isAuthenticated ? (
                 <Button
@@ -74,7 +75,7 @@ export const MobileDrawerMenu: React.FC<Props> = ({
                   isLoading={ownerLoading}
                   w="full"
                 >
-                  <HStack spacing={1} alignItems={"center"}>
+                  <HStack spacing={1} alignItems="center">
                     <Image src={safeLogSrc} alt="Safe logo" boxSize={5} />
                     <Text>Login</Text>
                   </HStack>
@@ -99,7 +100,7 @@ export const MobileDrawerMenu: React.FC<Props> = ({
           <Button
             w="full"
             aria-label="Mode Change"
-            variant={"outline"}
+            variant="outline"
             colorScheme="black"
             size="lg"
             leftIcon={colorMode.icon}

@@ -15,8 +15,8 @@ import {
 } from "@chakra-ui/react";
 
 import { useQuery } from "@tanstack/react-query";
-import { getExchangeRate } from "@/api/getExchangeRate";
 import { parseEther } from "viem";
+import { getExchangeRate } from "@/api/getExchangeRate";
 import { useCleanifyContract } from "@/hooks";
 import { useOperationToast } from "@/hooks/useOperationToast";
 import { useCurrentChain } from "@/store";
@@ -28,12 +28,12 @@ type Props = {
   refreshReport: () => void;
 };
 
-export const DonationModal = ({
+export function DonationModal({
   isOpen,
   onClose,
   reportId,
   refreshReport,
-}: Props) => {
+}: Props) {
   const [loading, setLoading] = useState(false);
   const [donationAmount, setDonationAmount] = useState("");
 
@@ -109,6 +109,6 @@ export const DonationModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}
 
 export default DonationModal;

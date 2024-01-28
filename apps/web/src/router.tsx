@@ -1,7 +1,7 @@
 import { createBrowserRouter, Outlet } from "react-router-dom";
+import { Container } from "@chakra-ui/react";
 import { Home, Report } from "./screens";
 import { Navbar } from "./components";
-import { Container } from "@chakra-ui/react";
 
 export enum Routes {
   Home = "/",
@@ -14,12 +14,12 @@ export const router = createBrowserRouter([
       <>
         <Navbar />
         <Container
-          alignItems={"center"}
-          justifyContent={"center"}
-          maxW={"6xl"}
-          display={"flex"}
+          alignItems="center"
+          justifyContent="center"
+          maxW="6xl"
+          display="flex"
           flexGrow={1}
-          overflow={"auto"}
+          overflow="auto"
         >
           <Outlet />
         </Container>

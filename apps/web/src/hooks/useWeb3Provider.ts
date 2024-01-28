@@ -27,11 +27,11 @@ export const useWeb3Provider = () => {
             // };
 
             return signer;
-        } else {
+        } 
             return new ethers.providers.JsonRpcProvider(
                 chain.rpcUrls.default.http[0]
             );
-        }
+        
     }, [web3Provider, chain]);
 
     return {

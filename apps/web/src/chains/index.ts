@@ -1,5 +1,6 @@
 import { testnets } from "./testnets";
 import { mainnets } from "./mainnets";
+
 export * from "./mainnets";
 export * from "./testnets";
 

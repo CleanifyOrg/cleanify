@@ -13,15 +13,15 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import AccountAbstraction from "@safe-global/account-abstraction-kit-poc";
 import { Web3AuthModalPack } from "@safe-global/auth-kit";
 
-//gasless transactions https://docs.safe.global/safe-core-aa-sdk/relay-kit/guides/gelato
+// gasless transactions https://docs.safe.global/safe-core-aa-sdk/relay-kit/guides/gelato
 import { GelatoRelayPack } from "@safe-global/relay-kit";
 
-import { defaultTestnetChain } from "@/chains";
 import { usePolling } from "@hooks";
 import { TransactionStatusResponse } from "@gelatonetwork/relay-sdk";
+import { defaultTestnetChain } from "@/chains";
 import { useChainStore } from "./Chain";
 
-type accountAbstractionContextValue = {
+type AccountAbstractionContextValue = {
   ownerAddress?: string;
   ownerLoading: boolean;
   safes: string[];
@@ -61,7 +61,7 @@ const initialState = {
 };
 
 const accountAbstractionContext =
-  createContext<accountAbstractionContextValue>(initialState);
+  createContext<AccountAbstractionContextValue>(initialState);
 
 const useAccountAbstraction = () => {
   const context = useContext(accountAbstractionContext);
@@ -75,11 +75,11 @@ const useAccountAbstraction = () => {
   return context;
 };
 
-const AccountAbstractionProvider = ({
+function AccountAbstractionProvider({
   children,
 }: {
   children: React.ReactNode;
-}) => {
+}) {
   // owner address from the email  (provided by web3Auth)
   const [ownerAddress, setOwnerAddress] = useState<string>("");
   const [ownerLoading, setOwnerLoading] = useState<boolean>(false);
@@ -280,7 +280,7 @@ const AccountAbstractionProvider = ({
           console.log("status", status);
 
           if (status?.lastCheckMessage?.includes("Execution error")) {
-            throw new Error("Transaction failed: " + JSON.stringify(status));
+            throw new Error(`Transaction failed: ${JSON.stringify(status)}`);
           }
 
           if (status && status.transactionHash) {
@@ -291,7 +291,7 @@ const AccountAbstractionProvider = ({
         }
 
         if (!status?.transactionHash) {
-          throw new Error("Transaction failed: " + JSON.stringify(status));
+          throw new Error(`Transaction failed: ${JSON.stringify(status)}`);
         }
 
         setIsRelayerLoading(false);
@@ -362,6 +362,6 @@ const AccountAbstractionProvider = ({
       {children}
     </accountAbstractionContext.Provider>
   );
-};
+}
 
 export { useAccountAbstraction, AccountAbstractionProvider };

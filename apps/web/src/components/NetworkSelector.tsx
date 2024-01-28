@@ -1,7 +1,7 @@
-import { chains, mainnets, testnets } from "@/chains";
 import { Box, HStack, Image, Text } from "@chakra-ui/react";
 import { Select, GroupBase } from "chakra-react-select";
 import { useMemo } from "react";
+import { chains, mainnets, testnets } from "@/chains";
 
 type Props = {
   selectedChainId: string;
@@ -30,26 +30,21 @@ export const NetworkSelector: React.FC<Props> = ({
     };
   }, [selectedChainId]);
 
-  const testnetOptions: Option[] = useMemo(() => {
-    return testnets.map((chain) => ({
+  const testnetOptions: Option[] = useMemo(() => testnets.map((chain) => ({
       label: chain.name,
       value: chain.id,
       icon: chain.icon,
       transactionServiceUrl: chain.transactionServiceUrl,
-    }));
-  }, []);
+    })), []);
 
-  const mainnetOptions: Option[] = useMemo(() => {
-    return mainnets.map((chain) => ({
+  const mainnetOptions: Option[] = useMemo(() => mainnets.map((chain) => ({
       label: chain.name,
       value: chain.id,
       icon: chain.icon,
       transactionServiceUrl: chain.transactionServiceUrl,
-    }));
-  }, []);
+    })), []);
 
-  const options = useMemo(() => {
-    return [
+  const options = useMemo(() => [
       {
         label: "Testnets",
         options: testnetOptions,
@@ -58,8 +53,7 @@ export const NetworkSelector: React.FC<Props> = ({
         label: "Mainnets",
         options: mainnetOptions,
       },
-    ];
-  }, [testnetOptions, mainnetOptions]);
+    ], [testnetOptions, mainnetOptions]);
 
   const formatOptionLabel = (option: Option) => (
     <Box>
@@ -67,7 +61,7 @@ export const NetworkSelector: React.FC<Props> = ({
         {option.icon && (
           <Image src={option.icon} alt={option.label} boxSize={4} />
         )}
-        <Text fontWeight={"semibold"}>{option.label}</Text>
+        <Text fontWeight="semibold">{option.label}</Text>
       </HStack>
     </Box>
   );

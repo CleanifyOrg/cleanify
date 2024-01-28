@@ -11,12 +11,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FaDoorOpen } from "react-icons/fa";
+import authLogo from "src/assets/web3Auth_logo.png";
 import { AddressLabel } from "./AddressLabel";
 import { useAccountAbstraction, useCurrentChain } from "@/store";
-import authLogo from "src/assets/web3Auth_logo.png";
 import { SafeInfo } from ".";
 
-export const ConnectedWalletOwner = ({ onClose }: { onClose: () => void }) => {
+export function ConnectedWalletOwner({ onClose }: { onClose: () => void }) {
   const {
     isAuthenticated,
     ownerAddress,
@@ -34,7 +34,7 @@ export const ConnectedWalletOwner = ({ onClose }: { onClose: () => void }) => {
     <VStack alignItems="flex-start" justifyContent="space-between" spacing={4}>
       <Heading size="sm">Safe Owner</Heading>
       <HStack alignItems="center" spacing={4}>
-        <Image src={authLogo} alt="connected Wallet logo" height={"50px"} />
+        <Image src={authLogo} alt="connected Wallet logo" height="50px" />
 
         {ownerAddress && (
           <AddressLabel address={ownerAddress} showBlockExplorerLink />
@@ -48,14 +48,14 @@ export const ConnectedWalletOwner = ({ onClose }: { onClose: () => void }) => {
         </Text>
       </Box>
 
-      {safeSelectedLoading && <Spinner alignSelf={"center"} />}
+      {safeSelectedLoading && <Spinner alignSelf="center" />}
 
       {safeSelected && (
         <SafeInfo safeAddress={safeSelected} chainId={chainId} />
       )}
 
-      <HStack spacing={4} alignSelf={"center"}>
-        <Tooltip label="Logout" alignSelf={"center"}>
+      <HStack spacing={4} alignSelf="center">
+        <Tooltip label="Logout" alignSelf="center">
           <Button
             onClick={() => {
               onClose();
@@ -68,8 +68,8 @@ export const ConnectedWalletOwner = ({ onClose }: { onClose: () => void }) => {
             Logout
           </Button>
         </Tooltip>
-        <VStack spacing={2}></VStack>
+        <VStack spacing={2} />
       </HStack>
     </VStack>
   );
-};
+}

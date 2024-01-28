@@ -5,10 +5,10 @@ type ITrashifyReport = {
   baseReport: BaseReport;
 };
 
-export const TrashifyReport = ({ baseReport }: ITrashifyReport) => {
+export function TrashifyReport({ baseReport }: ITrashifyReport) {
   const { report } = useReportMetadata(baseReport);
 
   console.log(report);
 
   return <></>;
-};
+}

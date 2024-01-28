@@ -1,13 +1,13 @@
-import { Report, ReportState } from "@/models";
-import { useCurrentChain } from "@/store";
 import { HStack, Tag, Tooltip, VStack } from "@chakra-ui/react";
 import { formatEther } from "viem";
+import { Report, ReportState } from "@/models";
+import { useCurrentChain } from "@/store";
 
 type Props = {
   report: Report;
 };
 
-export const ReportDetails = ({ report }: Props) => {
+export function ReportDetails({ report }: Props) {
   const totalDonationsAmount = formatEther(BigInt(report.totalRewards), "wei");
 
   const chain = useCurrentChain();
@@ -17,14 +17,14 @@ export const ReportDetails = ({ report }: Props) => {
     switch (report.state) {
       case ReportState.Available:
         return (
-          <Tooltip label={`Area available to clean`} placement="top">
+          <Tooltip label="Area available to clean" placement="top">
             <Tag colorScheme="green">Available to clean</Tag>
           </Tooltip>
         );
       case ReportState.InReview:
         return (
           <Tooltip
-            label={`Submission under review by moderators`}
+            label="Submission under review by moderators"
             placement="top"
           >
             <Tag colorScheme="yellow">Under review</Tag>
@@ -32,14 +32,14 @@ export const ReportDetails = ({ report }: Props) => {
         );
       case ReportState.Cleaned:
         return (
-          <Tooltip label={`Area succesfully cleaned`} placement="top">
+          <Tooltip label="Area succesfully cleaned" placement="top">
             <Tag colorScheme="blue">Cleaned</Tag>
           </Tooltip>
         );
       case ReportState.PendingVerification:
         return (
           <Tooltip
-            label={`Area cleaned and under review by moderators`}
+            label="Area cleaned and under review by moderators"
             placement="top"
           >
             <Tag colorScheme="yellow">Completeness under review</Tag>
@@ -54,36 +54,36 @@ export const ReportDetails = ({ report }: Props) => {
     if (report.totalRewards === 0 && report.state !== ReportState.Available) {
       return (
         <Tooltip
-          label={`Once the report will be approved people will be able to contribute to the reward pool`}
+          label="Once the report will be approved people will be able to contribute to the reward pool"
           placement="top"
         >
           <Tag colorScheme="orange">Rewards not added yet</Tag>
         </Tooltip>
       );
-    } else if (report.totalRewards === 0) {
+    } if (report.totalRewards === 0) {
       return (
         <Tooltip
-          label={`Incentivize someone to clean this area by contributing with a tip`}
+          label="Incentivize someone to clean this area by contributing with a tip"
           placement="top"
         >
           <Tag colorScheme="orange">Rewards not added yet</Tag>
         </Tooltip>
       );
-    } else {
+    } 
       return (
         <Tag colorScheme="orange">
           Total rewards: {totalDonationsAmount} {coinSymbol}
         </Tag>
       );
-    }
+    
   };
 
   return (
     <VStack>
-      <HStack justifyContent={"left"} w={"full"}>
+      <HStack justifyContent="left" w="full">
         {renderStateTag()}
         {renderTotalRewardsTag()}
       </HStack>
     </VStack>
   );
-};
+}

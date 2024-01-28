@@ -8,8 +8,8 @@ const containerStyle = {
   width: "100%",
 };
 
-//TODO: refactor to be more generic and with less conditionals
-const MapWithMarkerComponentContent = ({
+// TODO: refactor to be more generic and with less conditionals
+function MapWithMarkerComponentContent({
   markerLocation,
   onMapClick,
   defaultCenterCurrentLocation = true,
@@ -19,7 +19,7 @@ const MapWithMarkerComponentContent = ({
   defaultCenterCurrentLocation?: boolean;
   onMapClick?: (le: google.maps.MapMouseEvent) => void;
   onIsMapLoaded?: (isLoaded: boolean) => void;
-}) => {
+}) {
   const [center, setCenter] = useState<{ lat: number; lng: number }>();
 
   const { colorConfig } = useMapConfig();
@@ -52,7 +52,7 @@ const MapWithMarkerComponentContent = ({
     setMap(null);
   }, []);
 
-  //default center to current location
+  // default center to current location
   useEffect(() => {
     if (defaultCenterCurrentLocation) {
       navigator.geolocation.getCurrentPosition((location) => {
@@ -87,6 +87,6 @@ const MapWithMarkerComponentContent = ({
       )}
     </GoogleMap>
   ) : null;
-};
+}
 
 export const MapWithMarkerComponent = React.memo(MapWithMarkerComponentContent);

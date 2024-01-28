@@ -9,8 +9,8 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import { useCleanifyContract } from "@/hooks";
 import { useCallback, useState } from "react";
+import { useCleanifyContract } from "@/hooks";
 import { useOperationToast } from "@/hooks/useOperationToast";
 
 type Props = {
@@ -20,12 +20,12 @@ type Props = {
   refreshReport: () => void;
 };
 
-export const IWantToCleanModal = ({
+export function IWantToCleanModal({
   isOpen,
   onClose,
   reportId,
   refreshReport,
-}: Props) => {
+}: Props) {
   const [loading, setLoading] = useState(false);
   const { contract } = useCleanifyContract();
   const { success, error } = useOperationToast();
@@ -80,6 +80,6 @@ export const IWantToCleanModal = ({
       </ModalContent>
     </Modal>
   );
-};
+}
 
 export default IWantToCleanModal;

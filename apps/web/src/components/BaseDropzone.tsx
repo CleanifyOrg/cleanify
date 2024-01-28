@@ -18,30 +18,30 @@ export const BaseDropzone: React.FC<Props> = ({
     if (uploadedFiles.length)
       return (
         <VStack
-          position={"absolute"}
+          position="absolute"
           left={0}
           top={0}
           w="full"
           h="full"
-          align={"center"}
-          justify={"flex-end"}
+          align="center"
+          justify="flex-end"
           bgImage={uploadedFiles[0].image}
-          bgSize={"cover"}
-          bgPosition={"center"}
-          bgRepeat={"no-repeat"}
-          borderRadius={"lg"}
+          bgSize="cover"
+          bgPosition="center"
+          bgRepeat="no-repeat"
+          borderRadius="lg"
           py={4}
           px={8}
         >
           <Card>
             <CardBody h="full">
-              <HStack spacing={2} align={"center"}>
+              <HStack spacing={2} align="center">
                 <Icon as={FaCheck} boxSize={4} color="green" />
-                <Text color={"green"}>
+                <Text color="green">
                   Your images has been loaded correctly
                 </Text>
               </HStack>
-              <Text textAlign={"center"}>
+              <Text textAlign="center">
                 If you want to ovverride them, drop or click here
               </Text>
             </CardBody>
@@ -50,9 +50,9 @@ export const BaseDropzone: React.FC<Props> = ({
       );
 
     return (
-      <VStack spacing={2} alignItems={"center"} justify={"center"} h="full">
+      <VStack spacing={2} alignItems="center" justify="center" h="full">
         <Icon as={FaCamera} boxSize={8} />
-        <Text textAlign={"center"}>
+        <Text textAlign="center">
           Drop or click here to upload your image
         </Text>
       </VStack>
@@ -60,13 +60,13 @@ export const BaseDropzone: React.FC<Props> = ({
   }, [uploadedFiles]);
   return (
     <Card
-      position={"relative"}
+      position="relative"
       {...getRootProps()}
-      boxShadow={"0px 0px 1px 1px #000000"}
-      borderRadius={"xl"}
-      cursor={"pointer"}
+      boxShadow="0px 0px 1px 1px #000000"
+      borderRadius="xl"
+      cursor="pointer"
       w="full"
-      h={"full"}
+      h="full"
     >
       <CardBody>
         <input {...getInputProps()} />

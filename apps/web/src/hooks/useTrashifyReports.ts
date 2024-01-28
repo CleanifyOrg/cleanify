@@ -1,8 +1,8 @@
 import { useCleanifyContract } from "@hooks/useCleanifyContract.ts";
 import { useEffect, useState } from "react";
-import { Cleanify } from "@/typechain";
 import { BaseReport } from "@models/report.ts";
 import { useAccountAbstraction, useCurrentChain } from "@store"
+import { Cleanify } from "@/typechain";
 
 export const useTrashifyReports = () => {
     const chain = useCurrentChain();
@@ -16,8 +16,7 @@ export const useTrashifyReports = () => {
             Array.from(Array(totalReports.toNumber()).keys()).map((i) =>
                 contract.reports(i)
             )
-        ).then((reports) => {
-            return reports.map((report) => {
+        ).then((reports) => reports.map((report) => {
                 const baseReport: BaseReport = {
                     id: report.id.toNumber(),
                     creator: report.creator,
@@ -27,8 +26,7 @@ export const useTrashifyReports = () => {
                 };
 
                 return baseReport;
-            });
-        });
+            }));
 
         setBaseReports(allReports);
     };

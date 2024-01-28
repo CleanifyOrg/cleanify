@@ -1,4 +1,3 @@
-import { capitalizeFirstLetter } from "@/utils";
 import {
   Box,
   Step,
@@ -10,6 +9,7 @@ import {
   StepTitle,
   Stepper,
 } from "@chakra-ui/react";
+import { capitalizeFirstLetter } from "@/utils";
 
 type Props = {
   activeStep: number;
@@ -18,8 +18,7 @@ type Props = {
     description: string;
   }[];
 };
-export const NewReportModalSteps: React.FC<Props> = ({ steps, activeStep }) => {
-  return (
+export const NewReportModalSteps: React.FC<Props> = ({ steps, activeStep }) => (
     <Stepper index={activeStep} w="full">
       {steps.map((step, index) => (
         <Step key={index}>
@@ -41,4 +40,3 @@ export const NewReportModalSteps: React.FC<Props> = ({ steps, activeStep }) => {
       ))}
     </Stepper>
   );
-};

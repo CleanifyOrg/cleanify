@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { BaseReport, Report } from "@models/report.ts";
-import { useMapConfig } from "./useMapConfig";
-import { Routes } from "@/router";
 import { useNavigate } from "react-router-dom";
 import { MapMarker } from "@components/MapMarker.tsx";
-import { useReports } from "@/api/hooks";
 import {useTrashifyReports} from "@hooks"
+import { useMapConfig } from "./useMapConfig";
+import { Routes } from "@/router";
+import { useReports } from "@/api/hooks";
 
 const containerStyle = {
   height: "100%",
   width: "100%",
 };
 
-//TODO: refactor to be more generic and with less conditionals
-const MapComponentContent = ({
+// TODO: refactor to be more generic and with less conditionals
+function MapComponentContent({
   defaultMapCenter,
   defaultActiveReport,
   route,
@@ -29,7 +29,7 @@ const MapComponentContent = ({
   };
   defaultCenterCurrentLocation?: boolean;
   onMapClick?: (le: google.maps.MapMouseEvent) => void;
-}) => {
+}) {
   const {baseReports: reports} = useTrashifyReports()
   const [center, setCenter] = useState(
     defaultMapCenter || { lat: 41.0463678, lng: 28.9863605 }
@@ -64,7 +64,7 @@ const MapComponentContent = ({
     setMap(null);
   }, []);
 
-  //default center to current location
+  // default center to current location
   useEffect(() => {
     if (defaultCenterCurrentLocation) {
       navigator.geolocation.getCurrentPosition((location) => {
@@ -96,8 +96,7 @@ const MapComponentContent = ({
       onUnmount={onUnmount}
       onClick={onMapClick}
     >
-      {reports?.map((baseReport: BaseReport) => {
-        return (
+      {reports?.map((baseReport: BaseReport) => (
           <MapMarker
             key={
               baseReport.id === activeReportID
@@ -110,10 +109,9 @@ const MapComponentContent = ({
             setActiveReportId={setActiveReportId}
             handleActiveMarker={handleActiveMarker}
           />
-        );
-      })}
+        ))}
     </GoogleMap>
   ) : null;
-};
+}
 
 export const MapComponent = React.memo(MapComponentContent);

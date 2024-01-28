@@ -1,6 +1,6 @@
-import { toHexString } from "@/utils";
 import { ChainWithSafeConfig } from "@models";
 import { baseGoerli, goerli } from "viem/chains";
+import { toHexString } from "@/utils";
 
 const baseGoerliWithSafeConfig: ChainWithSafeConfig = {
   ...baseGoerli,

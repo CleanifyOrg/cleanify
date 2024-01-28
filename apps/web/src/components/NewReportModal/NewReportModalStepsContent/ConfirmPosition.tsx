@@ -1,10 +1,3 @@
-import { AnalyzeImageResponse } from "@/api/chatgpt";
-import { reportsKey } from "@/api/hooks";
-import { MapWithMarkerComponent } from "@/components/MapComponent/MapComponentWithMarker";
-import { useSubmitReport } from "@/hooks";
-import { ReportMetadata } from "@/models/report";
-import { useCurrentChain } from "@/store";
-import { blobToBase64 } from "@/utils";
 import {
   Box,
   Button,
@@ -16,6 +9,13 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import { AnalyzeImageResponse } from "@/api/chatgpt";
+import { reportsKey } from "@/api/hooks";
+import { MapWithMarkerComponent } from "@/components/MapComponent/MapComponentWithMarker";
+import { useSubmitReport } from "@/hooks";
+import { ReportMetadata } from "@/models/report";
+import { useCurrentChain } from "@/store";
+import { blobToBase64 } from "@/utils";
 
 type Props = {
   selectedLocation?: { lat: number; lng: number };
@@ -92,17 +92,17 @@ export const ConfirmPosition: React.FC<Props> = ({
     return (
       <ScaleFade
         initialScale={0.9}
-        in={true}
+        in
         style={{ height: 400, width: "100%" }}
       >
         <VStack
           align="center"
-          justify={"center"}
-          alignSelf={"center"}
+          justify="center"
+          alignSelf="center"
           spacing={4}
-          h={"full"}
+          h="full"
         >
-          <Spinner size={"xl"} />
+          <Spinner size="xl" />
           <Heading size="sm">We are finalizing your report...</Heading>
         </VStack>
       </ScaleFade>
@@ -111,15 +111,15 @@ export const ConfirmPosition: React.FC<Props> = ({
   return (
     <ScaleFade
       initialScale={0.9}
-      in={true}
+      in
       style={{ height: 400, width: "100%" }}
     >
       <VStack
-        justify={"flex-start"}
-        align={"flex-start"}
+        justify="flex-start"
+        align="flex-start"
         w="full"
         spacing={4}
-        h={"full"}
+        h="full"
       >
         <Heading size="sm">Confirm the report location</Heading>
         <Box h={300} w="full">
@@ -131,9 +131,9 @@ export const ConfirmPosition: React.FC<Props> = ({
         </Box>
         <Button
           colorScheme="blue"
-          alignSelf={"center"}
+          alignSelf="center"
           mt={4}
-          size={"md"}
+          size="md"
           onClick={() => mutate()}
         >
           Send report
