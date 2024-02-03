@@ -7,6 +7,7 @@ import { envConfig } from "@repo/config";
 import { Theme } from "./theme.ts";
 import { AccountAbstractionProvider } from "./store/accountAbstractionContext";
 import { router } from "./router";
+import { VeChainKitProvider } from "./components/VechainKitProvider.tsx";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -30,9 +31,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <ChakraProvider theme={Theme}>
                 <CSSReset />
                 <AccountAbstractionProvider>
-                    <Flex flexDir="column" h="100vh">
-                        <RouterProvider router={router} />
-                    </Flex>
+                    <VeChainKitProvider>
+                        <Flex flexDir="column" h="100vh">
+                            <RouterProvider router={router} />
+                        </Flex>
+                    </VeChainKitProvider>
                 </AccountAbstractionProvider>
             </ChakraProvider>
         </QueryClientProvider>
