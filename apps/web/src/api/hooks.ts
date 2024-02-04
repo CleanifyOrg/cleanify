@@ -1,11 +1,9 @@
 // This file should include only api-related hooks, like the one leveraging react-query
 
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { providers } from "ethers";
 import { getSafeInfo, isContractAddress } from "./safe";
-import { useCleanifyContract } from "@/hooks";
-import { getReportMetadata, queryReports } from "./contract";
-import { BaseReport, ChainWithSafeConfig } from "@/models";
+import { getFromIPFS } from "@/utils";
 
 const getIsSafeDeployedQueryKey = (
     safeAddress: string,
@@ -43,25 +41,11 @@ export const useSafeInfo = (safeAddress: string, connectedChainId: string) =>
         queryFn: () => getSafeInfo(safeAddress, connectedChainId),
     });
 
-// TODO: are these contracts related to a specific chain ? if so, we should add the chainId to the queryKey
-export const reportsKey = (chain: ChainWithSafeConfig) => ["REPORTS", chain.id];
-
-export const useReports = () => {
-    const { chain, contract } = useCleanifyContract();
-
-    return useQuery({
-        queryKey: reportsKey(chain),
-        queryFn: () => queryReports(contract),
-    });
-};
-
-export const reportMetadataKey = (baseReport: BaseReport) => [
-    "REPORT_METADATA",
-    baseReport.id,
-];
-
-export const useGetReportMetadata = (baseReport: BaseReport) =>
-    useQuery({
-        queryKey: reportMetadataKey(baseReport),
-        queryFn: () => getReportMetadata(baseReport),
+export const getFromIpfsQueryKey = (cid: string) => ["IPFS", cid];
+export const useGetMultipleFromIpfs = (cids: string[]) =>
+    useQueries({
+        queries: cids.map((cid) => ({
+            queryKey: getFromIpfsQueryKey(cid),
+            queryFn: () => getFromIPFS(cid),
+        })),
     });

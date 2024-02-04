@@ -1,56 +1,45 @@
 import { Button, Image } from "@chakra-ui/react";
 import { Report, ReportState } from "@models";
-import { useCleanifyAsModerator } from "@hooks/useCleanifyAsModerator.ts";
-import { useHasModeratorRole } from "@hooks/useHasModeratorRole.ts";
+import { useVerifyReport } from "@/hooks";
+import { useUserHasModeratorRole } from "@/api/contract";
+import { useAccountAbstraction } from "@/store";
 
 type Props = {
-  imageBase64?: string;
-  report: Report;
-  refreshReport: () => void;
+    imageBase64?: string;
+    report: Report;
 };
 
-export function ProofComponent({
-  imageBase64,
-  report,
-  refreshReport,
-}: Props) {
-  const { contractAsModerator } = useCleanifyAsModerator();
-  const { hasModeratorRole } = useHasModeratorRole();
+export function ProofComponent({ imageBase64, report }: Props) {
+    const { ownerAddress } = useAccountAbstraction();
+    const { data: hasModeratorRole } = useUserHasModeratorRole(ownerAddress);
+    const { mutate, isPending } = useVerifyReport(report.id);
 
-  if (!imageBase64) return <></>;
+    if (!imageBase64) return null;
 
-  const answerSubmission = async (cleaned: boolean) => {
-    const tx = await contractAsModerator.handleVerificationRequest(
-      report.id,
-      cleaned
-    );
-
-    await tx.wait();
-
-    refreshReport();
-  };
-
-  return (
-    <>
-      <Image src={imageBase64} w="full" borderRadius="xl" />
-      {hasModeratorRole && report.state === ReportState.PendingVerification && (
+    return (
         <>
-          <Button
-            colorScheme="green"
-            onClick={() => answerSubmission(true)}
-            mr={3}
-          >
-            Accept
-          </Button>
-          <Button
-            colorScheme="red"
-            onClick={() => answerSubmission(false)}
-            mr={3}
-          >
-            Reject
-          </Button>
+            <Image src={imageBase64} w="full" borderRadius="xl" />
+            {hasModeratorRole &&
+                report.state === ReportState.PendingVerification && (
+                    <>
+                        <Button
+                            isLoading={isPending}
+                            colorScheme="green"
+                            onClick={() => mutate(true)}
+                            mr={3}
+                        >
+                            Accept
+                        </Button>
+                        <Button
+                            isLoading={isPending}
+                            colorScheme="red"
+                            onClick={() => mutate(false)}
+                            mr={3}
+                        >
+                            Reject
+                        </Button>
+                    </>
+                )}
         </>
-      )}
-    </>
-  );
+    );
 }

@@ -1,117 +1,96 @@
 import { useCallback, useState } from "react";
 
 import {
-  Button,
-  Heading,
-  HStack,
-  Icon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  VStack,
+    Button,
+    Heading,
+    HStack,
+    Icon,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    VStack,
 } from "@chakra-ui/react";
 import { UploadPictureStep } from "@components/NewReportModal/NewReportModalStepsContent/UploadPictureStep";
 import { FaInfoCircle } from "react-icons/fa";
-import { blobToBase64, uploadToIpfs } from "@utils";
-import { useCleanifyContract } from "@hooks";
 import { Report } from "@/models/report";
+import { useCleanReport } from "@/hooks/useCleanReport";
 
 type Props = {
-  report: Report;
-  isOpen: boolean;
-  onClose: () => void;
-  refreshReport: () => void;
+    report: Report;
+    isOpen: boolean;
+    onClose: () => void;
 };
 
-export function AddCleaningProofModal({
-  report,
-  isOpen,
-  onClose,
-  refreshReport,
-}: Props) {
-  const [loading, setLoading] = useState(false);
+export function AddCleaningProofModal({ report, isOpen, onClose }: Props) {
+    const [uploadedImages, setUploadedImages] = useState<
+        { file: File; image: string }[]
+    >([]);
 
-  const [uploadedImages, setUploadedImages] = useState<
-    { file: File; image: string }[]
-  >([]);
+    const { mutate, isPending } = useCleanReport({
+        reportId: report.id,
+        onSuccess: onClose,
+    });
 
-  const { contract } = useCleanifyContract();
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        console.log({ acceptedFiles });
 
-  const onSubmit = async () => {
-    setLoading(true);
-    if (uploadedImages.length === 0) return;
+        const parsedUploads = acceptedFiles.map((file) => ({
+            file,
+            image: URL.createObjectURL(file),
+        }));
+        console.log({ parsedUploads });
+        setUploadedImages(parsedUploads);
+    }, []);
 
-    const base64Image = await blobToBase64(uploadedImages[0].file);
+    return (
+        <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>
+                    <HStack spacing={2}>
+                        <Icon as={FaInfoCircle} boxSize={5} />
+                        <Heading size="md"> New report</Heading>
+                    </HStack>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                    <VStack w="full" spacing={4}>
+                        <UploadPictureStep
+                            onDrop={onDrop}
+                            uploadedFiles={uploadedImages}
+                        />
+                    </VStack>
+                </ModalBody>
 
-    const uri = await uploadToIpfs(base64Image);
+                <ModalFooter>
+                    <HStack
+                        w="full"
+                        spacing={8}
+                        alignSelf="center"
+                        justifyContent="center"
+                        mt={4}
+                    >
+                        <Button
+                            isLoading={isPending}
+                            loadingText="Submitting"
+                            isDisabled={uploadedImages.length === 0}
+                            colorScheme="green"
+                            onClick={() => mutate(uploadedImages)}
+                            mr={3}
+                        >
+                            Submit
+                        </Button>
 
-    const tx = await contract.setReportAsCleaned(report.id, uri);
-
-    await tx.wait();
-
-    refreshReport();
-    setLoading(false);
-
-    onClose();
-  };
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log({ acceptedFiles });
-
-    const parsedUploads = acceptedFiles.map((file) => ({
-      file,
-      image: URL.createObjectURL(file),
-    }));
-    console.log({ parsedUploads });
-    setUploadedImages(parsedUploads);
-  }, []);
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          <HStack spacing={2}>
-            <Icon as={FaInfoCircle} boxSize={5} />
-            <Heading size="md"> New report</Heading>
-          </HStack>
-        </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <VStack w="full" spacing={4}>
-            <UploadPictureStep onDrop={onDrop} uploadedFiles={uploadedImages} />
-          </VStack>
-        </ModalBody>
-
-        <ModalFooter>
-          <HStack
-            w="full"
-            spacing={8}
-            alignSelf="center"
-            justifyContent="center"
-            mt={4}
-          >
-            <Button
-              isLoading={loading}
-              loadingText="Submitting"
-              isDisabled={uploadedImages.length === 0}
-              colorScheme="green"
-              onClick={onSubmit}
-              mr={3}
-            >
-              Submit
-            </Button>
-
-            <Button onClick={onClose} variant="ghost">
-              Cancel
-            </Button>
-          </HStack>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  );
+                        <Button onClick={onClose} variant="ghost">
+                            Cancel
+                        </Button>
+                    </HStack>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
 }

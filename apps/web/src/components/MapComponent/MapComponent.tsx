@@ -3,10 +3,9 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { BaseReport, Report } from "@models/report.ts";
 import { useNavigate } from "react-router-dom";
 import { MapMarker } from "@components/MapMarker.tsx";
-import {useTrashifyReports} from "@hooks"
 import { useMapConfig } from "./useMapConfig";
 import { Routes } from "@/router";
-import { useReports } from "@/api/hooks";
+import { useReports } from "@/api/contract";
 
 const containerStyle = {
   height: "100%",
@@ -30,14 +29,14 @@ function MapComponentContent({
   defaultCenterCurrentLocation?: boolean;
   onMapClick?: (le: google.maps.MapMouseEvent) => void;
 }) {
-  const {baseReports: reports} = useTrashifyReports()
-  const [center, setCenter] = useState(
-    defaultMapCenter || { lat: 41.0463678, lng: 28.9863605 }
-  );
-  const [activeReportID, setActiveReportId] = useState<number | undefined>(
-    defaultActiveReport
-  );
-  const navigate = useNavigate();
+    const { data: reports } = useReports();
+    const [center, setCenter] = useState(
+        defaultMapCenter || { lat: 41.0463678, lng: 28.9863605 }
+    );
+    const [activeReportId, setActiveReportId] = useState<number | undefined>(
+        defaultActiveReport
+    );
+    const navigate = useNavigate();
 
   const { colorConfig } = useMapConfig();
 
@@ -46,23 +45,23 @@ function MapComponentContent({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
   });
 
-  const [map, setMap] = React.useState(null);
+    const [map, setMap] = React.useState<google.maps.Map>();
 
-  const onLoad = React.useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (map: any) => {
-      // TODO: I don't think we will need this but let's leave it
-      // const bounds = new window.google.maps.LatLngBounds(center);
-      // map.fitBounds(bounds);
+    const onLoad = React.useCallback(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (_map: google.maps.Map) => {
+            // TODO: I don't think we will need this but let's leave it
+            // const bounds = new window.google.maps.LatLngBounds(center);
+            // map.fitBounds(bounds);
 
-      setMap(map);
-    },
-    []
-  );
+            setMap(_map);
+        },
+        []
+    );
 
-  const onUnmount = React.useCallback(() => {
-    setMap(null);
-  }, []);
+    const onUnmount = React.useCallback(() => {
+        setMap(undefined);
+    }, []);
 
   // default center to current location
   useEffect(() => {
@@ -76,42 +75,43 @@ function MapComponentContent({
     }
   }, [defaultCenterCurrentLocation]);
 
-  const handleActiveMarker = (report: Report) => {
-    if (report.id !== activeReportID) {
-      setActiveReportId(report.id);
-    }
-    if (route === Routes.Report) {
-      navigate(`/report/${report.id}`);
-    }
-  };
-  return isLoaded ? (
-    <GoogleMap
-      options={{
-        styles: colorConfig,
-      }}
-      mapContainerStyle={containerStyle}
-      center={center}
-      zoom={13}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-      onClick={onMapClick}
-    >
-      {reports?.map((baseReport: BaseReport) => (
-          <MapMarker
-            key={
-              baseReport.id === activeReportID
-                ? `${baseReport.id}-active`
-                : baseReport.id
-            }
-            route={route}
-            baseReport={baseReport}
-            activeReportID={activeReportID}
-            setActiveReportId={setActiveReportId}
-            handleActiveMarker={handleActiveMarker}
-          />
-        ))}
-    </GoogleMap>
-  ) : null;
+    const handleActiveMarker = (report: Report) => {
+        setActiveReportId(report.id);
+        if (route === Routes.Report) {
+            navigate(`/report/${report.id}`);
+        }
+    };
+
+    if (!isLoaded) return null;
+
+    return (
+        <GoogleMap
+            options={{
+                styles: colorConfig,
+            }}
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={13}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+            onClick={onMapClick}
+        >
+            {reports?.map((baseReport: BaseReport) => (
+                <MapMarker
+                    key={
+                        baseReport.id === activeReportId
+                            ? `${baseReport.id}-active`
+                            : baseReport.id
+                    }
+                    route={route}
+                    baseReport={baseReport}
+                    activeReportID={activeReportId}
+                    setActiveReportId={setActiveReportId}
+                    handleActiveMarker={handleActiveMarker}
+                />
+            ))}
+        </GoogleMap>
+    );
 }
 
 export const MapComponent = React.memo(MapComponentContent);

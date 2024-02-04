@@ -29,28 +29,28 @@ function MapWithMarkerComponentContent({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_KEY,
   });
 
-  const [map, setMap] = React.useState(null);
+    const [map, setMap] = React.useState<google.maps.Map>();
 
-  const onLoad = React.useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (map: any) => {
-      // TODO: I don't think we will need this but let's leave it
-      // const bounds = new window.google.maps.LatLngBounds(center);
-      // map.fitBounds(bounds);
+    const onLoad = React.useCallback(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (_map: google.maps.Map) => {
+            // TODO: I don't think we will need this but let's leave it
+            // const bounds = new window.google.maps.LatLngBounds(center);
+            // map.fitBounds(bounds);
 
-      setMap(map);
-      onIsMapLoaded?.(true);
-    },
-    []
-  );
+            setMap(_map);
+            onIsMapLoaded?.(true);
+        },
+        [onIsMapLoaded]
+    );
 
   useEffect(() => {
     onIsMapLoaded?.(isLoaded);
   }, [isLoaded, onIsMapLoaded]);
 
-  const onUnmount = React.useCallback(() => {
-    setMap(null);
-  }, []);
+    const onUnmount = React.useCallback(() => {
+        setMap(undefined);
+    }, []);
 
   // default center to current location
   useEffect(() => {

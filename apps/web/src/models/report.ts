@@ -1,5 +1,12 @@
 import { AnalyzeImageResponse } from "@api/chatgpt";
 
+export enum ReportState {
+    InReview,
+    Available,
+    PendingVerification,
+    Cleaned,
+}
+
 export type BaseReport = {
     id: number;
     creator: string;
@@ -8,9 +15,9 @@ export type BaseReport = {
     state: ReportState;
 };
 
-export type Report = {
-    metadata: ReportMetadata;
-} & Omit<BaseReport, "metadata">;
+export type ReportWithProofs = BaseReport & {
+    proofs: string[];
+};
 
 export type ReportMetadata = {
     // entered by the user
@@ -24,9 +31,6 @@ export type ReportMetadata = {
     analysis: AnalyzeImageResponse;
 };
 
-export enum ReportState {
-    InReview,
-    Available,
-    PendingVerification,
-    Cleaned,
-}
+export type Report = {
+    metadata: ReportMetadata;
+} & Omit<ReportWithProofs, "metadata">;
