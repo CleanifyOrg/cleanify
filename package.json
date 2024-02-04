@@ -1,36 +1,28 @@
 {
-    "name": "cleanify-monorepo",
-    "private": true,
-    "scripts": {
-        "test": "dotenv -e .env -- turbo run test",
-        "build": "dotenv -- turbo build",
-        "dev": "dotenv -e .env -- turbo dev",
-        "lint": "turbo lint",
-        "clean": "turbo run clean && rm -rf node_modules",
-        "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-        "hardhat:compile": "turbo run compile --scope=contracts",
-        "hardhat:deploy": "turbo run deploy --scope=contracts",
-        "hardhat:test": "turbo run test --scope=contracts"
-    },
-    "devDependencies": {
-        "dotenv-cli": "latest",
-        "eslint-config-airbnb": "^19.0.4",
-        "eslint-config-airbnb-typescript": "^17.1.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-import": "^2.29.1",
-        "eslint-plugin-jsx-a11y": "^6.8.0",
-        "eslint-plugin-prettier": "^5.1.3",
-        "eslint-plugin-react": "^7.33.2",
-        "eslint-plugin-react-hooks": "^4.6.0",
-        "prettier": "^3.2.4",
-        "turbo": "^1.11.3"
-    },
-    "engines": {
-        "node": ">=18"
-    },
-    "packageManager": "yarn@1.22.19",
-    "workspaces": [
-        "apps/*",
-        "packages/*"
-    ]
+  "name": "cleanify-monorepo",
+  "private": true,
+  "scripts": {
+    "test": "dotenv -e .env -- turbo run test --",
+    "build": "dotenv -- turbo build",
+    "dev": "dotenv -e .env -- turbo dev --",
+    "lint": "turbo lint",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "hardhat:compile": "turbo run compile --scope=contracts",
+    "hardhat:deploy": "turbo run deploy --scope=contracts",
+    "hardhat:test": "turbo run test --scope=contracts"
+  },
+  "devDependencies": {
+    "dotenv-cli": "latest",
+    "prettier": "^3.2.4",
+    "turbo": "^1.11.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
