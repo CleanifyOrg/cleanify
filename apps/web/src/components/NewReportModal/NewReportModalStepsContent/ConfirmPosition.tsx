@@ -45,7 +45,7 @@ export const ConfirmPosition = ({
                 lng: location.coords.longitude,
             });
         });
-    }, []);
+    }, [setSelectedLocation]);
 
     const onMapClick = (e: google.maps.MapMouseEvent) => {
         if (!e.latLng) {
@@ -71,12 +71,15 @@ export const ConfirmPosition = ({
 
         const tx = await createReport(report);
         console.log({ tx });
-    }, [uploadedImages, data, selectedLocation]);
+    }, [uploadedImages, data, selectedLocation, createReport]);
 
     const { mutate, isPending } = useMutation({
         mutationFn: processReport,
         onSuccess: () => {
-            queryClient.invalidateQueries({
+            queryClient.cancelQueries({
+                queryKey: reportsQueryKey(chain.id),
+            });
+            queryClient.refetchQueries({
                 queryKey: reportsQueryKey(chain.id),
             });
             closeModal();
